@@ -8,5 +8,8 @@
 # .tfvars files
 *.tfvars
 
-# ignore this file
-!tfmodule-template.tf
+# MacOS
+.DS_Store
+
+# project specific
+tests/test.sh

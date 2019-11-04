@@ -80,7 +80,7 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 
 terraform/lint: | guard/program/terraform
 	@ echo "[$@]: Linting Terraform files..."
-	terraform fmt -check=true -diff=true
+	terraform fmt -recursive -check=true -diff=true
 	@ echo "[$@]: Terraform files PASSED lint test!"
 
 terraform/format: | guard/program/terraform
