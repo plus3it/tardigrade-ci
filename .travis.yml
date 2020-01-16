@@ -28,17 +28,6 @@ jobs:
     - stage: lint
       name: Shell Script Syntax Verification
       script: make sh/lint
-    - stage: lint
-      name: JSON Lint/Format Verification
-      script: make json/lint
-    - stage: lint
-      name: Terraform Lint/Format Verification
-      install:
-        - make terraform/install
-        - make terraform-docs/install
-      script:
-        - make terraform/lint
-        - make docs/lint
     - stage: test
       name: Run Makefile unit tests
       script:
