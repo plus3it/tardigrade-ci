@@ -24,10 +24,9 @@ done
 
 }
 
-@test "docs/generate: nested file success" {
+@test "docs/generate: nested file failure" {
   run make docs/generate
-  [ "$status" -eq 0 ]
-  [ "${lines[7]}" = "[docs/generate]: Documentation generated!" ]
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {

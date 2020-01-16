@@ -14,6 +14,36 @@ SHELL := bash
 
 .PHONY: guard/% %/install %/lint
 
+DEFAULT_HELP_TARGET ?= help/all
+HELP_FILTER ?= .*
+
+green = $(shell echo -e '\x1b[32;01m$1\x1b[0m')
+yellow = $(shell echo -e '\x1b[33;01m$1\x1b[0m')
+red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
+
+default:: $(DEFAULT_HELP_TARGET)
+	@exit 0
+
+## This help screen
+help:
+	@printf "Available targets:\n\n"
+	@$(SELF) make -s help/generate  MAKEFILE_LIST="Makefile" | grep -E "\w($(HELP_FILTER))"
+
+# Generate help output from MAKEFILE_LIST
+help/generate:
+	@awk '/^[a-zA-Z\_0-9%:\\\/-]+:/ { \
+	  helpMessage = match(lastLine, /^## (.*)/); \
+	  if (helpMessage) { \
+	    helpCommand = $$1; \
+	    helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+      gsub("\\\\", "", helpCommand); \
+      gsub(":+$$", "", helpCommand); \
+	    printf "  \x1b[32;01m%-35s\x1b[0m %s\n", helpCommand, helpMessage; \
+	  } \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST) | sort -u
+	@printf "\n"
+
 GITHUB_ACCESS_TOKEN ?= 4224d33b8569bec8473980bb1bdb982639426a92
 # Macro to return the download url for a github release
 # For latest release, use version=latest
@@ -78,43 +108,50 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 	rm -rf $(@D)-*
 	$(@D) --version
 
+## Lints terraform files
 terraform/lint: | guard/program/terraform
 	@ echo "[$@]: Linting Terraform files..."
 	terraform fmt -recursive -check=true -diff=true
 	@ echo "[$@]: Terraform files PASSED lint test!"
 
+## Formats terraform files
 terraform/format: | guard/program/terraform
 	@ echo "[$@]: Formatting Terraform files..."
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
 sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+## Linst bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
 	$(FIND_SH) | $(XARGS) shellcheck {}
 	@ echo "[$@]: Shell scripts PASSED lint test!"
 
 json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
+## Lints json files
 json/lint: | guard/program/jq
 	@ echo "[$@]: Linting JSON files..."
 	$(FIND_JSON) | $(XARGS) bash -c 'cmp {} <(jq --indent 4 -S . {}) || (echo "[{}]: Failed JSON Lint Test"; exit 1)'
 	@ echo "[$@]: JSON files PASSED lint test!"
 
+## Formats json files
 json/format: | guard/program/jq
 	@ echo "[$@]: Formatting JSON files..."
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
 tfdocs-awk/install: $(BIN_DIR)
-tfdocs-awk/install: ARCHIVE := https://github.com/plus3it/tfdocs-awk/archive/master.tar.gz
+tfdocs-awk/install: ARCHIVE := https://github.com/plus3it/tfdocs-awk/archive/0.0.2.tar.gz
 tfdocs-awk/install:
 	$(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf -
 
+## Generates terraform documentation
 docs/generate: | tfdocs-awk/install guard/program/terraform-docs
 	@ echo "[$@]: Creating documentation files.."
 	@ bash -eu -o pipefail autodocs.sh -g
 	@ echo "[$@]: Documentation generated!"
 
+## Lints terraform documentation
 docs/lint: | tfdocs-awk/install guard/program/terraform-docs
 	@ echo "[$@] Linting documentation files.."
 	@ bash -eu -o pipefail autodocs.sh -l
@@ -128,4 +165,5 @@ terratest/install: | guard/program/go
 terratest/test: | guard/program/go
 	cd tests && go test -count=1 -timeout 20m
 
-test: terratest/test
+## Tests terraform modules in the project's test dir
+terraform/test: terratest/test
