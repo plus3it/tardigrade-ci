@@ -1,7 +1,6 @@
 #!/usr/bin/env bats
 
-DIR="$(pwd)"
-TEST_DIR="$DIR/json_lint_success"
+TEST_DIR="$(pwd)/json_lint_success"
 
 function setup() {
 mkdir -p "$TEST_DIR/top/nested"

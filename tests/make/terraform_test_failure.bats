@@ -1,8 +1,6 @@
 #!/usr/bin/env bats
 
-
-DIR="$(pwd)"
-TEST_DIR="$DIR/../terraform"
+TEST_DIR="$(pwd)/../terraform"
 
 function setup() {
 cat > "$TEST_DIR/main.tf" <<-EOF
@@ -16,7 +14,6 @@ output "baz" {
 }
 EOF
 }
-
 
 @test "test: terraform test failure" {
   run make TERRAFORM_TEST_DIR="../terraform" test

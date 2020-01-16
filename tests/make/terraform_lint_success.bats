@@ -1,7 +1,6 @@
 #!/usr/bin/env bats
 
-DIR="$(pwd)"
-TEST_DIR="$DIR/terraform_lint_success"
+TEST_DIR="$(pwd)/terraform_lint_success"
 
 function setup() {
 mkdir -p "$TEST_DIR/top/nested"

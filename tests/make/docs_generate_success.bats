@@ -1,7 +1,6 @@
 #!/usr/bin/env bats
 
-DIR="$(pwd)"
-TEST_DIR="$DIR/docs_generate_success"
+TEST_DIR="$(pwd)/docs_generate_success"
 
 # generate a test terraform project with a nested "module"
 function setup() {

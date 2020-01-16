@@ -1,8 +1,6 @@
 #!/usr/bin/env bats
 
-
-DIR="$(pwd)"
-TEST_DIR="$DIR/../terraform"
+TEST_DIR="$(pwd)/../terraform"
 
 function setup() {
 cat > "$TEST_DIR/main.tf" <<-EOF
