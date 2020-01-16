@@ -32,14 +32,14 @@ help:
 # Generate help output from MAKEFILE_LIST
 help/generate:
 	@awk '/^[a-zA-Z\_0-9%:\\\/-]+:/ { \
-	  helpMessage = match(lastLine, /^## (.*)/); \
-	  if (helpMessage) { \
-	    helpCommand = $$1; \
-	    helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
-      gsub("\\\\", "", helpCommand); \
-      gsub(":+$$", "", helpCommand); \
-	    printf "  \x1b[32;01m%-35s\x1b[0m %s\n", helpCommand, helpMessage; \
-	  } \
+		helpMessage = match(lastLine, /^## (.*)/); \
+		if (helpMessage) { \
+			helpCommand = $$1; \
+			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+		gsub("\\\\", "", helpCommand); \
+		gsub(":+$$", "", helpCommand); \
+		printf "  \x1b[32;01m%-35s\x1b[0m %s\n", helpCommand, helpMessage; \
+		} \
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST) | sort -u
 	@printf "\n"
@@ -131,19 +131,22 @@ json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
 ## Lints json files
 json/lint: | guard/program/jq
 	@ echo "[$@]: Linting JSON files..."
-	$(FIND_JSON) | $(XARGS) bash -c 'cmp {} <(jq --indent 4 -S . {}) || (echo "[{}]: Failed JSON Lint Test"; exit 1)'
+	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Failed JSON Lint Test"; exit 1)'
+	$(FIND_JSON) | $(XARGS) bash -c 'cmp {} <(jq --indent 4 -S . {})'
 	@ echo "[$@]: JSON files PASSED lint test!"
 
 ## Formats json files
 json/format: | guard/program/jq
 	@ echo "[$@]: Formatting JSON files..."
+	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: JSON format failed"; exit 1)'
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
 tfdocs-awk/install: $(BIN_DIR)
 tfdocs-awk/install: ARCHIVE := https://github.com/plus3it/tfdocs-awk/archive/0.0.2.tar.gz
 tfdocs-awk/install:
-	$(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf -
+	@ $(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf - \
+	> /dev/null 2>&1 || (echo "[$@]: Failed to install tfdocs-awk"; exit 1)
 
 ## Generates terraform documentation
 docs/generate: | tfdocs-awk/install guard/program/terraform-docs
@@ -157,13 +160,33 @@ docs/lint: | tfdocs-awk/install guard/program/terraform-docs
 	@ bash -eu -o pipefail autodocs.sh -l
 	@ echo "[$@] documentation linting complete!"
 
+TERRAFORM_TEST_DIR ?= tests/terraform
 terratest/install: | guard/program/go
-	cd tests && go mod init tardigrade-ci/tests
-	cd tests && go build ./...
-	cd tests && go mod tidy
+	@ echo "[$@] Installing terratest"
+	cd $(TERRAFORM_TEST_DIR) && go mod init tardigarde-ci/tests
+	cd $(TERRAFORM_TEST_DIR) && go build ./...
+	cd $(TERRAFORM_TEST_DIR) && go mod tidy
+	@ echo "[$@]: Completed successfully!"
 
 terratest/test: | guard/program/go
-	cd tests && go test -count=1 -timeout 20m
+	@ echo "[$@] Starting Terraform tests"
+	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout 20m
+	@ echo "[$@]: Completed successfully!"
 
-## Tests terraform modules in the project's test dir
-terraform/test: terratest/test
+test: terratest/test
+
+BATS_RELEASE ?= 1.1.0
+bats/install: $(BIN_DIR)
+bats/install: ARCHIVE := https://github.com/bats-core/bats-core/archive/v$(BATS_RELEASE).tar.gz
+bats/install:
+	$(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) -xzvf - > /dev/null 2>&1 || (echo "[$@]: Download failed"; exit 1)
+	$(BIN_DIR)/bats-core-$(BATS_RELEASE)/install.sh ~
+	bats --version
+	@ echo "[$@]: Completed successfully!"
+
+bats/test: | bats/install guard/program/bats
+	@ echo "[$@]: Starting make target unit tests"
+	bash -c 'cd tests/make && bats -r *.bats'
+	@ echo "[$@]: Completed successfully!"
+
+install: terraform/install shellcheck/install tfdocs-awk/install

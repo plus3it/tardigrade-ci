@@ -1,10 +1,12 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/docs_generate_success"
+DIR="$(pwd)"
+TEST_DIR="$DIR/docs_generate_failure"
 
 # generate a test terraform project with a nested "module"
 function setup() {
-working_dirs=("$TEST_DIR/top" "$TEST_DIR/top/nested")
+rm -rf "$TEST_DIR"
+working_dirs=("$TEST_DIR" "$TEST_DIR/nested")
 for working_dir in "${working_dirs[@]}"
 do
   mkdir -p "$working_dir/_docs"
@@ -12,20 +14,17 @@ do
   variable "foo" {
     default     = "bar"
     type        = string
-    description = "test var"
-  }
-EOF
+    description = "test var
 
-  cat > "$working_dir/_docs/MAIN.md" <<EOF
-  # Test
 EOF
+# intentially exclude the _docs/MAIN.md
 done
+
 }
 
-@test "docs/generate: nested file success" {
+@test "docs/generate: nested file failure" {
   run make docs/generate
-  [ "$status" -eq 0 ]
-  [ "${lines[7]}" = "[docs/generate]: Documentation generated!" ]
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {
