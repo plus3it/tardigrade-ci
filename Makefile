@@ -147,8 +147,7 @@ json/format: | guard/program/jq json/validate
 tfdocs-awk/install: $(BIN_DIR)
 tfdocs-awk/install: ARCHIVE := https://github.com/plus3it/tfdocs-awk/archive/0.0.2.tar.gz
 tfdocs-awk/install:
-	@ $(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf - \
-	|| (echo "[$@]: Failed to install tfdocs-awk"; exit 1)
+	@ $(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf -
 
 ## Generates terraform documentation
 docs/generate: | tfdocs-awk/install guard/program/terraform-docs
