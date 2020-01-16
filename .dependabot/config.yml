@@ -6,6 +6,6 @@ update_configs:
     directory: "/"
     update_schedule: "daily"
 
-  # - package_manager: "go:modules"
-  #   directory: "/tests"
-  #   update_schedule: "daily"
+  - package_manager: "go:modules"
+    directory: "/tests/terraform"
+    update_schedule: "daily"
