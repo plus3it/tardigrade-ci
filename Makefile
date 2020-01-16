@@ -121,24 +121,26 @@ terraform/format: | guard/program/terraform
 	@ echo "[$@]: Successfully formatted terraform files!"
 
 sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
-## Linst bash script files
+## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
 	$(FIND_SH) | $(XARGS) shellcheck {}
 	@ echo "[$@]: Shell scripts PASSED lint test!"
 
 json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
+json/validate:
+	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Found invalid JSON file: "{}" "; exit 1)'
+	@ echo "[$@]: JSON files PASSED validation test!"
+
 ## Lints json files
-json/lint: | guard/program/jq
+json/lint: | guard/program/jq json/validate
 	@ echo "[$@]: Linting JSON files..."
-	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Failed JSON Lint Test"; exit 1)'
 	$(FIND_JSON) | $(XARGS) bash -c 'cmp {} <(jq --indent 4 -S . {})'
 	@ echo "[$@]: JSON files PASSED lint test!"
 
 ## Formats json files
-json/format: | guard/program/jq
+json/format: | guard/program/jq json/validate
 	@ echo "[$@]: Formatting JSON files..."
-	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: JSON format failed"; exit 1)'
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
@@ -146,7 +148,7 @@ tfdocs-awk/install: $(BIN_DIR)
 tfdocs-awk/install: ARCHIVE := https://github.com/plus3it/tfdocs-awk/archive/0.0.2.tar.gz
 tfdocs-awk/install:
 	@ $(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) --strip-components=1 --wildcards '*.sh' --wildcards '*.awk' -xzvf - \
-	> /dev/null 2>&1 || (echo "[$@]: Failed to install tfdocs-awk"; exit 1)
+	|| (echo "[$@]: Failed to install tfdocs-awk"; exit 1)
 
 ## Generates terraform documentation
 docs/generate: | tfdocs-awk/install guard/program/terraform-docs
@@ -173,6 +175,7 @@ terratest/test: | guard/program/go
 	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout 20m
 	@ echo "[$@]: Completed successfully!"
 
+## Runs terraform tests in the tests directory
 test: terratest/test
 
 BATS_RELEASE ?= 1.1.0
