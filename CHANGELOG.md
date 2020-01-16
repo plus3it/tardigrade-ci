@@ -1,4 +1,4 @@
-## tardigarde-ci Change Log
+## tardigrade-ci Change Log
 
 All notable changes to this project will be documented in this file.
 

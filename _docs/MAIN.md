@@ -1,3 +1,3 @@
-# tardigarde-ci
+# tardigrade-ci
 
 A Terraform Module
