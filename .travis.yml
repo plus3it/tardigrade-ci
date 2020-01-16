@@ -5,9 +5,17 @@ language: node_js
 node_js:
   - "8"
 
+env:
+  global:
+    - IMAGE_NAME=plus3it/tardigrade-ci
+
 stages:
   - lint
+  - test
   - deploy
+
+services:
+  - docker
 
 jobs:
   include:
@@ -31,18 +39,28 @@ jobs:
       script:
         - make terraform/lint
         - make docs/lint
+    - stage: test
+      name: Run Makefile unit tests
+      script:
+        - |
+          docker build -t "$IMAGE_NAME" -f Dockerfile .
     - stage: deploy
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
           RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
-          RELEASE_BODY="* [tardigarde-ci v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/tardigrade-ci/blob/$RELEASE_VERSION/CHANGELOG.md)"
+          RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/tardigrade-ci/blob/$RELEASE_VERSION/CHANGELOG.md)"
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
+          docker build -t "$IMAGE_NAME" -f Dockerfile .
       script: skip
       before_deploy:
         - |
           (set -x; git tag -a $RELEASE_VERSION -m $RELEASE_VERSION)
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          docker tag "$IMAGE_NAME" "$IMAGE_NAME:latest"
+          docker tag "$IMAGE_NAME" "$IMAGE_NAME:$RELEASE_VERSION"
+          docker push "$IMAGE_NAME:latest" && docker push "$IMAGE_NAME:$RELEASE_VERSION"
       deploy:
         provider: releases
         api_key:
