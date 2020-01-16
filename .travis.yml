@@ -42,15 +42,14 @@ jobs:
     - stage: test
       name: Run Makefile unit tests
       script:
-        - |
-          docker build -t "$IMAGE_NAME" -f Dockerfile .
+        - docker build -t "$IMAGE_NAME" -f Dockerfile .
     - stage: deploy
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
         - |
           PRIOR_VERSION=$(git describe --abbrev=0 --tags)
           RELEASE_VERSION=$(grep current_version $TRAVIS_BUILD_DIR/.bumpversion.cfg | sed 's/^.*= //' )
-          RELEASE_BODY="* [ci-testing v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/tardigrade-ci/blob/$RELEASE_VERSION/CHANGELOG.md)"
+          RELEASE_BODY="* [tardigrade-ci v$RELEASE_VERSION CHANGELOG](https://github.com/plus3it/tardigrade-ci/blob/$RELEASE_VERSION/CHANGELOG.md)"
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
           docker build -t "$IMAGE_NAME" -f Dockerfile .
       script: skip
