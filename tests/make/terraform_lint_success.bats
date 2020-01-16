@@ -19,7 +19,7 @@ EOF
 @test "terraform/lint: nested file success" {
   run make terraform/lint
   [ "$status" -eq 0 ]
-  [ "${lines[2]}" = "[terraform/lint]: Terraform files PASSED lint test!" ]
+  [[ "$output" == *"[terraform/lint]: Terraform files PASSED lint test!"* ]]
 }
 
 function teardown() {

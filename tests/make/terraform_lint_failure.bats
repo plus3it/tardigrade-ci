@@ -19,7 +19,7 @@ EOF
 @test "terraform/lint: nested file failure" {
   run make terraform/lint
   [ "$status" -eq 2 ]
-  [ "${lines[5]}" = "@@ -1,5 +1,5 @@" ]
+  [[ "$output" == *"@@ -1,5 +1,5 @@"* ]]
 }
 
 function teardown() {

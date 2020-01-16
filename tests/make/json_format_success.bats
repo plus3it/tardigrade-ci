@@ -15,7 +15,7 @@ EOF
 @test "json/format: nested file success" {
   run make json/format
   [ "$status" -eq 0 ]
-  [ "${lines[2]}" = "[json/format]: Successfully formatted JSON files!" ]
+  [[ "$output" == *"[json/format]: Successfully formatted JSON files!"* ]]
 }
 
 function teardown() {

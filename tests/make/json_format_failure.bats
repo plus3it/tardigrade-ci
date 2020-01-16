@@ -16,7 +16,7 @@ EOF
 @test "json/format: nested file failure" {
   run make json/format
   [ "$status" -eq 2 ]
-  [ "${lines[1]}" = "[./json_format_failure/top/failure.json]: JSON format failed" ]
+  [[ "$output" == *"[./json_format_failure/top/failure.json]: Found invalid JSON file: ./json_format_failure/top/failure.json"* ]]
 }
 
 function teardown() {

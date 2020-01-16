@@ -15,7 +15,7 @@ EOF
 @test "json/lint: nested file success" {
   run make json/lint
   [ "$status" -eq 0 ]
-  [ "${lines[2]}" = "[json/lint]: JSON files PASSED lint test!" ]
+  [[ "$output" == *"[json/lint]: JSON files PASSED lint test!"* ]]
 }
 
 function teardown() {

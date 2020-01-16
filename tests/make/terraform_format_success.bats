@@ -15,7 +15,7 @@ EOF
 @test "terraform/format: nested file success" {
   run make terraform/format
   [ "$status" -eq 0 ]
-  [ "${lines[3]}" = "[terraform/format]: Successfully formatted terraform files!" ]
+  [[ "$output" == *"[terraform/format]: Successfully formatted terraform files!"* ]]
 }
 
 function teardown() {
