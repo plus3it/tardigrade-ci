@@ -5,9 +5,17 @@ language: node_js
 node_js:
   - "8"
 
+env:
+  global:
+    - IMAGE_NAME=plus3it/tardigrade-ci
+
 stages:
   - lint
+  - test
   - deploy
+
+services:
+  - docker
 
 jobs:
   include:
@@ -20,17 +28,10 @@ jobs:
     - stage: lint
       name: Shell Script Syntax Verification
       script: make sh/lint
-    - stage: lint
-      name: JSON Lint/Format Verification
-      script: make json/lint
-    - stage: lint
-      name: Terraform Lint/Format Verification
-      install:
-        - make terraform/install
-        - make terraform-docs/install
+    - stage: test
+      name: Run Makefile unit tests
       script:
-        - make terraform/lint
-        - make docs/lint
+        - docker build -t "$IMAGE_NAME" -f Dockerfile . && docker run -t "$IMAGE_NAME" bats/test
     - stage: deploy
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
@@ -41,8 +42,7 @@ jobs:
           export PRIOR_VERSION RELEASE_VERSION RELEASE_BODY
       script: skip
       before_deploy:
-        - |
-          (set -x; git tag -a $RELEASE_VERSION -m $RELEASE_VERSION)
+        - (set -x; git tag -a $RELEASE_VERSION -m $RELEASE_VERSION)
       deploy:
         provider: releases
         api_key:
