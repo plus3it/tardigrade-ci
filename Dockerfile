@@ -1,4 +1,4 @@
-FROM golang:1.13.4-buster
+FROM golang:1.13.6-buster
 RUN apt-get update -y && apt-get install -y \
     xz-utils \
     curl \
