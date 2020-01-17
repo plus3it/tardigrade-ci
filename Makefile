@@ -177,18 +177,17 @@ terratest/test: | guard/program/go
 ## Runs terraform tests in the tests directory
 test: terratest/test
 
-BATS_RELEASE ?= 1.1.0
-bats/install: $(BIN_DIR)
-bats/install: ARCHIVE := https://github.com/bats-core/bats-core/archive/v$(BATS_RELEASE).tar.gz
+bats/install: BATS_VERSION ?= latest
 bats/install:
-	$(CURL) $(ARCHIVE) | tar -C $(BIN_DIR) -xzvf - > /dev/null 2>&1 || (echo "[$@]: Download failed"; exit 1)
-	$(BIN_DIR)/bats-core-$(BATS_RELEASE)/install.sh ~
+	$(CURL) $(shell $(CURL) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
+	$(TMP)/bats-core-*/install.sh ~
 	bats --version
+	rm -rf $(TMP)/bats-core-*
 	@ echo "[$@]: Completed successfully!"
 
-bats/test: | bats/install guard/program/bats
+bats/test: | guard/program/bats
 	@ echo "[$@]: Starting make target unit tests"
-	bash -c 'cd tests/make && bats -r *.bats'
+	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
-install: terraform/install shellcheck/install tfdocs-awk/install
+install: terraform/install shellcheck/install tfdocs-awk/install bats/install

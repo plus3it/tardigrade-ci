@@ -7,6 +7,7 @@ RUN apt-get update -y && apt-get install -y \
     make \
 && rm -rf /var/lib/apt/lists/*
 COPY . /ci-harness
-RUN cd /ci-harness && make install && make bats/test
+RUN cd /ci-harness && make install
 ENV PATH="/root/bin:${PATH}"
 WORKDIR /ci-harness
+ENTRYPOINT ["make"]
