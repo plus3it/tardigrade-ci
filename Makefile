@@ -191,3 +191,5 @@ bats/test: | guard/program/bats
 	@ echo "[$@]: Completed successfully!"
 
 install: terraform/install shellcheck/install tfdocs-awk/install bats/install
+
+lint: terraform/lint sh/lint json/lint docs/lint
