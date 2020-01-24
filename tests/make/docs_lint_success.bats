@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/docs_generate_success"
+TEST_DIR="$(pwd)/docs_lint_success"
 
 # generate a test terraform project with a nested "module"
 function setup() {
@@ -13,7 +13,7 @@ do
   touch "$working_dir/main.tf"
   touch "$working_dir/README.md"
 
-  cat > "$working_dir/main.tf" <<"EOF"
+  cat > "$working_dir/main.tf" <<EOF
   variable "foo" {
     default     = "bar"
     type        = string
@@ -24,14 +24,28 @@ EOF
 # Foo
 
 <!-- BEGIN TFDOCS -->
+## Providers
+
+No provider.
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:-----:|
+| foo | test var | `string` | `"bar"` | no |
+
+## Outputs
+
+No output.
+
 <!-- END TFDOCS -->
 EOF
 done
 
 }
 
-@test "docs/generate: nested file success" {
-  run make docs/generate
+@test "docs/lint: nested file success" {
+  run make docs/lint
   [ "$status" -eq 0 ]
 }
 
