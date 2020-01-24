@@ -30,7 +30,6 @@ done
 
 }
 
-# due to a workaround to handle non-tf readmes this check will exit 0
 @test "docs/generate: nested file failure" {
   run make docs/generate
   [ "$status" -eq 0 ]

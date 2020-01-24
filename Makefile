@@ -151,31 +151,26 @@ docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
 
 docs/tmp/%: | guard/program/terraform-docs
-docs/tmp/%:
-	[[ $$(grep '<!-- BEGIN TFDOCS -->' $*) && $$(grep '<!-- END TFDOCS -->' $*) ]] && \
-	sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP) || \
-	exit 0
+	sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
 
 docs/generate/%:
 	@ echo "[$@]: Creating documentation files.."
 	@ $(MAKE) docs/tmp/$*
-	[[ $$(grep '<!-- BEGIN TFDOCS -->' $*) && $$(grep '<!-- END TFDOCS -->' $*) ]] && \
-	mv -f $(README_TMP) $* || \
-	echo "$* doesn't contain tf docs markers, skipping.."
+	mv -f $(README_TMP) $*
 	@ echo "[$@]: Documentation files creation complete!"
 
 docs/lint/%:
 	@ echo "[$@]: Linting documentation files.."
 	@ $(MAKE) docs/tmp/$*
-	[[ $$(grep '<!-- BEGIN TFDOCS -->' $*) && $$(grep '<!-- END TFDOCS -->' $*) ]] && diff $* $(README_TMP); \
-	[ -s $(README_TMP) ] && rm -f $(README_TMP)
+	diff $* $(README_TMP)
+	rm -f $(README_TMP)
 	@ echo "[$@]: Documentation files PASSED lint test!"
 
-## Generates terraform documentation
+## Generates Terraform documentation
 docs/generate:
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/generate/{}
 
-## Lints terraform documentation
+## Lints Terraform documentation
 docs/lint:
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
 
