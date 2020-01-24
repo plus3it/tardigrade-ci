@@ -1,0 +1,22 @@
+export SHELL = /bin/bash
+export BUILD_HARNESS_ORG ?= plus3it
+export BUILD_HARNESS_PROJECT ?= tardigrade-ci
+export BUILD_HARNESS_BRANCH ?= master
+export BUILD_HARNESS_PATH ?= $(shell until [ -d "$(BUILD_HARNESS_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(BUILD_HARNESS_PROJECT)
+
+PROJECT_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
+-include $(BUILD_HARNESS_PATH)/bootstrap/Makefile
+
+.PHONY : init
+## Init build-harness
+init::
+	@curl --retry 5 --fail --silent --retry-delay 1 https://raw.githubusercontent.com/$(BUILD_HARNESS_ORG)/$(BUILD_HARNESS_PROJECT)/$(BUILD_HARNESS_BRANCH)/bootstrap/bin/install.sh | \
+		bash -s "$(BUILD_HARNESS_ORG)" "$(BUILD_HARNESS_PROJECT)" "$(BUILD_HARNESS_BRANCH)"
+
+.PHONY : cleans
+## Clean build-harness
+clean::
+	@[ "$(BUILD_HARNESS_PATH)" == '/' ] || \
+	[ "$(BUILD_HARNESS_PATH)" == '.' ] || \
+	echo rm -rf $(BUILD_HARNESS_PATH)
