@@ -10,8 +10,6 @@ for working_dir in "${working_dirs[@]}"
 do
 
   mkdir -p "$working_dir"
-  touch "$working_dir/main.tf"
-  touch "$working_dir/README.md"
 
   cat > "$working_dir/main.tf" <<EOF
 variable "foo" {
