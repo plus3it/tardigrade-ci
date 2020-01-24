@@ -8,15 +8,21 @@ rm -rf "$TEST_DIR"
 working_dirs=("$TEST_DIR" "$TEST_DIR/nested")
 for working_dir in "${working_dirs[@]}"
 do
-  mkdir -p "$working_dir/_docs"
-  cat > "$working_dir/main.tf" <<EOF
+
+  mkdir -p "$working_dir"
+  cat > "$working_dir/main.tf" <<"EOF"
   variable "foo" {
     default     = "bar"
     type        = string
     description = "test var
-
 EOF
-# intentially exclude the _docs/MAIN.md
+# intentionally malform the readmes
+  cat > "$working_dir/README.md" <<"EOF"
+# Foo
+
+<!-- BEGIN TFDOCS
+    END TFDOCS -->
+EOF
 done
 
 }

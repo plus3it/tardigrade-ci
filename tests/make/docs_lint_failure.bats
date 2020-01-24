@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/docs_generate_success"
+TEST_DIR="$(pwd)/docs_lint_failure"
 
 # generate a test terraform project with a nested "module"
 function setup() {
@@ -10,6 +10,7 @@ for working_dir in "${working_dirs[@]}"
 do
 
   mkdir -p "$working_dir"
+
   cat > "$working_dir/main.tf" <<"EOF"
   variable "foo" {
     default     = "bar"
@@ -17,19 +18,23 @@ do
     description = "test var"
   }
 EOF
-  cat > "$working_dir/README.md" <<"EOF"
+  # intentionally generate incomplete READMEs
+  cat > "$working_dir/README.md" <<EOF
 # Foo
 
 <!-- BEGIN TFDOCS -->
+
+bar
+
 <!-- END TFDOCS -->
 EOF
 done
 
 }
 
-@test "docs/generate: nested file success" {
-  run make docs/generate
-  [ "$status" -eq 0 ]
+@test "docs/lint: nested file failure" {
+  run make docs/lint
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {
