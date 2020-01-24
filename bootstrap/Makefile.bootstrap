@@ -4,6 +4,8 @@ export BUILD_HARNESS_PROJECT ?= tardigrade-ci
 export BUILD_HARNESS_BRANCH ?= master
 export BUILD_HARNESS_PATH ?= $(shell until [ -d "$(BUILD_HARNESS_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(BUILD_HARNESS_PROJECT)
 
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+PROJECT_NAME := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
 PROJECT_ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 -include $(BUILD_HARNESS_PATH)/bootstrap/Makefile

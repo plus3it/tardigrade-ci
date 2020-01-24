@@ -6,11 +6,7 @@ SHELL = /usr/bin/env bash
 .SHELLFLAGS := -eu -o pipefail -c
 export SELF ?= $(MAKE)
 
-# https://stackoverflow.com/a/18137056/12031185
-MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-CURRENT_DIR := $(notdir $(patsubst %/,%,$(dir $(MAKEFILE_PATH))))
-
-IMAGE_NAME := $(CURRENT_DIR):latest
+IMAGE_NAME := $(shell basename $(PROJECT_ROOT)):latest
 
 DEFAULT_HELP_TARGET ?= help
 HELP_FILTER ?= .*
@@ -59,9 +55,9 @@ docker/run: target := help
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
-	-v "$(CURDIR):/ci-harness/$(CURRENT_DIR)" \
+	-v "$(PROJECT_ROOT):/ci-harness/$(PROJECT_NAME)" \
 	-v "$(HOME)/.aws:/.aws" \
-	-e TERRAFORM_TEST_DIR=$(CURRENT_DIR)/tests \
+	-e TERRAFORM_TEST_DIR=$(PROJECT_NAME)/tests \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	-e AWS_PROFILE=$(AWS_PROFILE) \
 	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
