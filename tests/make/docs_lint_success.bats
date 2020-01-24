@@ -14,11 +14,11 @@ do
   touch "$working_dir/README.md"
 
   cat > "$working_dir/main.tf" <<EOF
-  variable "foo" {
-    default     = "bar"
-    type        = string
-    description = "test var"
-  }
+variable "foo" {
+  default     = "bar"
+  type        = string
+  description = "test var"
+}
 EOF
   cat > "$working_dir/README.md" <<"EOF"
 # Foo

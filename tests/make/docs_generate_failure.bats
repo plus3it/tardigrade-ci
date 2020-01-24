@@ -32,7 +32,7 @@ done
 
 @test "docs/generate: nested file failure" {
   run make docs/generate
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {

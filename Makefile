@@ -167,11 +167,11 @@ docs/lint/%:
 	@ echo "[$@]: Documentation files PASSED lint test!"
 
 ## Generates Terraform documentation
-docs/generate:
+docs/generate: | terraform/format
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/generate/{}
 
 ## Lints Terraform documentation
-docs/lint:
+docs/lint: | terraform/lint
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
 
 TERRAFORM_TEST_DIR ?= tests
