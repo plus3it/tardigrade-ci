@@ -21,7 +21,7 @@ default:: $(DEFAULT_HELP_TARGET)
 ## This help screen
 help:
 	@printf "Available targets:\n\n"
-	@$(SELF) -s help/generate  MAKEFILE_LIST="$(BUILD_HARNESS_PATH)/bootstrap/Makefile" | grep -E "\w($(HELP_FILTER))"
+	@$(SELF) -s help/generate  MAKEFILE_LIST="$(TARDIGRADE_CI_PATH)/bootstrap/Makefile" | grep -E "\w($(HELP_FILTER))"
 
 # Generate help output from MAKEFILE_LIST
 help/generate:

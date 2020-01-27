@@ -1,15 +1,15 @@
 #!/usr/local/bin/bash
 
-export BUILD_HARNESS_ORG=${1:-plus3it}
-export BUILD_HARNESS_PROJECT=${2:-tardigrad-ci}
-export BUILD_HARNESS_BRANCH=${3:-master}
-export GITHUB_REPO="https://github.com/${BUILD_HARNESS_ORG}/${BUILD_HARNESS_PROJECT}.git"
+export TARDIGRADE_CI_ORG=${1:-plus3it}
+export TARDIGRADE_CI_PROJECT=${2:-tardigrade-ci}
+export TARDIGRADE_CI_BRANCH=${3:-master}
+export GITHUB_REPO="https://github.com/${TARDIGRADE_CI_ORG}/${TARDIGRADE_CI_PROJECT}.git"
 
-if [ "$BUILD_HARNESS_PROJECT" ] && [ -d "$BUILD_HARNESS_PROJECT" ]; then
-  echo "Removing existing $BUILD_HARNESS_PROJECT"
-  rm -rf "$BUILD_HARNESS_PROJECT"
+if [ "$TARDIGRADE_CI_PROJECT" ] && [ -d "$TARDIGRADE_CI_PROJECT" ]; then
+  echo "Removing existing $TARDIGRADE_CI_PROJECT"
+  rm -rf "$TARDIGRADE_CI_PROJECT"
 fi
 
-echo "Cloning ${GITHUB_REPO}#${BUILD_HARNESS_BRANCH}..."
+echo "Cloning ${GITHUB_REPO}#${TARDIGRADE_CI_BRANCH}..."
 
-git clone -b "$BUILD_HARNESS_BRANCH" "$GITHUB_REPO"
+git clone -b "$TARDIGRADE_CI_BRANCH" "$GITHUB_REPO"
