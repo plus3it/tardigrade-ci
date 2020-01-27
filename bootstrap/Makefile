@@ -49,9 +49,9 @@ docker/build:
 
 # Adds the current Makefile working directory as a bind mount
 ## Runs the tardigrade-ci docker image
-docker/run: DOCKER_RUN_FLAGS := --rm
-docker/run: AWS_DEFAULT_REGION := us-east-1
-docker/run: target := help
+docker/run: DOCKER_RUN_FLAGS ?= --rm
+docker/run: AWS_DEFAULT_REGION ?= us-east-1
+docker/run: target ?= help
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
