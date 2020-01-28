@@ -140,9 +140,11 @@ eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
 
 ## Runs eclint against the project
-eclint/lint: | guard/program/eclint
+eclint/lint: | guard/program/eclint guard/program/git
+eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
+eclint/lint:
 	@ echo "[$@]: Running eclint..."
-	eclint check
+	$(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
 ## Lints Python files

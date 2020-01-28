@@ -18,7 +18,7 @@ done
 }
 
 @test "eclint/lint: failure" {
-  run make eclint/lint
+  run make eclint/lint ECLINT_PREFIX=
   [ "$status" -eq 2 ]
 }
 
