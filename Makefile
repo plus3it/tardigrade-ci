@@ -140,9 +140,11 @@ eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
 
 ## Runs eclint against the project
-eclint/lint: | guard/program/eclint
+eclint/lint: | guard/program/eclint guard/program/git
+eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
+eclint/lint:
 	@ echo "[$@]: Running eclint..."
-	eclint check
+	$(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
 ## Lints Python files
@@ -200,7 +202,7 @@ docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
 
 docs/tmp/%: | guard/program/terraform-docs
-	sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
+	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
 
 docs/generate/%:
 	@ echo "[$@]: Creating documentation files.."
