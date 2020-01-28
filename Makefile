@@ -1,3 +1,6 @@
+INCLUDE ?= .dummy_include
+-include $(INCLUDE)
+
 ARCH ?= amd64
 OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
