@@ -9,11 +9,14 @@ The makefile in this repository has been exposed as the entry point to the accom
 ```bash
 Available targets:
 
-  docs/generate                       Generates terraform documentation
-  docs/lint                           Lints terraform documentation
+  docs/generate                       Generates Terraform documentation
+  docs/lint                           Lints Terraform documentation
+  eclint/lint                         Runs eclint against the project
   help                                This help screen
   json/format                         Formats json files
   json/lint                           Lints json files
+  python/format                       Formats Python files
+  python/lint                         Lints Python files
   sh/lint                             Lints bash script files
   terraform/format                    Formats terraform files
   terraform/lint                      Lints terraform files
