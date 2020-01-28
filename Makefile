@@ -202,7 +202,7 @@ docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
 
 docs/tmp/%: | guard/program/terraform-docs
-	sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
+	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
 
 docs/generate/%:
 	@ echo "[$@]: Creating documentation files.."
