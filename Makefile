@@ -108,6 +108,55 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 	rm -rf $(@D)-*
 	$(@D) --version
 
+install/pip/%: PYTHON ?= python3
+install/pip/%: | guard/env/PYPI_PKG_NAME
+	@ echo "[$@]: Installing $*..."
+	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
+	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
+	$* --version
+	@ echo "[$@]: Completed successfully!"
+
+black/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+node/install: NODE_VERSION ?= 10.x
+node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
+node/install:
+	@ echo "[$@]: Installing $(@D)..."
+	$(CURL) "$(NODE_SOURCE)" | bash -
+	apt-get install nodejs -y
+	npm --version
+	@ echo "[$@]: Completed successfully"
+
+npm/install: node/install
+
+install/npm/%: | guard/program/npm
+	@ echo "[$@]: Installing $*..."
+	npm install -g $(NPM_PKG_NAME)
+	$* --version
+	@ echo "[$@]: Completed successfully!"
+
+eclint/install:
+	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
+
+## Runs eclint against the project
+eclint/lint: | guard/program/eclint
+	@ echo "[$@]: Running eclint..."
+	eclint check
+	@ echo "[$@]: Project PASSED eclint test!"
+
+## Lints Python files
+python/lint: | guard/program/black
+	@ echo "[$@]: Linting Python files..."
+	black --check .
+	@ echo "[$@]: Python files PASSED lint test!"
+
+## Formats Python files
+python/format: | guard/program/black
+	@ echo "[$@]: Formatting Python files..."
+	black .
+	@ echo "[$@]: Successfully formatted Python files!"
+
 ## Lints terraform files
 terraform/lint: | guard/program/terraform
 	@ echo "[$@]: Linting Terraform files..."
@@ -203,6 +252,6 @@ bats/test: | guard/program/bats
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install
 
-lint: terraform/lint sh/lint json/lint docs/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint
