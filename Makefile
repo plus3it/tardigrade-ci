@@ -1,3 +1,6 @@
+INCLUDE ?= .dummy_include
+-include $(INCLUDE)
+
 ARCH ?= amd64
 OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
@@ -148,15 +151,16 @@ eclint/lint:
 	@ echo "[$@]: Project PASSED eclint test!"
 
 ## Lints Python files
+python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
 python/lint: | guard/program/black
 	@ echo "[$@]: Linting Python files..."
-	black --check .
+	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
 	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
 python/format: | guard/program/black
 	@ echo "[$@]: Formatting Python files..."
-	black .
+	$(FIND_PYTHON) | $(XARGS) black $$(dirname {})
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
