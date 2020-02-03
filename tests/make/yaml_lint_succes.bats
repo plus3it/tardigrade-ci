@@ -10,9 +10,7 @@ for working_dir in "${working_dirs[@]}"
 do
 
   mkdir -p "$working_dir"
-  cat > "$working_dir/test.yml" <<"EOF"
-foo: "bar"
-EOF
+  echo "foo: 'bar'" > $working_dir/test.yml
 done
 
 }
