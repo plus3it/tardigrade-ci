@@ -122,6 +122,15 @@ install/pip/%: | guard/env/PYPI_PKG_NAME
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+yamllint/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+cfn-lint/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+yq/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
 node/install: NODE_VERSION ?= 10.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
 node/install:
@@ -141,6 +150,20 @@ install/npm/%: | guard/program/npm
 
 eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
+
+## Lints YAML files
+yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
+yaml/lint: | guard/program/yamllint
+yaml/lint: YAMLLINT_CONFIG ?= .yamllint.yml
+yaml/lint:
+	@ echo "[$@]: Running yamllint..."
+	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
+	@ echo "[$@]: Project PASSED yamllint test!"
+
+## Lints CloudFormation files
+cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
+cfn/lint: | guard/program/cfn-lint
+	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
@@ -258,6 +281,6 @@ bats/test: | guard/program/bats
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint
