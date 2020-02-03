@@ -82,7 +82,7 @@ done
 
 }
 
-@test "cfn/lint: nested file success" {
+@test "cfn/lint: nested file failure" {
   run make cfn/lint
   [ "$status" -eq 2 ]
 }
