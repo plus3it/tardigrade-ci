@@ -283,4 +283,4 @@ bats/test: | guard/program/bats
 
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint yaml/lint cfn/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint
