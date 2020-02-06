@@ -151,8 +151,8 @@ install/npm/%: | guard/program/npm
 eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
 
-## Lints YAML files
 yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
+## Lints YAML files
 yaml/lint: | guard/program/yamllint
 yaml/lint: YAMLLINT_CONFIG ?= .yamllint.yml
 yaml/lint:
@@ -160,8 +160,8 @@ yaml/lint:
 	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
 	@ echo "[$@]: Project PASSED yamllint test!"
 
-## Lints CloudFormation files
 cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
+## Lints CloudFormation files
 cfn/lint: | guard/program/cfn-lint
 	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
@@ -174,8 +174,8 @@ eclint/lint:
 	cd $(TARGET_PROJECT_NAME) && $(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
-## Lints Python files
 python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
+## Lints Python files
 python/lint: | guard/program/black
 	@ echo "[$@]: Linting Python files..."
 	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
