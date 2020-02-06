@@ -199,7 +199,7 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name '*.tfvars' -o -name "*.tf" -o -name "*.hcl" \)
+hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
 hcl/validate: | guard/program/terraform
 hcl/validate:
 	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - > /dev/null 2>&1 || (echo "Found invalid hcl file: "{}" "; exit 1)'
@@ -210,6 +210,12 @@ hcl/lint: | guard/program/terraform hcl/validate
 	@ echo "[$@]: Linting hcl files..."
 	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -check=true -diff=true -
 	@ echo "[$@]: hcl files PASSED lint test!"
+
+## Formats hcl files
+hcl/format: | guard/program/terraform hcl/validate
+	@ echo "[$@]: Formatting hcl files..."
+	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -
+	@ echo "[$@]: Successfully formatted hcl files!"
 
 sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
 ## Lints bash script files
@@ -296,4 +302,4 @@ bats/test: | guard/program/bats
 
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint
