@@ -151,8 +151,8 @@ install/npm/%: | guard/program/npm
 eclint/install:
 	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
 
-## Lints YAML files
 yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
+## Lints YAML files
 yaml/lint: | guard/program/yamllint
 yaml/lint: YAMLLINT_CONFIG ?= .yamllint.yml
 yaml/lint:
@@ -160,8 +160,8 @@ yaml/lint:
 	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
 	@ echo "[$@]: Project PASSED yamllint test!"
 
-## Lints CloudFormation files
 cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
+## Lints CloudFormation files
 cfn/lint: | guard/program/cfn-lint
 	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
@@ -170,11 +170,11 @@ eclint/lint: | guard/program/eclint guard/program/git
 eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
-	$(ECLINT_PREFIX) eclint check
+	cd $(PROJECT_ROOT) && $(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
-## Lints Python files
 python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
+## Lints Python files
 python/lint: | guard/program/black
 	@ echo "[$@]: Linting Python files..."
 	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
@@ -197,6 +197,24 @@ terraform/format: | guard/program/terraform
 	@ echo "[$@]: Formatting Terraform files..."
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
+
+hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
+hcl/validate: | guard/program/terraform
+hcl/validate:
+	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - > /dev/null 2>&1 || (echo "Found invalid hcl file: "{}" "; exit 1)'
+	@ echo "[$@]: hcl files PASSED validation test!"
+
+## Lints hcl files
+hcl/lint: | guard/program/terraform hcl/validate
+	@ echo "[$@]: Linting hcl files..."
+	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -check=true -diff=true -
+	@ echo "[$@]: hcl files PASSED lint test!"
+
+## Formats hcl files
+hcl/format: | guard/program/terraform hcl/validate
+	@ echo "[$@]: Formatting hcl files..."
+	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -
+	@ echo "[$@]: Successfully formatted hcl files!"
 
 sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
 ## Lints bash script files
@@ -283,4 +301,4 @@ bats/test: | guard/program/bats
 
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint
+lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint

@@ -9,9 +9,12 @@ The makefile in this repository has been exposed as the entry point to the accom
 ```bash
 Available targets:
 
+  cfn/lint                            Lints CloudFormation files
   docs/generate                       Generates Terraform documentation
   docs/lint                           Lints Terraform documentation
   eclint/lint                         Runs eclint against the project
+  hcl/format                          Formats hcl files
+  hcl/lint                            Lints hcl files
   help                                This help screen
   json/format                         Formats json files
   json/lint                           Lints json files
@@ -21,6 +24,7 @@ Available targets:
   terraform/format                    Formats terraform files
   terraform/lint                      Lints terraform files
   test                                Runs terraform tests in the tests directory
+  yaml/lint                           Lints YAML files
 ```
 
 ## How to use
@@ -62,8 +66,12 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
 3. Add the following to your `.gitignore` file
 
   ```bash
+  # tardigrade-ci
   .tardigrade-ci
   tardigrade-ci/
+
+  # eclint
+  .git/
   ```
 
 4. Run `make` once to initialize the project and then `make docker/run target=<TARGET>`
