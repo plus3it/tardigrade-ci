@@ -167,10 +167,11 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
+eclint/lint: TARGET_PROJECT_NAME ?= .
 eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
-	$(ECLINT_PREFIX) eclint check
+	cd $(TARGET_PROJECT_NAME) && $(ECLINT_PREFIX) eclint check
 	@ echo "[$@]: Project PASSED eclint test!"
 
 ## Lints Python files
