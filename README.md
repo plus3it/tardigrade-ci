@@ -13,6 +13,7 @@ Available targets:
   docs/generate                       Generates Terraform documentation
   docs/lint                           Lints Terraform documentation
   eclint/lint                         Runs eclint against the project
+  hcl/lint                            Lints hcl files
   help                                This help screen
   json/format                         Formats json files
   json/lint                           Lints json files
