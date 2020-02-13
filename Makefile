@@ -52,7 +52,7 @@ GITHUB_ACCESS_TOKEN ?= 4224d33b8569bec8473980bb1bdb982639426a92
 # For latest release, use version=latest
 # To pin a release, use version=tags/<tag>
 # $(call parse_github_download_url,owner,repo,version,asset select query)
-parse_github_download_url = $(CURL) https://api.github.com/repos/$(1)/$(2)/releases/$(3)?access_token=$(GITHUB_ACCESS_TOKEN) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
+parse_github_download_url = $(CURL) -H "Authorization: token $(GITHUB_ACCESS_TOKEN)" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
 
 # Macro to download a github binary release
 # $(call download_github_release,file,owner,repo,version,asset select query)
