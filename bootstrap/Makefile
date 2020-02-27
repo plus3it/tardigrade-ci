@@ -62,6 +62,7 @@ docker/run: docker/build
 	-e AWS_PROFILE=$(AWS_PROFILE) \
 	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
 	-e INCLUDE=/ci-harness/$(PROJECT_NAME)/Makefile \
+	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME) \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment
