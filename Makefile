@@ -24,6 +24,8 @@ green = $(shell echo -e '\x1b[32;01m$1\x1b[0m')
 yellow = $(shell echo -e '\x1b[33;01m$1\x1b[0m')
 red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
 
+PROJECT_ROOT ?= .
+
 default:: $(DEFAULT_HELP_TARGET)
 	@exit 0
 
@@ -216,7 +218,7 @@ hcl/format: | guard/program/terraform hcl/validate
 	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -
 	@ echo "[$@]: Successfully formatted hcl files!"
 
-sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f -print0
+sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
@@ -299,6 +301,11 @@ bats/test: | guard/program/bats
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
+project/validate:
+	@ echo "[$@]: Ensuring the target test folder is not empty"
+	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
+	@ echo "[$@]: Target test folder validation successful"
+
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
 
-lint: terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint
+lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint
