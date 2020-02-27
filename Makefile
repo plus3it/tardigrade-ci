@@ -303,7 +303,7 @@ bats/test: | guard/program/bats
 
 project/validate:
 	@ echo "[$@]: Ensuring the target test folder is not empty"
-	[ "$$(ls -A $(PROJECT_ROOT))" ] && (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
+	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
