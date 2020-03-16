@@ -16,6 +16,9 @@ EOF
 
 done
 
+git add "$TEST_DIR/."
+git commit -m 'eclint success testing'
+
 }
 
 @test "eclint/lint: success" {
@@ -24,5 +27,6 @@ done
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }
