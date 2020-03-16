@@ -24,7 +24,7 @@ jobs:
       install:
         - npm install -g eclint
         - eclint --version
-      script: eclint check
+      script: make eclint/lint
     - stage: lint
       name: Shell Script Syntax Verification
       script: make sh/lint
