@@ -174,9 +174,8 @@ eclint/lint: ECLINT_PREFIX ?= git ls-files -z
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
-	[ -z "$(HAS_UNTRACKED_CHANGES)" ] && \
-	($(ECLINT_PREFIX) | $(XARGS) --null bash -c 'if ! [[ "{}" == *".bats"* ]]; then eclint check {}; fi') || \
-	(echo "untracked changes detected!" && exit 1)
+	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
+	$(ECLINT_PREFIX) | $(XARGS) --null bash -c 'if ! [[ "{}" == *".bats"* ]]; then eclint check {}; fi'
 	@ echo "[$@]: Project PASSED eclint test!"
 
 python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
