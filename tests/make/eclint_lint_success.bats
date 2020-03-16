@@ -13,6 +13,7 @@ do
   cat > "$working_dir/Makefile" <<"EOF"
 echo "foo"
 EOF
+
 done
 
 }
