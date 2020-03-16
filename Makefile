@@ -301,7 +301,12 @@ bats/install:
 	@ echo "[$@]: Completed successfully!"
 
 bats/test: | guard/program/bats
+bats/test: GIT_USERNAME ?= $(shell git config user.name)
+bats/test: GIT_EMAIL ?= $(shell git config user.email)
+bats/test:
 	@ echo "[$@]: Starting make target unit tests"
+	[ -n "$(GIT_USERNAME)" ] && echo "git username set" || git config user.name "bats"
+	[ -n "$(GIT_EMAIL)" ] && echo "git email set" || git config user.email "bats@test.com"
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
