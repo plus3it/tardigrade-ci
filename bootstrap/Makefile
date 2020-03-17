@@ -44,7 +44,8 @@ docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
 	@echo "[$@]: building docker image"
-	[ -z $(IMAGE_ID) ] && $(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(PROJECT_ROOT)Dockerfile . || echo "Image present"
+	[ -n "$(IMAGE_ID)" ] && echo "Image present" || \
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(PROJECT_ROOT)Dockerfile .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount

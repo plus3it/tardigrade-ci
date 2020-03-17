@@ -169,10 +169,13 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
-eclint/lint: ECLINT_PREFIX ?= git ls-files -z | xargs -0
+eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell git status -s || echo "true")
+eclint/lint: ECLINT_FILES ?= git ls-files -z
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
-	cd $(PROJECT_ROOT) && $(ECLINT_PREFIX) eclint check
+	cd $(PROJECT_ROOT) && \
+	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
+	$(ECLINT_FILES) | grep -zv ".bats" | xargs -0 -I {} eclint check {}
 	@ echo "[$@]: Project PASSED eclint test!"
 
 python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
@@ -297,7 +300,12 @@ bats/install:
 	@ echo "[$@]: Completed successfully!"
 
 bats/test: | guard/program/bats
+bats/test: GIT_USERNAME ?= $(shell git config user.name)
+bats/test: GIT_EMAIL ?= $(shell git config user.email)
+bats/test:
 	@ echo "[$@]: Starting make target unit tests"
+	[ -n "$(GIT_USERNAME)" ] && echo "git username set" || git config user.name "bats"
+	[ -n "$(GIT_EMAIL)" ] && echo "git email set" || git config user.email "bats@test.com"
 	cd tests/make && bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 

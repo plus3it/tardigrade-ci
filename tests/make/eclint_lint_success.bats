@@ -13,7 +13,11 @@ do
   cat > "$working_dir/Makefile" <<"EOF"
 echo "foo"
 EOF
+
 done
+
+git add "$TEST_DIR/."
+git commit -m 'eclint success testing'
 
 }
 
@@ -23,5 +27,6 @@ done
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }
