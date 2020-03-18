@@ -70,4 +70,5 @@ docker/run: docker/build
 docker/clean:
 	@echo "[$@]: Cleaning docker environment"
 	docker image prune -a -f
+	docker system prune -a -f
 	@echo "[$@]: cleanup successful"
