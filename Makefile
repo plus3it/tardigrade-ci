@@ -175,6 +175,7 @@ eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
 	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
+	cd $(PROJECT_ROOT) && \
 	$(ECLINT_FILES) | grep -zv ".bats" | xargs -0 -I {} eclint check {}
 	@ echo "[$@]: Project PASSED eclint test!"
 
