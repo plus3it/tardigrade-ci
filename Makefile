@@ -108,7 +108,7 @@ jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
 shellcheck/install: SHELLCHECK_VERSION ?= latest
-shellcheck/install: SHELLCHECK_URL ?= https://storage.googleapis.com/shellcheck/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz
+shellcheck/install: SHELLCHECK_URL ?= $(shell $(call parse_github_download_url,koalaman,shellcheck,$(SHELLCHECK_VERSION),.name | endswith("$(OS).x86_64.tar.xz")))
 shellcheck/install: $(BIN_DIR) guard/program/xz
 	$(CURL) $(SHELLCHECK_URL) | tar -xJv
 	mv $(@D)-*/$(@D) $(BIN_DIR)
