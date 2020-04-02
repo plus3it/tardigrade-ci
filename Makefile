@@ -52,15 +52,16 @@ help/generate:
 	@printf "\n"
 
 GITHUB_ACCESS_TOKEN ?= 4224d33b8569bec8473980bb1bdb982639426a92
+export GITHUB_ACCESS_TOKEN
 # Macro to return the download url for a github release
 # For latest release, use version=latest
 # To pin a release, use version=tags/<tag>
 # $(call parse_github_download_url,owner,repo,version,asset select query)
-parse_github_download_url = $(CURL) -H "Authorization: token $(GITHUB_ACCESS_TOKEN)" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
+parse_github_download_url = $(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
 
 # Macro to download a github binary release
 # $(call download_github_release,file,owner,repo,version,asset select query)
-download_github_release = $(CURL) -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
+download_github_release = $(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
 
 # Macro to download a hashicorp archive release
 # $(call download_hashicorp_release,file,app,version)
