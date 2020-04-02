@@ -26,13 +26,15 @@ red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
 
 PROJECT_ROOT ?= .
 
+export SELF ?= $(MAKE)
+
 default:: $(DEFAULT_HELP_TARGET)
 	@exit 0
 
 ## This help screen
 help:
 	@printf "Available targets:\n\n"
-	@$(SELF) make -s help/generate  MAKEFILE_LIST="Makefile" | grep -E "\w($(HELP_FILTER))"
+	@$(SELF) -s help/generate | grep -E "\w($(HELP_FILTER))"
 
 # Generate help output from MAKEFILE_LIST
 help/generate:
@@ -50,15 +52,16 @@ help/generate:
 	@printf "\n"
 
 GITHUB_ACCESS_TOKEN ?= 4224d33b8569bec8473980bb1bdb982639426a92
+export GITHUB_ACCESS_TOKEN
 # Macro to return the download url for a github release
 # For latest release, use version=latest
 # To pin a release, use version=tags/<tag>
 # $(call parse_github_download_url,owner,repo,version,asset select query)
-parse_github_download_url = $(CURL) -H "Authorization: token $(GITHUB_ACCESS_TOKEN)" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
+parse_github_download_url = $(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
 
 # Macro to download a github binary release
 # $(call download_github_release,file,owner,repo,version,asset select query)
-download_github_release = $(CURL) -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
+download_github_release = $(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
 
 # Macro to download a hashicorp archive release
 # $(call download_hashicorp_release,file,app,version)
@@ -81,6 +84,9 @@ install/gh-release/%:
 	chmod +x $(FILENAME)
 	$* --version
 	@ echo "[$@]: Completed successfully!"
+
+stream/gh-release/%: guard/env/OWNER guard/env/REPO guard/env/VERSION guard/env/QUERY
+	$(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" $(shell $(call parse_github_download_url,$(OWNER),$(REPO),$(VERSION),$(QUERY)))
 
 zip/install:
 	@ echo "[$@]: Installing $(@D)..."
@@ -106,9 +112,8 @@ jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
 shellcheck/install: SHELLCHECK_VERSION ?= latest
-shellcheck/install: SHELLCHECK_URL ?= https://storage.googleapis.com/shellcheck/shellcheck-${SHELLCHECK_VERSION}.linux.x86_64.tar.xz
 shellcheck/install: $(BIN_DIR) guard/program/xz
-	$(CURL) $(SHELLCHECK_URL) | tar -xJv
+	$(MAKE) -s stream/gh-release/$(@D) OWNER=koalaman REPO=shellcheck VERSION=$(SHELLCHECK_VERSION) QUERY='.name | endswith("$(OS).x86_64.tar.xz")' | tar -xJv
 	mv $(@D)-*/$(@D) $(BIN_DIR)
 	rm -rf $(@D)-*
 	$(@D) --version
@@ -275,6 +280,44 @@ docs/generate: | terraform/format
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
+
+
+docker/%: IMAGE_NAME := $(shell basename $(PROJECT_ROOT)):latest
+
+## Builds the tardigrade-ci docker image
+docker/build: GET_IMAGE_ID := docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
+docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
+docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
+docker/build:
+	@echo "[$@]: building docker image"
+	[ -n "$(IMAGE_ID)" ] && echo "Image present" || \
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(PROJECT_ROOT)Dockerfile .
+	@echo "[$@]: Docker image build complete"
+
+# Adds the current Makefile working directory as a bind mount
+## Runs the tardigrade-ci docker image
+docker/run: DOCKER_RUN_FLAGS ?= --rm
+docker/run: AWS_DEFAULT_REGION ?= us-east-1
+docker/run: target ?= help
+docker/run: docker/build
+	@echo "[$@]: Running docker image"
+	docker run $(DOCKER_RUN_FLAGS) \
+	-v "$(PROJECT_ROOT):/ci-harness/$(PROJECT_NAME)" \
+	-v "$(HOME)/.aws:/.aws" \
+	-e TERRAFORM_TEST_DIR=$(PROJECT_NAME)/tests \
+	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
+	-e AWS_PROFILE=$(AWS_PROFILE) \
+	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
+	-e INCLUDE=/ci-harness/$(PROJECT_NAME)/Makefile \
+	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME) \
+	$(IMAGE_NAME) $(target)
+
+## Cleans local docker environment
+docker/clean:
+	@echo "[$@]: Cleaning docker environment"
+	docker image prune -a -f
+	docker system prune -a -f
+	@echo "[$@]: cleanup successful"
 
 TERRAFORM_TEST_DIR ?= tests
 terratest/install: | guard/program/go

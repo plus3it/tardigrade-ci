@@ -22,6 +22,10 @@ EOF
 # Foo
 
 <!-- BEGIN TFDOCS -->
+## Requirements
+
+No requirements.
+
 ## Providers
 
 No provider.
@@ -29,7 +33,7 @@ No provider.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:-----:|
+|------|-------------|------|---------|:--------:|
 | foo | test var | `string` | `"bar"` | no |
 
 ## Outputs

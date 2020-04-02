@@ -60,7 +60,6 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
   SHELL := /bin/bash
 
   -include $(shell curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
-
   ```
 
 3. Add the following to your `.gitignore` file
@@ -75,3 +74,18 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
   ```
 
 4. Run `make` once to initialize the project and then `make docker/run target=<TARGET>`
+
+5. Additionally, you can use the tardigrade-ci/Makefile vars and targets
+directly in your own Makefile. For example, there is a target for installing
+a binary from GitHub releases, which you can utilize pretty easily:
+
+```
+## Install gomplate
+gomplate/% GOMPLATE_VERSION ?= latest
+gomplate/install:
+  @ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=hairyhenderson REPO=$(@D) VERSION=$(GOMPLATE_VERSION) QUERY='.name | endswith("$(OS)-$(ARCH)")'
+```
+
+The target `install/gh-release/%` as well as the vars `$(OS)` and `$(ARCH)` are
+provided by the tardigrade-ci/Makefile, and do not need to be redefined in your
+local Makefile.
