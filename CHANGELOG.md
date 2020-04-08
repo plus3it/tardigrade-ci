@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.0.16
+
+**Released**: 2020.04.08
+
+**Commit Delta**: [Change from 0.0.15 release](https://github.com/plus3it/tardigrade-ci/compare/0.0.15...0.0.16)
+
+**Summary**:
+
+*   Updates hcl/format and hcl/lint targets
+
 ### 0.0.3
 
 **Released**: 2020.1.28
