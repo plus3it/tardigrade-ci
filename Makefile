@@ -210,19 +210,15 @@ terraform/format: | guard/program/terraform
 	@ echo "[$@]: Successfully formatted terraform files!"
 
 hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
-hcl/validate: | guard/program/terraform
-hcl/validate:
-	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - > /dev/null 2>&1 || (echo "Found invalid hcl file: "{}" "; exit 1)'
-	@ echo "[$@]: hcl files PASSED validation test!"
 
 ## Lints hcl files
-hcl/lint: | guard/program/terraform hcl/validate
+hcl/lint: | guard/program/terraform
 	@ echo "[$@]: Linting hcl files..."
 	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -check=true -diff=true -
 	@ echo "[$@]: hcl files PASSED lint test!"
 
 ## Formats hcl files
-hcl/format: | guard/program/terraform hcl/validate
+hcl/format: | guard/program/terraform
 	@ echo "[$@]: Formatting hcl files..."
 	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -
 	@ echo "[$@]: Successfully formatted hcl files!"
