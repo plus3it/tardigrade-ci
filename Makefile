@@ -220,7 +220,7 @@ hcl/lint: | guard/program/terraform
 ## Formats hcl files
 hcl/format: | guard/program/terraform
 	@ echo "[$@]: Formatting hcl files..."
-	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -
+	$(FIND_HCL) | $(XARGS) bash -c 'echo "$$(cat "{}" | terraform fmt -)" > "{}"'
 	@ echo "[$@]: Successfully formatted hcl files!"
 
 sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f
