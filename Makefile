@@ -330,8 +330,10 @@ terratest/install: | guard/program/go
 	@ echo "[$@]: Completed successfully!"
 
 terratest/test: | guard/program/go
+terratest/test: TIMEOUT ?= 20m
+terratest/test:
 	@ echo "[$@] Starting Terraform tests"
-	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout 20m
+	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
 	@ echo "[$@]: Completed successfully!"
 
 ## Runs terraform tests in the tests directory
