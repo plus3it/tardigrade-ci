@@ -211,14 +211,20 @@ terraform/format: | guard/program/terraform
 
 hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
 
+## Validates hcl files
+hcl/validate: | guard/program/terraform
+	@ echo "[$@]: Validating hcl files..."
+	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt - > /dev/null 2>&1 || (echo "[$@]: Found invalid HCL file: "{}""; exit 1)'
+	@ echo "[$@]: hcl files PASSED validation test!"
+
 ## Lints hcl files
-hcl/lint: | guard/program/terraform
+hcl/lint: | guard/program/terraform hcl/validate
 	@ echo "[$@]: Linting hcl files..."
-	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - || (echo "[$@]: Found invalid HCL file: "{}""; exit 1)'
+	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - || (echo "[$@]: Found unformatted HCL file: "{}""; exit 1)'
 	@ echo "[$@]: hcl files PASSED lint test!"
 
 ## Formats hcl files
-hcl/format: | guard/program/terraform
+hcl/format: | guard/program/terraform hcl/validate
 	@ echo "[$@]: Formatting hcl files..."
 	$(FIND_HCL) | $(XARGS) bash -c 'echo "$$(cat "{}" | terraform fmt -)" > "{}"'
 	@ echo "[$@]: Successfully formatted hcl files!"
