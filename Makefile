@@ -214,7 +214,7 @@ hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
 ## Lints hcl files
 hcl/lint: | guard/program/terraform
 	@ echo "[$@]: Linting hcl files..."
-	$(FIND_HCL) | $(XARGS) cat {} | terraform fmt -check=true -diff=true -
+	@ $(FIND_HCL) | $(XARGS) bash -c 'cat {} | terraform fmt -check=true -diff=true - || (echo "[$@]: Found invalid HCL file: "{}""; exit 1)'
 	@ echo "[$@]: hcl files PASSED lint test!"
 
 ## Formats hcl files
