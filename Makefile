@@ -129,6 +129,9 @@ install/pip/%: | guard/env/PYPI_PKG_NAME
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+flake8/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
 yamllint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
@@ -186,9 +189,10 @@ eclint/lint:
 
 python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
 ## Lints Python files
-python/lint: | guard/program/black
+python/lint: | guard/program/black guard/program/flake8
 	@ echo "[$@]: Linting Python files..."
-	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
+	black --check .
+	flake8 --ignore=FI15,FI16,FI17,FI18,FI5,D107,W503,W504 .
 	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
@@ -362,6 +366,6 @@ project/validate:
 	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install flake8/install eclint/install yamllint/install cfn-lint/install yq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint
