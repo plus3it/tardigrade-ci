@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/python_lint_success"
+TEST_DIR="$(pwd)/python_lint_flake8_success"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -11,13 +11,15 @@ do
 
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
-print("foo")
+import os
+
+print(os.name)
 EOF
 done
 
 }
 
-@test "python/lint: success" {
+@test "python/lint flake8: success" {
   run make python/lint
   [ "$status" -eq 0 ]
 }
