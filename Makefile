@@ -254,7 +254,7 @@ json/format: | guard/program/jq json/validate
 	@ echo "[$@]: Successfully formatted JSON files!"
 
 docs/%: TFDOCS ?= terraform-docs --sort-by-required markdown table
-docs/%: README_FILES ?= find . -type f -name README.md
+docs/%: README_FILES ?= find . $(FIND_EXCLUDES) -type f -name README.md
 docs/%: README_TMP ?= $(TMP)/README.tmp
 docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
