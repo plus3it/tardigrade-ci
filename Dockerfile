@@ -1,4 +1,4 @@
-FROM golang:1.14.6-buster
+FROM golang:1.14.7-buster
 ENV PATH="/root/.local/bin:/root/bin:${PATH}"
 RUN apt-get update -y && apt-get install -y \
     xz-utils \
