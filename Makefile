@@ -24,7 +24,7 @@ green = $(shell echo -e '\x1b[32;01m$1\x1b[0m')
 yellow = $(shell echo -e '\x1b[33;01m$1\x1b[0m')
 red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
 
-PROJECT_ROOT ?= .
+PROJECT_ROOT ?= ./
 
 export SELF ?= $(MAKE)
 
@@ -284,7 +284,7 @@ docs/lint: | terraform/lint
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
 
 
-docker/%: IMAGE_NAME := $(shell basename $(PROJECT_ROOT)):latest
+docker/%: IMAGE_NAME := $(shell basename $$(readlink -f $(PROJECT_ROOT))):latest
 
 ## Builds the tardigrade-ci docker image
 docker/build: GET_IMAGE_ID := docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true

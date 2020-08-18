@@ -21,6 +21,6 @@ EOF
 }
 
 function teardown() {
-  find "$TEST_DIR/example_testcase/" -name "*terraform*" -exec rm -rf {} \;
+  find "$TEST_DIR/example_testcase" -name "*terraform*" -exec rm -rf {} \;
   rm $TEST_DIR/main.tf
 }
