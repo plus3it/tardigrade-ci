@@ -188,8 +188,8 @@ eclint/lint:
 	@ echo "[$@]: Project PASSED eclint test!"
 
 python/%: PYTHON_FILES := git ls-files '*.py'
-## Checks format and lints Python files.  Runs pylint on each individual 
-## file and uses a custom format for the lint messages.  
+## Checks format and lints Python files.  Runs pylint on each individual
+## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
@@ -200,7 +200,7 @@ python/lint:
 
 ## Formats Python files.
 python/format: | guard/program/black guard/program/git
-python/format: 
+python/format:
 	@ echo "[$@]: Formatting Python files..."
 	black $(PROJECT_ROOT)
 	@ echo "[$@]: Successfully formatted Python files!"
