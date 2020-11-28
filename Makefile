@@ -193,7 +193,7 @@ python/%: PYTHON_FILES := git ls-files '*.py'
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	$(PYTHON_FILES) | black --check $$(dirname {})
+	black --check $(PROJECT_ROOT)
 	$(PYTHON_FILES) | ${XARGS} -n1 pylint -rn -sn \
 		--msg-template="{path}:{line} [{symbol}] {msg}" {}
 	@ echo "[$@]: Python files PASSED lint test!"
@@ -202,7 +202,7 @@ python/lint:
 python/format: | guard/program/black guard/program/git
 python/format: 
 	@ echo "[$@]: Formatting Python files..."
-	$(PYTHON_FILES) | black $$(dirname {})
+	black $(PROJECT_ROOT)
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
