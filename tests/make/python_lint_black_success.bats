@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/python_lint_success"
+TEST_DIR="$(pwd)/python_lint_black_success"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -17,7 +17,7 @@ done
 
 }
 
-@test "python/lint: success" {
+@test "python/lint black: success" {
   run make python/lint
   [ "$status" -eq 0 ]
 }
