@@ -17,6 +17,8 @@ y8: 8, key9: 9, }
 EOF
 done
 
+git add "$TEST_DIR/."
+git commit -m 'black format failure testing'
 }
 
 @test "python/format: failure" {
@@ -25,5 +27,6 @@ done
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }
