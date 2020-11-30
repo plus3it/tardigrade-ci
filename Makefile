@@ -193,7 +193,7 @@ python/%: PYTHON_FILES := git ls-files '*.py'
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	$(PYTHON_FILES) | xargs black --check 
+	$(PYTHON_FILES) | xargs black --check
 	$(PYTHON_FILES) | ${XARGS} -n1 pylint -rn -sn \
 		--msg-template="{path}:{line} [{symbol}] {msg}" {}
 	@ echo "[$@]: Python files PASSED lint test!"
