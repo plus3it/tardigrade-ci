@@ -12,7 +12,8 @@ do
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
 
-print("foo")
+test_dict == { key1: 1, key2: 2, key3: 3, key4: 4, key5: 5, key6: 6, key7: 7, ke
+y8: 8, key9: 9, }
 EOF
 done
 
@@ -20,7 +21,7 @@ done
 
 @test "python/lint black: failure" {
   run make python/lint
-  [ "$status" -eq 2 ]
+  [ "$status" -eq 1 ]
 }
 
 function teardown() {
