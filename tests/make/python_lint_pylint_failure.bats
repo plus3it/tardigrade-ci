@@ -23,8 +23,7 @@ git commit -m 'pylint lint failure testing'
 
 @test "python/lint pylint: failure" {
   run make python/lint
-  # xargs returns 123 instead of the non-zero exit code from pylint.
-  [ "$status" -eq 123 ]
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {

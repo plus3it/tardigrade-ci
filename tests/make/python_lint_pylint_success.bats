@@ -25,7 +25,6 @@ git commit -m 'pylint lint success testing'
 @test "python/lint pylint: success" {
   run make python/lint
   [ "$status" -eq 0 ]
-  [[ "$output" != *"**********"* ]]
 }
 
 function teardown() {
