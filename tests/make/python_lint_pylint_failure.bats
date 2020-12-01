@@ -17,13 +17,17 @@ import os
 EOF
 done
 
+git add "$TEST_DIR/."
+git commit -m 'pylint lint failure testing'
 }
 
 @test "python/lint pylint: failure" {
   run make python/lint
-  [ "$status" -eq 2 ]
+  # xargs returns 123 instead of the non-zero exit code from pylint.
+  [ "$status" -eq 123 ]
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }

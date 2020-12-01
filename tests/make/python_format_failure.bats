@@ -22,7 +22,8 @@ git commit -m 'black format failure testing'
 
 @test "python/format: failure" {
   run make python/format
-  [ "$status" -eq 1 ]
+  # xargs returns 123 instead of the non-zero exit code from black.
+  [ "$status" -eq 123 ]
 }
 
 function teardown() {

@@ -16,6 +16,8 @@ print("foo")
 EOF
 done
 
+git add "$TEST_DIR/."
+git commit -m 'black format success testing'
 }
 
 @test "python/format: success" {
@@ -25,5 +27,6 @@ done
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }

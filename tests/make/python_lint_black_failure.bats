@@ -22,7 +22,8 @@ git commit -m 'black lint failure testing'
 
 @test "python/lint black: failure" {
   run make python/lint
-  [ "$status" -eq 1 ]
+  # xargs returns 123 instead of the non-zero exit code from black.
+  [ "$status" -eq 123 ]
 }
 
 function teardown() {

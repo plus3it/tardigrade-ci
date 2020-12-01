@@ -18,13 +18,17 @@ print("os.name")
 EOF
 done
 
+git add "$TEST_DIR/."
+git commit -m 'pylint lint success testing'
 }
 
 @test "python/lint pylint: success" {
   run make python/lint
   [ "$status" -eq 0 ]
+  [[ "$output" != *"**********"* ]]
 }
 
 function teardown() {
-  rm -rf "$TEST_DIR"
+  git rm -r -f "$TEST_DIR"
+  git reset --hard HEAD^
 }
