@@ -14,7 +14,7 @@ do
 """Simple test of pylint"""
 import os
 
-print("os.name")
+print(os.name)
 EOF
 done
 
