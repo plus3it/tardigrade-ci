@@ -187,7 +187,7 @@ eclint/lint:
 	$(ECLINT_FILES) | grep -zv ".bats" | xargs -0 -I {} eclint check {}
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: PYTHON_FILES ?= git ls-files '*.py'
+python/%: PYTHON_FILES ?= git ls-files --others --exclude-standard '*.py'
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
