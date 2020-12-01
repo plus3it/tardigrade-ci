@@ -11,6 +11,7 @@ do
 
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
+"""Simple print test"""
 print("foo")
 EOF
 done
