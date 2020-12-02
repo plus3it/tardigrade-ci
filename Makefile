@@ -177,7 +177,7 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
-eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s || echo "true")
+eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
 eclint/lint: ECLINT_FILES ?= git ls-files -z
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
@@ -188,13 +188,22 @@ eclint/lint:
 	@ echo "[$@]: Project PASSED eclint test!"
 
 python/%: PYTHON_FILES ?= git ls-files --cached --others --exclude-standard '*.py'
+# Black's exclude pattern matches against files and path names. 
+# Pylint's exclude pattern matches against the base name, not the path.
+# Black requires a value with it's exclude option, pylint does not.
+python/%: PYTHON_BLACK_EXCLUDES ?= 
+python/%: PYTHON_PYLINT_EXCLUDES ?= 
+python/%: BLACK_EXCLUDES_OPTION := $(shell [ ! -z "$(PYTHON_BLACK_EXCLUDES)" ] && echo "--force-exclude $(PYTHON_BLACK_EXCLUDES)" || echo "";)
+python/%: HAS_BLACK_EXCLUDE_OPTION := $(shell black --force-exclude xxx yyy 2>&1 | grep -q "no such option" || echo $$?;)
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	$(PYTHON_FILES) | xargs black --check
+	@ [ ! -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
+	$(PYTHON_FILES) | xargs black --check $(BLACK_EXCLUDES_OPTION)
 	$(PYTHON_FILES) | $(XARGS) -n1 pylint -rn -sn \
+		--ignore-patterns=$(PYTHON_PYLINT_EXCLUDES) \
 		--msg-template="{path}:{line} [{symbol}] {msg}" {}
 	@ echo "[$@]: Python files PASSED lint test!"
 
@@ -202,7 +211,8 @@ python/lint:
 python/format: | guard/program/black guard/program/git
 python/format:
 	@ echo "[$@]: Formatting Python files..."
-	$(PYTHON_FILES) | xargs black
+	@ [ ! -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
+	$(PYTHON_FILES) | xargs black $(BLACK_EXCLUDES_OPTION)
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
