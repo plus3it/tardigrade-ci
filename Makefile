@@ -200,7 +200,7 @@ python/%: HAS_BLACK_EXCLUDE_OPTION := $(shell black --force-exclude xxx yyy 2>&1
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	@ [ ! -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
+	@ [ -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
 	$(PYTHON_FILES) | xargs black --check $(BLACK_EXCLUDES_OPTION)
 	$(PYTHON_FILES) | $(XARGS) -n1 pylint -rn -sn \
 		--ignore-patterns=$(PYTHON_PYLINT_EXCLUDES) \
@@ -211,7 +211,7 @@ python/lint:
 python/format: | guard/program/black guard/program/git
 python/format:
 	@ echo "[$@]: Formatting Python files..."
-	@ [ ! -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
+	@ [ -z "$(PYTHON_BLACK_EXCLUDES)" -o $(HAS_BLACK_EXCLUDE_OPTION) -eq 1 ] || (echo "black v20.8b0 or higher is required if excluding files." && exit 1)
 	$(PYTHON_FILES) | xargs black $(BLACK_EXCLUDES_OPTION)
 	@ echo "[$@]: Successfully formatted Python files!"
 
