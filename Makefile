@@ -129,6 +129,9 @@ install/pip/%: | guard/env/PYPI_PKG_NAME
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+pylint/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
 yamllint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
@@ -174,7 +177,7 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
-eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s || echo "true")
+eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
 eclint/lint: ECLINT_FILES ?= git ls-files -z
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
@@ -184,17 +187,22 @@ eclint/lint:
 	$(ECLINT_FILES) | grep -zv ".bats" | xargs -0 -I {} eclint check {}
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: FIND_PYTHON := find . $(FIND_EXCLUDES) -name '*.py' -type f
-## Lints Python files
-python/lint: | guard/program/black
+python/%: PYTHON_FILES ?= git ls-files --cached --others --exclude-standard '*.py'
+## Checks format and lints Python files.  Runs pylint on each individual
+## file and uses a custom format for the lint messages.
+python/lint: | guard/program/pylint guard/program/black guard/program/git
+python/lint:
 	@ echo "[$@]: Linting Python files..."
-	$(FIND_PYTHON) | $(XARGS) black --check $$(dirname {})
+	$(PYTHON_FILES) | xargs black --check
+	$(PYTHON_FILES) | $(XARGS) -n1 pylint -rn -sn \
+		--msg-template="{path}:{line} [{symbol}] {msg}" {}
 	@ echo "[$@]: Python files PASSED lint test!"
 
-## Formats Python files
-python/format: | guard/program/black
+## Formats Python files.
+python/format: | guard/program/black guard/program/git
+python/format:
 	@ echo "[$@]: Formatting Python files..."
-	$(FIND_PYTHON) | $(XARGS) black $$(dirname {})
+	$(PYTHON_FILES) | xargs black
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
@@ -362,6 +370,6 @@ project/validate:
 	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install eclint/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install eclint/install yamllint/install cfn-lint/install yq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint

@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/python_format_success"
+TEST_DIR="$(pwd)/python_lint_pylint_success"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -11,16 +11,18 @@ do
 
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
+"""Simple test of pylint"""
+import os
 
-test_dict = { "key1": 1, "key2": 2, "key3": 3, "key4": 4, "key5": 5, "key6": 6, "key7": 7, "key8": 8, "key9": 9, }
+print(os.name)
 EOF
 done
 }
 
-@test "python/format: success" {
-  run make python/format
+@test "python/lint pylint: success" {
+  run make python/lint
+  # If there are no pylint issues, there will be no pylint output.
   [ "$status" -eq 0 ]
-  [[ "$output" == *"[python/format]: Successfully formatted Python files!"* ]]
 }
 
 function teardown() {

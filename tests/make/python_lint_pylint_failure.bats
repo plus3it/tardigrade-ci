@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/python_lint_success"
+TEST_DIR="$(pwd)/python_lint_pylint_failure"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -11,15 +11,16 @@ do
 
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
-print("foo")
+
+import json
+import os
 EOF
 done
-
 }
 
-@test "python/lint: success" {
+@test "python/lint pylint: failure" {
   run make python/lint
-  [ "$status" -eq 0 ]
+  [ "$status" -eq 2 ]
 }
 
 function teardown() {
