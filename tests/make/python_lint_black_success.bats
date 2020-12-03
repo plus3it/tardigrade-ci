@@ -20,6 +20,7 @@ done
 @test "python/lint black: success" {
   run make python/lint
   [ "$status" -eq 0 ]
+  [[ "$output" == *"2 files would be left unchanged"* ]]
 }
 
 function teardown() {

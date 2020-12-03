@@ -21,6 +21,7 @@ done
 
 @test "python/lint pylint: success" {
   run make python/lint
+  # If there are no pylint issues, there will be no pylint output.
   [ "$status" -eq 0 ]
 }
 
