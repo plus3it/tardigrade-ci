@@ -17,9 +17,6 @@ import os
 print(os.name)
 EOF
 done
-
-git add "$TEST_DIR/."
-git commit -m 'pylint lint success testing'
 }
 
 @test "python/lint pylint: success" {
@@ -28,6 +25,5 @@ git commit -m 'pylint lint success testing'
 }
 
 function teardown() {
-  git rm -r -f "$TEST_DIR"
-  git reset --hard HEAD^
+  rm -rf "$TEST_DIR"
 }

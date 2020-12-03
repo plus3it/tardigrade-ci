@@ -16,9 +16,6 @@ import json
 import os
 EOF
 done
-
-git add "$TEST_DIR/."
-git commit -m 'pylint lint failure testing'
 }
 
 @test "python/lint pylint: failure" {
@@ -27,6 +24,5 @@ git commit -m 'pylint lint failure testing'
 }
 
 function teardown() {
-  git rm -r -f "$TEST_DIR"
-  git reset --hard HEAD^
+  rm -rf "$TEST_DIR"
 }

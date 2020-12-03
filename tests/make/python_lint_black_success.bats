@@ -15,9 +15,6 @@ do
 print("foo")
 EOF
 done
-
-git add "$TEST_DIR/."
-git commit -m 'black lint success testing'
 }
 
 @test "python/lint black: success" {
@@ -26,6 +23,5 @@ git commit -m 'black lint success testing'
 }
 
 function teardown() {
-  git rm -r -f "$TEST_DIR"
-  git reset --hard HEAD^
+  rm -rf "$TEST_DIR"
 }
