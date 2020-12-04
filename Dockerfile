@@ -1,4 +1,4 @@
-FROM golang:1.15.5-buster as golang
+FROM golang:1.15.6-buster as golang
 FROM python:3.8.6-buster
 ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
