@@ -1,5 +1,5 @@
 FROM golang:1.15.6-buster as golang
-FROM python:3.8.6-buster
+FROM python:3.9.1-buster
 ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 RUN apt-get update -y && apt-get install -y \
