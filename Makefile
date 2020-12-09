@@ -185,10 +185,10 @@ eclint/lint:
 	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
 	cd $(PROJECT_ROOT) && \
 	$(ECLINT_FILES) | grep -zv ".bats" | \
-		$(XARGS) -0 eclint check $(PROJECT_ROOT)/{}
+		$(XARGS) -0 eclint check $(PROJECT_ROOT){}
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: PYTHON_FILES ?= git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)/%s\n"
+python/%: PYTHON_FILES ?= git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)%s\n"
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
