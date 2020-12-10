@@ -186,7 +186,7 @@ eclint/lint:
 	eclint check $(ECLINT_FILES)
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)%s ")
+python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)/%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
