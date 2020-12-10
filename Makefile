@@ -178,14 +178,12 @@ cfn/lint: | guard/program/cfn-lint
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
 eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
-eclint/lint: ECLINT_FILES ?= git -C $(PROJECT_ROOT) ls-files -z
+eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0)
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
 	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
-	cd $(PROJECT_ROOT) && \
-	$(ECLINT_FILES) | grep -zv ".bats" | \
-		$(XARGS) -0 eclint check $(PROJECT_ROOT){}
+	ls $(ECLINT_FILES) | $(XARGS) eclint check {}
 	@ echo "[$@]: Project PASSED eclint test!"
 
 python/%: PYTHON_FILES ?= git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)%s\n"
