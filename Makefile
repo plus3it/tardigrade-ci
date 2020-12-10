@@ -183,25 +183,27 @@ eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
 	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
-	ls $(ECLINT_FILES) | $(XARGS) eclint check {}
+	eclint check $(ECLINT_FILES)
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: PYTHON_FILES ?= git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)%s\n"
+python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs printf "$(PROJECT_ROOT)%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	$(PYTHON_FILES) | xargs black --check
-	$(PYTHON_FILES) | $(XARGS) -n1 pylint -rn -sn \
-		--msg-template="{path}:{line} [{symbol}] {msg}" {}
+	black --check $(PYTHON_FILES)
+	for python_file in $(PYTHON_FILES); do \
+		pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
+			-rn -sn $$python_file; \
+	done
 	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files.
 python/format: | guard/program/black guard/program/git
 python/format:
 	@ echo "[$@]: Formatting Python files..."
-	$(PYTHON_FILES) | xargs black
+	black $(PYTHON_FILES)
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Lints terraform files
