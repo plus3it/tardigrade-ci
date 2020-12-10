@@ -192,14 +192,14 @@ python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --oth
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	@ [[ ! -z "$(findstring .py, $(PYTHON_FILES))" ]] && \
-		black --check $(PYTHON_FILES) && \
-		for python_file in $(PYTHON_FILES); do \
+	black --check $(PYTHON_FILES) 
+	for python_file in $(PYTHON_FILES); do \
+		if [[ $$python_file = *.py ]]; then \
 			pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
 				-rn -sn $$python_file; \
-	done || \
-		(echo "No python files to lint."; exit 0)
-	@ echo "[$@]: Python files PASSED lint test!"
+		fi \
+	done
+	echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files.
 python/format: | guard/program/black guard/program/git
