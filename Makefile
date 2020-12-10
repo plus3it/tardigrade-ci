@@ -192,7 +192,7 @@ python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --oth
 python/lint: | guard/program/pylint guard/program/black guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
-	black --check $(PYTHON_FILES) 
+	black --check $(PYTHON_FILES)
 	for python_file in $(PYTHON_FILES); do \
 		if [[ $$python_file = *.py ]]; then \
 			pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
