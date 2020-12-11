@@ -18,11 +18,11 @@ done
 
 git add "$TEST_DIR/."
 git commit -m 'eclint success testing'
-
 }
 
 @test "eclint/lint: success" {
-  run make eclint/lint
+  ECLINT_FILES=$(find "${TEST_DIR}" -type f | xargs echo)
+  run make eclint/lint ECLINT_FILES="${ECLINT_FILES}"
   [ "$status" -eq 0 ]
 }
 

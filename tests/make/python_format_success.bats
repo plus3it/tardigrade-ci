@@ -21,6 +21,10 @@ done
   run make python/format
   [ "$status" -eq 0 ]
   [[ "$output" == *"[python/format]: Successfully formatted Python files!"* ]]
+
+  run make python/format PYTHON_FILES="$TEST_DIR/nested/*.py"
+  [ "$status" -eq 0 ]
+  [[ "$output" == *"1 file left unchanged"* ]]
 }
 
 function teardown() {
