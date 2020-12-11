@@ -178,7 +178,7 @@ cfn/lint: | guard/program/cfn-lint
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
 eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
-eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0)
+eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)/%s ")
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
