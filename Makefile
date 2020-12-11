@@ -178,7 +178,7 @@ cfn/lint: | guard/program/cfn-lint
 ## Runs eclint against the project
 eclint/lint: | guard/program/eclint guard/program/git
 eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
-eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)/%s ")
+eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
 eclint/lint:
 	@ echo "[$@]: Running eclint..."
 	cd $(PROJECT_ROOT) && \
@@ -186,7 +186,7 @@ eclint/lint:
 	eclint check $(ECLINT_FILES)
 	@ echo "[$@]: Project PASSED eclint test!"
 
-python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "$(PROJECT_ROOT)/%s ")
+python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/git
@@ -320,7 +320,7 @@ docker/run: docker/build
 	-e AWS_PROFILE=$(AWS_PROFILE) \
 	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
 	-e INCLUDE=/ci-harness/$(PROJECT_NAME)/Makefile \
-	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME) \
+	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME)/ \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment
