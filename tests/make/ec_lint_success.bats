@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/eclint_lint_success"
+TEST_DIR="$(pwd)/ec_lint_success"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -15,21 +15,16 @@ echo "foo"
 EOF
 
 done
-
-git add "$TEST_DIR/."
-git commit -m 'eclint success testing'
 }
 
-@test "eclint/lint: success" {
-  run make eclint/lint 
-  [ "$status" -eq 0 ]
-
+@test "ec/lint: success" {
+  # The 'ec/lint' Makefile target excludes *.bats files.
   ECLINT_FILES=$(find "${TEST_DIR}" -type f | xargs echo)
-  run make eclint/lint ECLINT_FILES="${ECLINT_FILES}"
+
+  run make ec/lint ECLINT_FILES="${ECLINT_FILES}"
   [ "$status" -eq 0 ]
 }
 
 function teardown() {
-  git rm -r -f "$TEST_DIR"
-  git reset --hard HEAD^
+  rm -r -f "$TEST_DIR"
 }

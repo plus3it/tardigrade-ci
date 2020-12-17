@@ -118,6 +118,18 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 	rm -rf $(@D)-*
 	$(@D) --version
 
+# For editorconfig-checker, the 'curl' command needs the options to follow
+# redirects (e.g., "-L -C - ").  The tar file consists of a single file,
+# ./bin/ec-linux-amd64.
+ec/install: EC_BASE_NAME := ec-linux-$(ARCH)
+ec/install:
+	@ echo "[$@]: Installing $(@D)..."
+	$(CURL) -s -O -L -C - https://github.com/editorconfig-checker/editorconfig-checker/releases/latest/download/$(EC_BASE_NAME).tar.gz
+	tar -C "$(BIN_DIR)/.." -xzf "$(EC_BASE_NAME).tar.gz" && rm -f "$(EC_BASE_NAME).tar.gz"
+	ln -sf "$(BIN_DIR)/$(EC_BASE_NAME)" "$(BIN_DIR)/$(@D)"
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
+
 install/pip/%: PYTHON ?= python3
 install/pip/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
@@ -158,9 +170,6 @@ install/npm/%: | guard/program/npm
 	$* --version
 	@ echo "[$@]: Completed successfully!"
 
-eclint/install:
-	@ $(MAKE) install/npm/$(@D) NPM_PKG_NAME=$(@D)
-
 yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
 ## Lints YAML files
 yaml/lint: | guard/program/yamllint
@@ -175,16 +184,13 @@ cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
 cfn/lint: | guard/program/cfn-lint
 	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
-## Runs eclint against the project
-eclint/lint: | guard/program/eclint guard/program/git
-eclint/lint: HAS_UNTRACKED_CHANGES ?= $(shell cd $(PROJECT_ROOT) && git status -s)
-eclint/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
-eclint/lint:
-	@ echo "[$@]: Running eclint..."
-	cd $(PROJECT_ROOT) && \
-	[ -z "$(HAS_UNTRACKED_CHANGES)" ] || (echo "untracked changes detected!" && exit 1)
-	eclint check $(ECLINT_FILES)
-	@ echo "[$@]: Project PASSED eclint test!"
+## Runs editorconfig-checker, aka 'ec',  against the project
+ec/lint: | guard/program/ec guard/program/git
+ec/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
+ec/lint:
+	@ echo "[$@]: Running ec..."
+	ec $(ECLINT_FILES)
+	@ echo "[$@]: Project PASSED ec lint test!"
 
 python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
@@ -357,13 +363,9 @@ bats/install:
 	@ echo "[$@]: Completed successfully!"
 
 bats/test: | guard/program/bats
-bats/test: GIT_USERNAME ?= $(shell git config user.name)
-bats/test: GIT_EMAIL ?= $(shell git config user.email)
 bats/test:
 	@ echo "[$@]: Starting make target unit tests"
-	[ -n "$(GIT_USERNAME)" ] && echo "git username set" || git config user.name "bats"
-	[ -n "$(GIT_EMAIL)" ] && echo "git email set" || git config user.email "bats@test.com"
-	cd tests/make && bats -r *.bats
+	cd tests/make; bats -r *.bats
 	@ echo "[$@]: Completed successfully!"
 
 project/validate:
@@ -371,6 +373,6 @@ project/validate:
 	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install eclint/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install ec/install yamllint/install cfn-lint/install yq/install
 
-lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint eclint/lint cfn/lint hcl/lint
+lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
