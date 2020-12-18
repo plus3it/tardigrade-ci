@@ -1,6 +1,6 @@
 #!/usr/bin/env bats
 
-TEST_DIR="$(pwd)/python_lint_black_success"
+TEST_DIR="$(pwd)/python_lint_pydocstyle_success"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -11,16 +11,21 @@ do
 
   mkdir -p "$working_dir"
   cat > "$working_dir/test.py" <<"EOF"
-"""Simple print test."""
-print("foo")
+"""Simple test for pydocstyle."""
+import os
+
+
+def testing():
+    """Print the current OS name."""
+    print(os.name)
 EOF
 done
 }
 
-@test "python/lint black: success" {
+@test "python/lint pydocstyle: success" {
   run make python/lint
+  # If there are no pydocstyle issues, there will be no pydocstyle output.
   [ "$status" -eq 0 ]
-  [[ "$output" == *"2 files would be left unchanged"* ]]
 }
 
 function teardown() {
