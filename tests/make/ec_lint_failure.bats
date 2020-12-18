@@ -3,7 +3,7 @@
 # NOTE: edit this file in an editor not configured to auto remediate
 # required editor config changes (vim, nano, etc)
 
-TEST_DIR="$(pwd)/eclint_lint_failure"
+TEST_DIR="$(pwd)/ec_lint_failure"
 
 # generate a test terraform project with a nested project
 function setup() {
@@ -21,18 +21,17 @@ trailing whitespace test
    indent size test
 EOF
 done
-
-git add "$TEST_DIR/."
-git commit -m 'eclint failure testing'
-
 }
 
-@test "eclint/lint: failure" {
-  run make eclint/lint
+@test "ec/lint: failure" {
+  # The 'ec/lint' Makefile target excludes *.bats files.
+  ECLINT_FILES=$(find "${TEST_DIR}" -type f | xargs echo)
+
+  run make ec/lint ECLINT_FILES="${ECLINT_FILES}"
+  echo "${output}"
   [ "$status" -eq 2 ]
 }
 
 function teardown() {
-  git rm -r -f "$TEST_DIR"
-  git reset --hard HEAD^
+  rm -r -f "$TEST_DIR"
 }

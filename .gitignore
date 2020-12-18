@@ -11,6 +11,6 @@
 # MacOS
 .DS_Store
 
-# eclint
+# ec (editorconfig-checker)
 .git/
 

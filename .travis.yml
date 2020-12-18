@@ -21,10 +21,7 @@ jobs:
   include:
     - stage: lint
       name: EditorConfig Syntax Verification
-      install:
-        - npm install -g eclint
-        - eclint --version
-      script: make eclint/lint
+      script: make ec/lint
     - stage: lint
       name: Shell Script Syntax Verification
       script: make sh/lint
