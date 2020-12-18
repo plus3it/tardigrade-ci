@@ -21,9 +21,6 @@ jobs:
   include:
     - stage: lint
       name: EditorConfig Syntax Verification
-      install:
-        - make ec/install
-        - ec --version
       script: make ec/lint
     - stage: lint
       name: Shell Script Syntax Verification
