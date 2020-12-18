@@ -143,6 +143,9 @@ black/install:
 pylint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+pydocstyle/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
 yamllint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
@@ -194,7 +197,7 @@ ec/lint:
 python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
-python/lint: | guard/program/pylint guard/program/black guard/program/git
+python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
 	black --check $(PYTHON_FILES)
@@ -202,6 +205,7 @@ python/lint:
 		pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
 			-rn -sn $$python_file; \
 	done
+	pydocstyle $(PYTHON_FILES)
 	echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files.
@@ -372,6 +376,6 @@ project/validate:
 	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install ec/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
