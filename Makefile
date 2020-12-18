@@ -118,14 +118,13 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 	rm -rf $(@D)-*
 	$(@D) --version
 
-# For editorconfig-checker, the 'curl' command needs the options to follow
-# redirects (e.g., "-L -C - ").  The tar file consists of a single file,
+# For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
-ec/install: EC_BASE_NAME := ec-linux-$(ARCH)
+ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
+ec/install: EC_VERSION ?= latest
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
-	$(CURL) -s -O -L -C - https://github.com/editorconfig-checker/editorconfig-checker/releases/latest/download/$(EC_BASE_NAME).tar.gz
-	tar -C "$(BIN_DIR)/.." -xzf "$(EC_BASE_NAME).tar.gz" && rm -f "$(EC_BASE_NAME).tar.gz"
+	$(MAKE) -s stream/gh-release/$(@D) OWNER=editorconfig-checker REPO=editorconfig-checker VERSION=$(EC_VERSION) QUERY='.name | endswith("$(EC_BASE_NAME).tar.gz")' | tar -C "$(BIN_DIR)" --strip-components=1 -xzvf -
 	ln -sf "$(BIN_DIR)/$(EC_BASE_NAME)" "$(BIN_DIR)/$(@D)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
