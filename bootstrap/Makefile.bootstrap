@@ -4,10 +4,6 @@ export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_BRANCH ?= master
 export TARDIGRADE_CI_PATH ?= $(shell until [ -d "$(TARDIGRADE_CI_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(TARDIGRADE_CI_PROJECT)
 
-export MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
-export PROJECT_ROOT ?= $(dir $(MAKEFILE_PATH))
-export PROJECT_NAME := $(notdir $(patsubst %/,%,$(PROJECT_ROOT)))
-
 -include $(TARDIGRADE_CI_PATH)/Makefile
 
 .PHONY : init

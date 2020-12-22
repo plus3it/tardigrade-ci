@@ -1,6 +1,3 @@
-INCLUDE ?= .dummy_include
--include $(INCLUDE)
-
 ARCH ?= amd64
 OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
@@ -23,8 +20,6 @@ HELP_FILTER ?= .*
 green = $(shell echo -e '\x1b[32;01m$1\x1b[0m')
 yellow = $(shell echo -e '\x1b[33;01m$1\x1b[0m')
 red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
-
-PROJECT_ROOT ?= ./
 
 export SELF ?= $(MAKE)
 
@@ -188,13 +183,13 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs editorconfig-checker, aka 'ec',  against the project
 ec/lint: | guard/program/ec guard/program/git
-ec/lint: ECLINT_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
+ec/lint: ECLINT_FILES ?= $(shell git ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "%s ")
 ec/lint:
 	@ echo "[$@]: Running ec..."
 	ec $(ECLINT_FILES)
 	@ echo "[$@]: Project PASSED ec lint test!"
 
-python/%: PYTHON_FILES ?= $(shell git -C $(PROJECT_ROOT) ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "$(PROJECT_ROOT)%s ")
+python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "%s ")
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
@@ -301,17 +296,16 @@ docs/generate: | terraform/format
 docs/lint: | terraform/lint
 	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
 
-
-docker/%: IMAGE_NAME := $(shell basename $$(readlink -f $(PROJECT_ROOT))):latest
+docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
-docker/build: GET_IMAGE_ID := docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
+docker/build: GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
 docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
-	@echo "[$@]: building docker image"
-	[ -n "$(IMAGE_ID)" ] && echo "Image present" || \
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(PROJECT_ROOT)Dockerfile .
+	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
+	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f Dockerfile .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount
@@ -322,14 +316,10 @@ docker/run: target ?= help
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
-	-v "$(PROJECT_ROOT):/ci-harness/$(PROJECT_NAME)" \
-	-v "$(HOME)/.aws:/.aws" \
-	-e TERRAFORM_TEST_DIR=$(PROJECT_NAME)/tests \
+	-v "$(PWD)/:/ci-harness/" \
+	-v "$(HOME)/.aws:/root/.aws" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	-e AWS_PROFILE=$(AWS_PROFILE) \
-	-e AWS_SHARED_CREDENTIALS_FILE=/.aws/credentials \
-	-e INCLUDE=/ci-harness/$(PROJECT_NAME)/Makefile \
-	-e PROJECT_ROOT=/ci-harness/$(PROJECT_NAME)/ \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment
@@ -373,7 +363,7 @@ bats/test:
 
 project/validate:
 	@ echo "[$@]: Ensuring the target test folder is not empty"
-	[ "$$(ls -A $(PROJECT_ROOT))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
+	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
 install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install
