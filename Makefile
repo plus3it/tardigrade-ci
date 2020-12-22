@@ -183,13 +183,13 @@ cfn/lint: | guard/program/cfn-lint
 
 ## Runs editorconfig-checker, aka 'ec',  against the project
 ec/lint: | guard/program/ec guard/program/git
-ec/lint: ECLINT_FILES ?= $(shell git ls-files -z | grep -zv ".bats" | xargs -0 --no-run-if-empty printf "%s ")
+ec/lint: ECLINT_FILES ?= $(shell git ls-files | grep -v ".bats")
 ec/lint:
 	@ echo "[$@]: Running ec..."
 	ec $(ECLINT_FILES)
 	@ echo "[$@]: Project PASSED ec lint test!"
 
-python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py' | xargs --no-run-if-empty printf "%s ")
+python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
 ## Checks format and lints Python files.  Runs pylint on each individual
 ## file and uses a custom format for the lint messages.
 python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
