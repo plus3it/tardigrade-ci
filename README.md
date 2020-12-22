@@ -2,9 +2,12 @@
 
 A docker based test framework
 
-This project packages the make targets that provide the tools and command shortcuts Plus3IT uses to develop and maintain our terraform modules.
+This project packages the make targets that provide the tools and command shortcuts
+Plus3IT uses to develop and maintain projects of all sorts.
 
-The makefile in this repository has been exposed as the entry point to the accompanying docker image. A list of the available make targets are provided below:
+The targets in this tardigrade-ci Makefile are included when using the accompanying
+docker image with your own project. A list of the available make targets are provided
+below:
 
 ```bash
 Available targets:
@@ -38,17 +41,19 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
   ```bash
   IMAGE="plus3it/tardigrade-ci:latest"
   docker pull "$IMAGE"
-  docker run --rm -ti -v "my-project-dir:/ci-harness/my-project" "$IMAGE" helps
+  docker run --rm -ti -v "my-project-dir/:/ci-harness/" "$IMAGE" helps
   ```
 
 ### Makefile Include
 
-1. Create a Dockerfile in the project in which you wish to utilize these ci tools with the following content.
+1. Create a Dockerfile in the project in which you wish to utilize these ci tools
+with the following content.
 
-  **NOTE:** This Dockerfile is intended to be used to enable version pinning of the underlying toolset.
+  **NOTE:** This Dockerfile is intended to be used to enable version pinning of
+  the underlying toolset.
 
   ```bash
-  FROM plus3it/tardigrade-ci:0.0.2
+  FROM plus3it/tardigrade-ci:0.6.0
 
   WORKDIR /ci-harness
   ENTRYPOINT ["make"]
@@ -68,9 +73,6 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
   # tardigrade-ci
   .tardigrade-ci
   tardigrade-ci/
-
-  # eclint
-  .git/
   ```
 
 4. Run `make` once to initialize the project and then `make docker/run target=<TARGET>`
