@@ -47,7 +47,7 @@ This project can be utilized one of two ways, via docker or via a Makefile inclu
   ```bash
   IMAGE="plus3it/tardigrade-ci:latest"
   docker pull "$IMAGE"
-  docker run --rm -ti -v "my-project-dir/:/ci-harness/" "$IMAGE" helps
+  docker run --rm -ti -v "my-project-dir/:/ci-harness/" "$IMAGE" help
   ```
 
 ### Makefile Include
