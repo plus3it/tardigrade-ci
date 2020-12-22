@@ -13,16 +13,22 @@ below:
 Available targets:
 
   cfn/lint                            Lints CloudFormation files
+  clean                               Clean build-harness
+  docker/build                        Builds the tardigrade-ci docker image
+  docker/clean                        Cleans local docker environment
+  docker/run                          Runs the tardigrade-ci docker image
   docs/generate                       Generates Terraform documentation
   docs/lint                           Lints Terraform documentation
-  eclint/lint                         Runs eclint against the project
+  ec/lint                             Runs editorconfig-checker, aka 'ec',  against the project
   hcl/format                          Formats hcl files
   hcl/lint                            Lints hcl files
+  hcl/validate                        Validates hcl files
   help                                This help screen
+  init                                Init build-harness
   json/format                         Formats json files
   json/lint                           Lints json files
-  python/format                       Formats Python files
-  python/lint                         Lints Python files
+  python/format                       Formats Python files.
+  python/lint                         file and uses a custom format for the lint messages.
   sh/lint                             Lints bash script files
   terraform/format                    Formats terraform files
   terraform/lint                      Lints terraform files
