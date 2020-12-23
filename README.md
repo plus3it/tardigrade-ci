@@ -81,7 +81,7 @@ with the following content.
   tardigrade-ci/
   ```
 
-4. Run `make` once to initialize the project and then `make docker/run target=<TARGET>`
+4. Run `make init` once to initialize the project and then `make docker/run target=<TARGET>`.
 
 5. Additionally, you can use the tardigrade-ci/Makefile vars and targets
 directly in your own Makefile. For example, there is a target for installing
