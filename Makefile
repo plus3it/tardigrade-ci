@@ -177,7 +177,7 @@ cfn/%: FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
 cfn/lint: | guard/program/cfn-lint
 	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
-## Runs editorconfig-checker, aka 'ec',  against the project
+## Runs editorconfig-checker, aka 'ec', against the project
 ec/lint: | guard/program/ec guard/program/git
 ec/lint: ECLINT_FILES ?= $(shell git ls-files | grep -v ".bats")
 ec/lint:
@@ -186,8 +186,7 @@ ec/lint:
 	@ echo "[$@]: Project PASSED ec lint test!"
 
 python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
-## Checks format and lints Python files.  Runs pylint on each individual
-## file and uses a custom format for the lint messages.
+## Checks format and lints Python files
 python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
@@ -199,7 +198,7 @@ python/lint:
 	pydocstyle $(PYTHON_FILES)
 	echo "[$@]: Python files PASSED lint test!"
 
-## Formats Python files.
+## Formats Python files
 python/format: | guard/program/black guard/program/git
 python/format:
 	@ echo "[$@]: Formatting Python files..."
