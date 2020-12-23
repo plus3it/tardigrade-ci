@@ -17,10 +17,6 @@ SHELL := bash
 DEFAULT_HELP_TARGET ?= help
 HELP_FILTER ?= .*
 
-green = $(shell echo -e '\x1b[32;01m$1\x1b[0m')
-yellow = $(shell echo -e '\x1b[33;01m$1\x1b[0m')
-red = $(shell echo -e '\x1b[33;31m$1\x1b[0m')
-
 export SELF ?= $(MAKE)
 
 default:: $(DEFAULT_HELP_TARGET)
