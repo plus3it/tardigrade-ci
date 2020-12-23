@@ -9,8 +9,8 @@ mkdir "$TEST_DIR"
 
 }
 
-@test "project/validate: success" {
-  run make project/validate PROJECT_ROOT="$TEST_DIR"
+@test "project/validate: failure" {
+  run make project/validate PWD="$TEST_DIR"
   [ "$status" -eq 2 ]
 }
 
