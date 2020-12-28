@@ -12,4 +12,4 @@ fi
 
 echo "Cloning ${GITHUB_REPO}#${TARDIGRADE_CI_BRANCH}..."
 
-git clone -b "$TARDIGRADE_CI_BRANCH" "$GITHUB_REPO"
+git clone -c advice.detachedHead=false --depth=1 -b "$TARDIGRADE_CI_BRANCH" "$GITHUB_REPO"
