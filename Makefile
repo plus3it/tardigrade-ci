@@ -146,9 +146,6 @@ cfn-lint/install:
 yq/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
-bumpversion/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
-
 node/install: NODE_VERSION ?= 10.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
 node/install:
@@ -364,6 +361,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
