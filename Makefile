@@ -123,12 +123,13 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
+install/pip: CUSTOM_VERSION_CMD ?= ''
 install/pip/%: PYTHON ?= python3
 install/pip/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
 	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
-	$* --version
+	$(if $(CUSTOM_VERSION_CMD),$(CUSTOM_VERSION_CMD),$* --version)
 	@ echo "[$@]: Completed successfully!"
 
 black/install:
@@ -149,6 +150,11 @@ cfn-lint/install:
 yq/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
+bump2version/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) CUSTOM_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+
+bumpversion/install: bump2version/install
+
 node/install: NODE_VERSION ?= 10.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
 node/install:
@@ -165,6 +171,10 @@ install/npm/%: | guard/program/npm
 	npm install -g $(NPM_PKG_NAME)
 	$* --version
 	@ echo "[$@]: Completed successfully!"
+
+bumpversion/%: BUMPVERSION_ARGS ?=
+bumpversion/major bumpversion/minor bumpversion/patch: | guard/program/bump2version
+	@ bumpversion $(BUMPVERSION_ARGS) $(@F)
 
 yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
 ## Lints YAML files
@@ -366,6 +376,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
