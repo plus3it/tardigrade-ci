@@ -12,6 +12,6 @@ RUN apt-get update -y && apt-get install -y \
 COPY --from=golang /go/ /go/
 COPY --from=golang /usr/local/go/ /usr/local/go/
 COPY . /ci-harness
-RUN cd /ci-harness && make install
+RUN make -C /ci-harness install
 WORKDIR /ci-harness
 ENTRYPOINT ["make"]
