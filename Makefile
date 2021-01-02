@@ -312,7 +312,8 @@ docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
 	-v "$(PWD)/:/ci-harness/" \
-	-v "$(HOME)/.aws:/root/.aws" \
+	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
+	-v "$(HOME)/.aws/:/root/.aws/" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	-e AWS_PROFILE=$(AWS_PROFILE) \
 	$(IMAGE_NAME) $(target)
