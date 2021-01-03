@@ -17,6 +17,9 @@ SHELL := bash
 DEFAULT_HELP_TARGET ?= help
 HELP_FILTER ?= .*
 
+TARDIGRADE_CI_PATH ?= $(PWD)
+TARDIGRADE_CI_PROJECT ?= tardigrade-ci
+
 export SELF ?= $(MAKE)
 
 default:: $(DEFAULT_HELP_TARGET)
@@ -308,6 +311,7 @@ docker/build:
 docker/run: DOCKER_RUN_FLAGS ?= --rm
 docker/run: AWS_DEFAULT_REGION ?= us-east-1
 docker/run: target ?= help
+docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
