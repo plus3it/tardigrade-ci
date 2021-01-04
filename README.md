@@ -63,9 +63,6 @@ with the following content.
 
   ```bash
   FROM plus3it/tardigrade-ci:0.6.0
-
-  WORKDIR /ci-harness
-  ENTRYPOINT ["make"]
   ```
 
 2. Add a simple makefile with these two lines

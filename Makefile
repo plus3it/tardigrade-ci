@@ -322,15 +322,18 @@ docker/build:
 docker/run: DOCKER_RUN_FLAGS ?= --rm
 docker/run: AWS_DEFAULT_REGION ?= us-east-1
 docker/run: target ?= help
+docker/run: entrypoint ?= make
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
-	-v "$(PWD)/:/ci-harness/" \
+	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/root/.aws/" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	-e AWS_PROFILE=$(AWS_PROFILE) \
+	-w /workdir/ \
+	--entrypoint $(entrypoint) \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment
