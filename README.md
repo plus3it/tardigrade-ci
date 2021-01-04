@@ -73,7 +73,7 @@ with the following content.
   ```bash
   SHELL := /bin/bash
 
-  -include $(shell curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
+  -include $(test -f .tardigrade-ci || shell curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
   ```
 
 3. Add the following to your `.gitignore` file
