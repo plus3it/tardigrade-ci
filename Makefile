@@ -173,6 +173,7 @@ install/npm/%: | guard/program/npm
 	@ echo "[$@]: Completed successfully!"
 
 bumpversion/%: BUMPVERSION_ARGS ?=
+## Bumps the major, minor, or patch version
 bumpversion/major bumpversion/minor bumpversion/patch: | guard/program/bump2version
 	@ bumpversion $(BUMPVERSION_ARGS) $(@F)
 
