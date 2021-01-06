@@ -123,13 +123,13 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-install/pip: CUSTOM_VERSION_CMD ?= ''
+install/pip/%: PKG_VERSION_CMD ?= $* --version
 install/pip/%: PYTHON ?= python3
 install/pip/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
 	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
-	$(if $(CUSTOM_VERSION_CMD),$(CUSTOM_VERSION_CMD),$* --version)
+	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
 
 black/install:
@@ -151,7 +151,7 @@ yq/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
 bump2version/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) CUSTOM_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
 
 bumpversion/install: bump2version/install
 
