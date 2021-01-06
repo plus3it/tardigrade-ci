@@ -12,6 +12,9 @@ below:
 ```bash
 Available targets:
 
+  bumpversion/major                   Uses 'bumpversion' to update the major version
+  bumpversion/minor                   Uses 'bumpversion' to update the minor version
+  bumpversion/patch                   Uses 'bumpversion' to update the patch version
   cfn/lint                            Lints CloudFormation files
   clean                               Clean build-harness
   docker/build                        Builds the tardigrade-ci docker image
