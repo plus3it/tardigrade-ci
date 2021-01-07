@@ -109,6 +109,35 @@ a binary from GitHub releases, which you can utilize pretty easily:
     provided by the tardigrade-ci/Makefile, and do not need to be redefined in your
     local Makefile.
 
+## Makefile prerequisites
+
+Using the Makefile approach involves calling `make` directly. This means make,
+as well as a few other prerequisites must be installed on the system for it to
+work.
+
+* `make` v4.2 or later
+* `jq` v1.5 or later
+* `git` v2.20 or later
+* `bash` v4 or later
+* `sed` v4 or later
+* `awk` v4 or later
+* `grep` v3 or later
+* `xargs` v4.7 or later
+* `curl` v7 or later
+
+The Makefile is written with Debian-based systems in mind, including Ubuntu, and
+all those packages can be installed using `apt` from default repos. Other platforms
+ought to work fine, as long as these packages/versions can be installed. For example,
+MacOS is known to work, using `brew` to get a modern version of `bash` and GNU
+tools (there are many guides, [here is one](https://www.topbug.net/blog/2013/04/14/install-and-use-gnu-command-line-tools-in-mac-os-x/)).
+
+There are a couple make targets that call out to `apt` directly. You can avoid
+that requirement by pre-installing these packages using your own package manager,
+or simply do not invoke targets that rely on these packages:
+
+* `zip`
+* `nodejs`
+
 ## Makefile "operating modes"
 
 When using the Makefile approach, the `include` directive is a shell command that
