@@ -142,14 +142,14 @@ or simply do not invoke targets that rely on these packages:
 
 When using the Makefile approach, the `include` directive is a shell command that
 retrieves the "bootstrap" Makefile from this project, saves it to the current working
-directory, and then echoes back the name of the saved file. Make reads the bootstrap
-Makefile and processes its directives and targets.
+directory, and then echoes back the name of the saved file. The `include` directive
+tells `make` to read the specified Makefile and process its directives and targets.
 
 The bootstrap Makefile is very barebones. Its primary purpose is to bootstrap this
-`tardigrade-ci` project so all the make targets are available. It does this through
-its own `include` directive. The bootstrap include directive processes a shell
-command with logic to determine whether to clone this project, and then echoes
-back the path to this project's Makefile.
+`tardigrade-ci` project so all the `make` targets are available. It does this through
+its own `include` directive. The bootstrap `include` directive processes a shell
+command with logic to determine the operating mode (described below), and then echoes
+back the path to the tardigrade-ci Makefile.
 
 The bootstrap Makefile supports two "operating modes" that we're calling **user mode**
 and **developer mode**.
@@ -163,7 +163,7 @@ matches the git branch or tag specified by the env `TARDIGRADE_CI_BRANCH`. By
 default, this env will resolve to either the version specified in the `Dockerfile`
 (if present) or the `master` branch (if the Dockerfile is missing or is not
 specifying a version). The user may override the default behavior by providing
-the env explicitly, e.g. `TARDIGRADE_CI_BRANCH=foo make help`.
+the env explicitly, e.g. `TARDIGRADE_CI_BRANCH={branch} make help`.
 
 In **developer mode**, the user is responsible for cloning the `tardigrade-ci`
 repo to a sibling directory of the current project, e.g. `/{project}/` and
