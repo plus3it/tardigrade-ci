@@ -13,40 +13,36 @@ export TARDIGRADE_CI_PATH := $(or $(wildcard $(TARDIGRADE_CI_PATH)),$(TARDIGRADE
 TARDIGRADE_CI_MAKEFILE := $(TARDIGRADE_CI_PATH)/Makefile
 
 # Macro to clone TARDIGRADE_CI_PROJECT
-# editorconfig-checker-disable
 define $(TARDIGRADE_CI_PROJECT)/clone
 if [[ -d "$(TARDIGRADE_CI_PATH_LOCAL)" ]]; then \
-  echo "Removing existing $(TARDIGRADE_CI_PATH_LOCAL)" >&2 &&\
-  rm -rf "$(TARDIGRADE_CI_PATH_LOCAL)" ;\
+	echo "Removing existing $(TARDIGRADE_CI_PATH_LOCAL)" &&\
+	rm -rf "$(TARDIGRADE_CI_PATH_LOCAL)" ;\
 fi && \
-echo "Cloning $(TARDIGRADE_CI_CLONE_URL)?ref=$(TARDIGRADE_CI_BRANCH)..." >&2 &&\
+echo "Cloning $(TARDIGRADE_CI_CLONE_URL)?ref=$(TARDIGRADE_CI_BRANCH)..." &&\
 git clone -c advice.detachedHead=false --depth=1 -b "$(TARDIGRADE_CI_BRANCH)" "$(TARDIGRADE_CI_CLONE_URL)"
 endef
-# editorconfig-checker-enable
 
 # Macro to auto-init the TARDIGRADE_CI_PROJECT with the `include` directive
 # Tests if TARDIGRADE_CI_PROJECT does not yet exist, or if it does exist but the
 # checkout does not match TARDIGRADE_CI_BRANCH
-# editorconfig-checker-disable
 define $(TARDIGRADE_CI_PROJECT)/init
 if [[ \
-  "$(TARDIGRADE_CI_PATH)" != "$(TARDIGRADE_CI_PATH_LOCAL)" && \
-  -f "$(TARDIGRADE_CI_MAKEFILE)" \
+	"$(TARDIGRADE_CI_PATH)" != "$(TARDIGRADE_CI_PATH_LOCAL)" && \
+	-f "$(TARDIGRADE_CI_MAKEFILE)" \
 ]]; then \
-  : ;\
+	: ;\
 elif [[ \
-  "$(TARDIGRADE_CI_PATH)" == "$(TARDIGRADE_CI_PATH_LOCAL)" && \
-  -f "$(TARDIGRADE_CI_MAKEFILE)" && \
-  "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' ls-remote '$(TARDIGRADE_CI_CLONE_URL)' '$(TARDIGRADE_CI_BRANCH)' | cut -f1)" == "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' rev-parse HEAD)" \
+	"$(TARDIGRADE_CI_PATH)" == "$(TARDIGRADE_CI_PATH_LOCAL)" && \
+	-f "$(TARDIGRADE_CI_MAKEFILE)" && \
+	"$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' ls-remote '$(TARDIGRADE_CI_CLONE_URL)' '$(TARDIGRADE_CI_BRANCH)' | cut -f1)" == "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' rev-parse HEAD)" \
 ]]; then \
-  : ;\
+	: ;\
 else \
-  $($(TARDIGRADE_CI_PROJECT)/clone) ;\
+	$($(TARDIGRADE_CI_PROJECT)/clone) ;\
 fi
 endef
-# editorconfig-checker-enable
 
-include $(shell $($(TARDIGRADE_CI_PROJECT)/init) ; echo $(TARDIGRADE_CI_MAKEFILE))
+include $(shell $($(TARDIGRADE_CI_PROJECT)/init) >&2 ; echo $(TARDIGRADE_CI_MAKEFILE))
 
 .PHONY : init
 ## Init build-harness
