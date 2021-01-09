@@ -6,7 +6,7 @@ export TARDIGRADE_CI_BRANCH ?= $(or $(shell grep 'FROM $(TARDIGRADE_CI_ORG)/$(TA
 TARDIGRADE_CI_PATH ?= $(shell until [ -d "$(TARDIGRADE_CI_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(TARDIGRADE_CI_PROJECT)
 TARDIGRADE_CI_PATH_LOCAL := $(PWD)/$(TARDIGRADE_CI_PROJECT)
 TARDIGRADE_CI_BOOTSTRAP := $(PWD)/.$(TARDIGRADE_CI_PROJECT)
-TARGIDRADE_CI_CLONE_URL ?= https://github.com/$(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT).git
+TARDIGRADE_CI_CLONE_URL ?= https://github.com/$(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT).git
 
 # Resolves to TARDIGRADE_CI_PATH_LOCAL when TARDIGRADE_CI_PATH does not exist
 export TARDIGRADE_CI_PATH := $(or $(wildcard $(TARDIGRADE_CI_PATH)),$(TARDIGRADE_CI_PATH_LOCAL))
@@ -19,8 +19,8 @@ if [[ -d "$(TARDIGRADE_CI_PATH_LOCAL)" ]]; then \
   echo "Removing existing $(TARDIGRADE_CI_PATH_LOCAL)" >&2 &&\
   rm -rf "$(TARDIGRADE_CI_PATH_LOCAL)" ;\
 fi && \
-echo "Cloning $(TARGIDRADE_CI_CLONE_URL)?ref=$(TARDIGRADE_CI_BRANCH)..." >&2 &&\
-git clone -c advice.detachedHead=false --depth=1 -b "$(TARDIGRADE_CI_BRANCH)" "$(TARGIDRADE_CI_CLONE_URL)"
+echo "Cloning $(TARDIGRADE_CI_CLONE_URL)?ref=$(TARDIGRADE_CI_BRANCH)..." >&2 &&\
+git clone -c advice.detachedHead=false --depth=1 -b "$(TARDIGRADE_CI_BRANCH)" "$(TARDIGRADE_CI_CLONE_URL)"
 endef
 # editorconfig-checker-enable
 
@@ -37,7 +37,7 @@ if [[ \
 elif [[ \
   "$(TARDIGRADE_CI_PATH)" == "$(TARDIGRADE_CI_PATH_LOCAL)" && \
   -f "$(TARDIGRADE_CI_MAKEFILE)" && \
-  "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' ls-remote '$(TARGIDRADE_CI_CLONE_URL)' '$(TARDIGRADE_CI_BRANCH)' | cut -f1)" == "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' rev-parse HEAD)" \
+  "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' ls-remote '$(TARDIGRADE_CI_CLONE_URL)' '$(TARDIGRADE_CI_BRANCH)' | cut -f1)" == "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' rev-parse HEAD)" \
 ]]; then \
   : ;\
 else \
