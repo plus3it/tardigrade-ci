@@ -52,7 +52,7 @@ include $(shell $($(TARDIGRADE_CI_PROJECT)/init) >&2 ; echo $(TARDIGRADE_CI_MAKE
 ## Init build-harness
 init::
 	@ $($(TARDIGRADE_CI_PROJECT)/clone)
-	git -C "$(TARDIGRADE_CI_PATH)" log -1 --oneline
+	git -C "$(TARDIGRADE_CI_PATH_LOCAL)" log -1 --oneline
 	@ echo "[$@]: Completed successfully!"
 
 .PHONY : clean
