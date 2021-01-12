@@ -158,12 +158,12 @@ In **user mode**, the bootstrap Makefile automatically clones the `tardigrade-ci
 repo to a subdirectory of the calling project, e.g. `/{project}/tardigrade-ci/`.
 This feature is called **auto-init**. In this mode, the `tardigrade-ci` subdirectory
 is considered "owned" by the bootstrap Makefile. The bootstrap Makefile will
-manage and update the clone (through the `include` logic) to ensure the checkout
+manage and update the clone (through the `include` logic), ensuring the checkout
 matches the git branch or tag specified by the env `TARDIGRADE_CI_BRANCH`. By
 default, this env will resolve to either the version specified in the `Dockerfile`
 (if present) or the `master` branch (if the Dockerfile is missing or is not
 specifying a version). The user may override the default behavior by providing
-the env explicitly, e.g. `TARDIGRADE_CI_BRANCH={branch} make help`.
+the env explicitly to `make`, e.g. `TARDIGRADE_CI_BRANCH={branch} make help`.
 
 In **developer mode**, the user is responsible for cloning the `tardigrade-ci`
 repo to a sibling directory of the current project, e.g. `/{project}/` and
