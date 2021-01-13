@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### 0.8.0
 
-**Released**: 2021.01.11
+**Released**: 2021.01.12
 
 **Commit Delta**: [Change from 0.7.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.7.0...0.8.0)
 
@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 *   Sets `docker/run` WORKDIR to `/workdir` and mounts calling project to `/workdir`
 *   Exposes the env `entrypoint` to the `docker/run` target, keeping backwards
     compatibility by setting the default to `make`
+*   Authenticates to GitHub API with GITHUB_ACCESS_TOKEN only if present
 
 ### 0.7.0
 

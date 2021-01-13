@@ -28,7 +28,8 @@ jobs:
     - stage: test
       name: Run Makefile unit tests
       script:
-        - docker build -t "$IMAGE_NAME" -f Dockerfile . && docker run "$IMAGE_NAME" bats/test
+        - docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
+        - docker run "$IMAGE_NAME" bats/test
     - stage: deploy
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
