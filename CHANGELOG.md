@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.8.1
+
+**Released**: 2021.01.13
+
+**Commit Delta**: [Change from 0.8.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.8.0...0.8.1)
+
+**Summary**:
+
+*   Runs auto-init in non-`tardigrade-ci` containers, so the make targets are available
+*   Ensures `$PWD` is always set, including when invoking the container directly
+    with `docker run`
+
 ### 0.8.0
 
 **Released**: 2021.01.12
