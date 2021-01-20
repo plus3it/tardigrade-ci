@@ -1,4 +1,4 @@
-FROM golang:1.15.6-buster as golang
+FROM golang:1.15.7-buster as golang
 FROM python:3.9.1-buster
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
