@@ -9,6 +9,8 @@ env:
   global:
     - IMAGE_NAME=plus3it/tardigrade-ci
 
+if: branch = master OR type = pull_request OR tag is present
+
 stages:
   - lint
   - test
