@@ -30,6 +30,14 @@ No requirements.
 
 No provider.
 
+## Modules
+
+No Modules.
+
+## Resources
+
+No resources.
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -39,7 +47,6 @@ No provider.
 ## Outputs
 
 No output.
-
 <!-- END TFDOCS -->
 EOF
 done
