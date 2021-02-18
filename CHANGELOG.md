@@ -14,7 +14,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 *   PYLINT_RCFILE defines location of the .pylintrc used by pylint
 *   Loadable-plugin added to .pylintrc file to support pytest linting
-*   Unit test updated to support latest version of terraform-docs (0.11.0)
 
 ### 0.8.1
 
