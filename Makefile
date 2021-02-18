@@ -70,7 +70,7 @@ guard/program/%:
 	@ which $* > /dev/null || $(MAKE) $*/install
 
 guard/python_pkg/%:
-	@ pip freeze | grep $* > /dev/null || $(MAKE) $*/install
+	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(MAKE) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
