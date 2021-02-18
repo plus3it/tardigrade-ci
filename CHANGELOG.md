@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.9.0
+
+**Released**: 2021.02.18
+
+**Commit Delta**: [Change from 0.8.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.8.1...0.9.0)
+
+**Summary**:
+
+*   PYLINT_RCFILE defines location of the .pylintrc used by pylint
+*   Loadable-plugin added to .pylintrc file to support pytest linting
+
 ### 0.8.1
 
 **Released**: 2021.01.13

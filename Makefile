@@ -12,6 +12,8 @@ MAKEFLAGS += --no-print-directory
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 
+PYTHON ?= python3
+
 .PHONY: guard/% %/install %/lint
 
 DEFAULT_HELP_TARGET ?= help
@@ -66,6 +68,9 @@ guard/env/%:
 
 guard/program/%:
 	@ which $* > /dev/null || $(MAKE) $*/install
+
+guard/python_pkg/%:
+	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(MAKE) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
@@ -124,7 +129,6 @@ ec/install:
 	@ echo "[$@]: Completed successfully!"
 
 install/pip/%: PKG_VERSION_CMD ?= $* --version
-install/pip/%: PYTHON ?= python3
 install/pip/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
@@ -132,11 +136,18 @@ install/pip/%: | guard/env/PYPI_PKG_NAME
 	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
 
+install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
+	@ echo "[$@]: Installing $*..."
+	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
+
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
 pylint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+pylint-pytest/install:
+	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME=$(@D)
 
 pydocstyle/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
@@ -201,16 +212,19 @@ ec/lint:
 
 python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
 ## Checks format and lints Python files
-python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
+python/lint: PYLINT_RCFILE ?= $(TARDIGRADE_CI_PATH)/.pylintrc
+python/lint: | guard/program/pylint guard/python_pkg/pylint-pytest guard/program/black guard/program/pydocstyle guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
+	@ echo "[$@]: Pylint rcfile:  $(PYLINT_RCFILE)"
 	black --check $(PYTHON_FILES)
 	for python_file in $(PYTHON_FILES); do \
-		pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
+		$(PYTHON) -m pylint --rcfile $(PYLINT_RCFILE) \
+			--msg-template="{path}:{line} [{symbol}] {msg}" \
 			-rn -sn $$python_file; \
 	done
 	pydocstyle $(PYTHON_FILES)
-	echo "[$@]: Python files PASSED lint test!"
+	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
 python/format: | guard/program/black guard/program/git
@@ -381,6 +395,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
