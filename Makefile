@@ -102,7 +102,7 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-terraform-docs/install: TFDOCS_VERSION ?= tags/v0.10.1
+terraform-docs/install: TFDOCS_VERSION ?= latest
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=segmentio REPO=$(@D) VERSION=$(TFDOCS_VERSION) QUERY='.name | endswith("$(OS)-$(ARCH)")'
 
@@ -289,14 +289,14 @@ json/format: | guard/program/jq json/validate
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
-docs/%: TFDOCS ?= terraform-docs --sort-by-required markdown table
+docs/%: TFDOCS ?= terraform-docs --hide modules --hide resources --sort-by-required markdown table
 docs/%: README_FILES ?= find . $(FIND_EXCLUDES) -type f -name README.md
 docs/%: README_TMP ?= $(TMP)/README.tmp
 docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
 
 docs/tmp/%: | guard/program/terraform-docs
-	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
+	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("echo \"$$($(TFDOCS) $$(dirname $*))\"; echo")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
 
 docs/generate/%:
 	@ echo "[$@]: Creating documentation files.."
