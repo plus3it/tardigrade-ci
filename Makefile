@@ -345,7 +345,7 @@ docker/run: docker/build
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/root/.aws/" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
-	-e AWS_PROFILE=$(AWS_PROFILE) \
+	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
 	-e GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN) \
 	-w /workdir/ \
 	--entrypoint $(entrypoint) \
