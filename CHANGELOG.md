@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.9.2
+
+**Released**: 2021.02.19
+
+**Commit Delta**: [Change from 0.9.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.9.1...0.9.2)
+
+**Summary**:
+
+*   Restores terraform-docs version to latest (currently v0.11.1), suppressing
+    the `modules` and `resources` sections. Also, the newline behavior of `docs/generate`
+    is managed explicitly so it is no longer subject to future changes in the
+    terminating newline behavior of `terraform-docs`. See [PR #143](https://github.com/plus3it/tardigrade-ci/pull/143)
+
+### 0.9.1
+
+**Released**: 2021.02.18
+
+**Commit Delta**: [Change from 0.9.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.9.0...0.9.1)
+
+**Summary**:
+
+*   Skips setting AWS_PROFILE when the env is not available
+
 ### 0.9.0
 
 **Released**: 2021.02.18
