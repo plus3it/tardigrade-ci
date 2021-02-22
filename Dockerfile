@@ -1,5 +1,5 @@
 FROM golang:1.16.0-buster as golang
-FROM python:3.9.1-buster
+FROM python:3.9.2-buster
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
 ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
