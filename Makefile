@@ -366,15 +366,17 @@ terratest/install: | guard/program/go
 	cd $(TERRAFORM_TEST_DIR) && go mod tidy
 	@ echo "[$@]: Completed successfully!"
 
+terratest/test: TERRATEST_FILES ?= $(shell find $(TERRAFORM_TEST_DIR) -name "*.go")
 terratest/test: | guard/program/go
 terratest/test: TIMEOUT ?= 20m
 terratest/test:
-	@ echo "[$@] Starting Terraform tests"
-	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
+	@ echo "[$@] Starting Terratest-based Terraform tests"
+	$(if $(TERRATEST_FILES),\
+	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT))
 	@ echo "[$@]: Completed successfully!"
 
 ## Runs terraform tests in the tests directory
-test: terratest/test
+test:: terratest/test
 
 bats/install: BATS_VERSION ?= latest
 bats/install:
