@@ -18,6 +18,11 @@ EOF
 @test "test: terraform test success" {
   run make TERRAFORM_TEST_DIR="../terraform" test
   [ "$status" -eq 0 ]
+
+  # Test for success when there are no go files.  Re-use the test directory
+  # that only contains terraform files.
+  run make TERRAFORM_TEST_DIR="../terraform/example_testcase" test
+  [ "$status" -eq 0 ]
 }
 
 function teardown() {
