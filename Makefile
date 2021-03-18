@@ -321,6 +321,8 @@ docs/lint: | terraform/lint
 
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
+TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
+
 ## Builds the tardigrade-ci docker image
 docker/build: GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
 docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
@@ -328,7 +330,7 @@ docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDK
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f Dockerfile .
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount
