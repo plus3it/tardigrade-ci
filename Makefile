@@ -321,9 +321,8 @@ docs/lint: | terraform/lint
 
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
-TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
-
 ## Builds the tardigrade-ci docker image
+docker/build: TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
 docker/build: GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
 docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
@@ -363,7 +362,7 @@ docker/clean:
 TERRAFORM_TEST_DIR ?= tests
 terratest/install: | guard/program/go
 	@ echo "[$@] Installing terratest"
-	cd $(TERRAFORM_TEST_DIR) && go mod init tardigarde-ci/tests
+	cd $(TERRAFORM_TEST_DIR) && go mod init tardigrade-ci/tests
 	cd $(TERRAFORM_TEST_DIR) && go build ./...
 	cd $(TERRAFORM_TEST_DIR) && go mod tidy
 	@ echo "[$@]: Completed successfully!"

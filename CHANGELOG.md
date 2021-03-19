@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.10.0
+
+**Released**: 2021.03.18
+
+**Commit Delta**: [Change from 0.9.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.9.2...0.10.0)
+
+**Summary**:
+
+*   No longer requires a docker file with the fixed name of `Dockerfile`.
+    The environment variable `TARDIGRADE_CI_DOCKERFILE` can be used to
+    specify an alternative docker filename for the `docker/build` 
+    target or for the file used for the bootstrap.
+*   Corrects misspelling of the module name for terratest golang test.
+
 ### 0.9.2
 
 **Released**: 2021.02.19
