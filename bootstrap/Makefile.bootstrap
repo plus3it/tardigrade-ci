@@ -9,6 +9,7 @@ TARDIGRADE_CI_PATH ?= $(shell until [ -d "$(TARDIGRADE_CI_PROJECT)" ] || [ "`pwd
 TARDIGRADE_CI_PATH_LOCAL := $(PWD)/$(TARDIGRADE_CI_PROJECT)
 TARDIGRADE_CI_BOOTSTRAP := $(PWD)/.$(TARDIGRADE_CI_PROJECT)
 TARDIGRADE_CI_CLONE_URL ?= https://github.com/$(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT).git
+TARDIGRADE_CI_AUTO_INIT ?= true
 
 # Resolves to TARDIGRADE_CI_PATH_LOCAL when TARDIGRADE_CI_PATH does not exist
 export TARDIGRADE_CI_PATH := $(or $(wildcard $(TARDIGRADE_CI_PATH)),$(TARDIGRADE_CI_PATH_LOCAL))
@@ -48,7 +49,7 @@ else \
 fi
 endef
 
-include $(shell $($(TARDIGRADE_CI_PROJECT)/init) >&2 ; echo $(TARDIGRADE_CI_MAKEFILE))
+include $(if $(findstring true,$(TARDIGRADE_CI_AUTO_INIT)),$(shell $($(TARDIGRADE_CI_PROJECT)/init) >&2)) $(TARDIGRADE_CI_MAKEFILE)
 
 .PHONY : init
 ## Init build-harness

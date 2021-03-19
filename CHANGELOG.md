@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.11.0
+
+**Released**: 2021.03.19
+
+**Commit Delta**: [Change from 0.10.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.10.0...0.11.0)
+
+**Summary**:
+
+*   Adds env TARDIGRADE_CI_AUTO_INIT that controls whether auto-init is enabled
+    (defaults to true).
+*   Suppresses the duplicative output from the auto-init logic in recursive calls
+    to $(MAKE).
+
 ### 0.10.0
 
 **Released**: 2021.03.18
