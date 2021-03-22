@@ -22,6 +22,8 @@ HELP_FILTER ?= .*
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 
+export TARDIGRADE_CI_AUTO_INIT = false
+
 export SELF ?= $(MAKE)
 
 default:: $(DEFAULT_HELP_TARGET)
