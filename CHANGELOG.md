@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### unreleased
+
+**Released**: tbd
+
+**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0...unreleased)
+
+**Summary**:
+
+*   Pins terraform-docs version using multi-stage docker build
+
 ### 0.11.0
 
 **Released**: 2021.03.19
