@@ -41,9 +41,21 @@ Available targets:
 
 ## How to use
 
-This project can be utilized one of two ways, via docker or via a Makefile include.
+This project can be utilized one of two ways, via Docker or via Makefile include.
+
+### Prerequisite
+
+Regardless of the method for using `tardigrade-ci`, the `tardigrade-ci` framework requires a Makefile to function as intended. A simple Makefile will suffice:
+
+```bash
+SHELL := /bin/bash
+
+include $(shell test -f .tardigrade-ci || curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
+```
 
 ### Via Docker
+
+Refer to [Prerequisite](#Prerequisite) section for Makefile setup.
 
 **NOTE:** The target project _must_ be added as a bindmount to the docker WORKDIR.
 
@@ -67,7 +79,7 @@ flexibility/understanding), as the install routines may not be tailored for your
 system.
 
 1. Create a Dockerfile in the project in which you wish to utilize these ci tools
-with the following content.
+with the following content (updated to the current version).
 
     **NOTE:** This Dockerfile is intended to be used to enable version pinning of
     the underlying toolset.
@@ -76,13 +88,7 @@ with the following content.
     FROM plus3it/tardigrade-ci:0.8.0
     ```
 
-2. Add a simple makefile with these two lines
-
-    ```bash
-    SHELL := /bin/bash
-
-    include $(shell test -f .tardigrade-ci || curl -sSL -o .tardigrade-ci "https://raw.githubusercontent.com/plus3it/tardigrade-ci/master/bootstrap/Makefile.bootstrap"; echo .tardigrade-ci)
-    ```
+2. Refer to [Prerequisite](#Prerequisite) section for Makefile setup.
 
 3. Add the following to your `.gitignore` file
 
