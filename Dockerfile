@@ -1,5 +1,5 @@
 FROM golang:1.16.2-buster as golang
-FROM quay.io/terraform-docs/terraform-docs:0.11.2 as tfdocs
+FROM quay.io/terraform-docs/terraform-docs:0.12.0 as tfdocs
 
 FROM python:3.9.2-buster
 ARG PROJECT_NAME=tardigrade-ci
