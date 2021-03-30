@@ -35,5 +35,5 @@ indent_size = 1
 [LICENSE]
 indent_size = none
 
-[.pylintrc]
+[.*pylintrc]
 indent_size = none

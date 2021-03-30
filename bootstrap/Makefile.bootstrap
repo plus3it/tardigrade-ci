@@ -1,20 +1,72 @@
 export SHELL = /bin/bash
+export PWD = $(shell pwd)
 export TARDIGRADE_CI_ORG ?= plus3it
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
-export TARDIGRADE_CI_BRANCH ?= $(or $(shell grep 'FROM $(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT)' Dockerfile | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' 2> /dev/null),master)
-export TARDIGRADE_CI_PATH ?= $(shell until [ -d "$(TARDIGRADE_CI_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(TARDIGRADE_CI_PROJECT)
+export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
+export TARDIGRADE_CI_BRANCH ?= $(or $(shell grep 'FROM $(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT)' $(TARDIGRADE_CI_DOCKERFILE) 2> /dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' 2> /dev/null),master)
 
--include $(TARDIGRADE_CI_PATH)/Makefile
+TARDIGRADE_CI_PATH ?= $(shell until [ -d "$(TARDIGRADE_CI_PROJECT)" ] || [ "`pwd`" == '/' ]; do cd ..; done; pwd)/$(TARDIGRADE_CI_PROJECT)
+TARDIGRADE_CI_PATH_LOCAL := $(PWD)/$(TARDIGRADE_CI_PROJECT)
+TARDIGRADE_CI_BOOTSTRAP := $(PWD)/.$(TARDIGRADE_CI_PROJECT)
+TARDIGRADE_CI_CLONE_URL ?= https://github.com/$(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT).git
+TARDIGRADE_CI_AUTO_INIT ?= true
+
+# Resolves to TARDIGRADE_CI_PATH_LOCAL when TARDIGRADE_CI_PATH does not exist
+export TARDIGRADE_CI_PATH := $(or $(wildcard $(TARDIGRADE_CI_PATH)),$(TARDIGRADE_CI_PATH_LOCAL))
+TARDIGRADE_CI_MAKEFILE := $(or $(wildcard $(TARDIGRADE_CI_PATH)/Makefile),$(TARDIGRADE_CI_PATH_LOCAL)/Makefile)
+
+# Macro to clone TARDIGRADE_CI_PROJECT
+define $(TARDIGRADE_CI_PROJECT)/clone
+if [[ -d "$(TARDIGRADE_CI_PATH_LOCAL)" ]]; then \
+	echo "[bootstrap]: Removing existing $(TARDIGRADE_CI_PATH_LOCAL)" &&\
+	rm -rf "$(TARDIGRADE_CI_PATH_LOCAL)" ;\
+fi && \
+echo "[bootstrap]: Cloning $(TARDIGRADE_CI_CLONE_URL)?ref=$(TARDIGRADE_CI_BRANCH)..." &&\
+git clone -c advice.detachedHead=false --depth=1 -b "$(TARDIGRADE_CI_BRANCH)" "$(TARDIGRADE_CI_CLONE_URL)"
+endef
+
+# Macro to auto-init the TARDIGRADE_CI_PROJECT with the `include` directive
+# Tests if TARDIGRADE_CI_PROJECT does not yet exist, or if it does exist but the
+# checkout does not match TARDIGRADE_CI_BRANCH
+define $(TARDIGRADE_CI_PROJECT)/init
+if [[ \
+	-f "/.dockerenv" && -f "/$(TARDIGRADE_CI_PROJECT)/Makefile" \
+]]; then \
+	echo "[bootstrap]: In $(TARDIGRADE_CI_PROJECT) docker container, skipping auto-init" ;\
+elif [[ \
+	"$(TARDIGRADE_CI_PATH)" != "$(TARDIGRADE_CI_PATH_LOCAL)" && \
+	-f "$(TARDIGRADE_CI_MAKEFILE)" \
+]]; then \
+	echo "[bootstrap]: Using external $(TARDIGRADE_CI_PROJECT), skipping auto-init" ;\
+elif [[ \
+	"$(TARDIGRADE_CI_PATH)" == "$(TARDIGRADE_CI_PATH_LOCAL)" && \
+	-f "$(TARDIGRADE_CI_MAKEFILE)" && \
+	"$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' ls-remote '$(TARDIGRADE_CI_CLONE_URL)' '$(TARDIGRADE_CI_BRANCH)' | cut -f1)" == "$$(git -C '$(TARDIGRADE_CI_PATH_LOCAL)' rev-parse HEAD)" \
+]]; then \
+	echo "[bootstrap]: Clone of $(TARDIGRADE_CI_PROJECT) is up-to-date, skipping auto-init" ;\
+else \
+	$($(TARDIGRADE_CI_PROJECT)/clone) ;\
+fi
+endef
+
+include $(if $(findstring true,$(TARDIGRADE_CI_AUTO_INIT)),$(shell $($(TARDIGRADE_CI_PROJECT)/init) >&2)) $(TARDIGRADE_CI_MAKEFILE)
 
 .PHONY : init
 ## Init build-harness
 init::
-	@curl --retry 5 --fail --silent --retry-delay 1 https://raw.githubusercontent.com/$(TARDIGRADE_CI_ORG)/$(TARDIGRADE_CI_PROJECT)/$(TARDIGRADE_CI_BRANCH)/bootstrap/bin/install.sh | \
-		bash -s "$(TARDIGRADE_CI_ORG)" "$(TARDIGRADE_CI_PROJECT)" "$(TARDIGRADE_CI_BRANCH)"
+	@ $($(TARDIGRADE_CI_PROJECT)/clone)
+	git -C "$(TARDIGRADE_CI_PATH_LOCAL)" log -1 --oneline
+	@ echo "[$@]: Completed successfully!"
 
 .PHONY : clean
 ## Clean build-harness
 clean::
-	@[ "$(TARDIGRADE_CI_PATH)" == '/' ] || \
-	[ "$(TARDIGRADE_CI_PATH)" == '.' ] || \
-	echo rm -rf $(TARDIGRADE_CI_PATH)
+	@ if [[ \
+		"$(TARDIGRADE_CI_PATH_LOCAL)" == "/" || \
+		"$(TARDIGRADE_CI_PATH_LOCAL)" == "." || \
+		"$(TARDIGRADE_CI_PATH_LOCAL)" == *".."* \
+	]]; then \
+		echo 'Refusing to `clean` because TARDIGRADE_CI_PATH_LOCAL is "/" or ".", or contains ".."' >&2 ;\
+		exit 1 ;\
+	fi
+	rm -rf "$(TARDIGRADE_CI_PATH_LOCAL)" "$(TARDIGRADE_CI_BOOTSTRAP)"

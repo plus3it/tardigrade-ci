@@ -12,6 +12,8 @@ MAKEFLAGS += --no-print-directory
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 
+PYTHON ?= python3
+
 .PHONY: guard/% %/install %/lint
 
 DEFAULT_HELP_TARGET ?= help
@@ -19,6 +21,8 @@ HELP_FILTER ?= .*
 
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
+
+export TARDIGRADE_CI_AUTO_INIT = false
 
 export SELF ?= $(MAKE)
 
@@ -45,17 +49,17 @@ help/generate:
 	{ lastLine = $$0 }' $(MAKEFILE_LIST) | sort -u
 	@printf "\n"
 
-GITHUB_ACCESS_TOKEN ?= 4224d33b8569bec8473980bb1bdb982639426a92
-export GITHUB_ACCESS_TOKEN
+GITHUB_AUTHORIZATION := $(if $(GITHUB_ACCESS_TOKEN),-H "Authorization: token $$GITHUB_ACCESS_TOKEN",)
+
 # Macro to return the download url for a github release
 # For latest release, use version=latest
 # To pin a release, use version=tags/<tag>
 # $(call parse_github_download_url,owner,repo,version,asset select query)
-parse_github_download_url = $(CURL) -H "Authorization: token $(GITHUB_ACCESS_TOKEN)" https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
+parse_github_download_url = $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
 
 # Macro to download a github binary release
 # $(call download_github_release,file,owner,repo,version,asset select query)
-download_github_release = $(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
+download_github_release = $(CURL) $(GITHUB_AUTHORIZATION) -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
 
 # Macro to download a hashicorp archive release
 # $(call download_hashicorp_release,file,app,version)
@@ -66,6 +70,9 @@ guard/env/%:
 
 guard/program/%:
 	@ which $* > /dev/null || $(MAKE) $*/install
+
+guard/python_pkg/%:
+	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(MAKE) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
@@ -80,7 +87,7 @@ install/gh-release/%:
 	@ echo "[$@]: Completed successfully!"
 
 stream/gh-release/%: guard/env/OWNER guard/env/REPO guard/env/VERSION guard/env/QUERY
-	$(CURL) -H "Authorization: token $$GITHUB_ACCESS_TOKEN" $(shell $(call parse_github_download_url,$(OWNER),$(REPO),$(VERSION),$(QUERY)))
+	$(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_github_download_url,$(OWNER),$(REPO),$(VERSION),$(QUERY)))
 
 zip/install:
 	@ echo "[$@]: Installing $(@D)..."
@@ -123,19 +130,26 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-install/pip/%: PYTHON ?= python3
+install/pip/%: PKG_VERSION_CMD ?= $* --version
 install/pip/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
 	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
-	$* --version
+	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
+
+install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
+	@ echo "[$@]: Installing $*..."
+	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
 
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
 
 pylint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+pylint-pytest/install:
+	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME=$(@D)
 
 pydocstyle/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
@@ -148,6 +162,11 @@ cfn-lint/install:
 
 yq/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+
+bump2version/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+
+bumpversion/install: bump2version/install
 
 node/install: NODE_VERSION ?= 10.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
@@ -165,6 +184,11 @@ install/npm/%: | guard/program/npm
 	npm install -g $(NPM_PKG_NAME)
 	$* --version
 	@ echo "[$@]: Completed successfully!"
+
+bumpversion/%: BUMPVERSION_ARGS ?=
+## Bumps the major, minor, or patch version
+bumpversion/major bumpversion/minor bumpversion/patch: | guard/program/bump2version
+	@ bumpversion $(BUMPVERSION_ARGS) $(@F)
 
 yaml/%: FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
 ## Lints YAML files
@@ -190,16 +214,19 @@ ec/lint:
 
 python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
 ## Checks format and lints Python files
-python/lint: | guard/program/pylint guard/program/black guard/program/pydocstyle guard/program/git
+python/lint: PYLINT_RCFILE ?= $(TARDIGRADE_CI_PATH)/.pylintrc
+python/lint: | guard/program/pylint guard/python_pkg/pylint-pytest guard/program/black guard/program/pydocstyle guard/program/git
 python/lint:
 	@ echo "[$@]: Linting Python files..."
+	@ echo "[$@]: Pylint rcfile:  $(PYLINT_RCFILE)"
 	black --check $(PYTHON_FILES)
 	for python_file in $(PYTHON_FILES); do \
-		pylint --msg-template="{path}:{line} [{symbol}] {msg}" \
+		$(PYTHON) -m pylint --rcfile $(PYLINT_RCFILE) \
+			--msg-template="{path}:{line} [{symbol}] {msg}" \
 			-rn -sn $$python_file; \
 	done
 	pydocstyle $(PYTHON_FILES)
-	echo "[$@]: Python files PASSED lint test!"
+	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
 python/format: | guard/program/black guard/program/git
@@ -264,14 +291,14 @@ json/format: | guard/program/jq json/validate
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
-docs/%: TFDOCS ?= terraform-docs --sort-by-required markdown table
+docs/%: TFDOCS ?= terraform-docs --hide modules --hide resources --sort-by-required markdown table
 docs/%: README_FILES ?= find . $(FIND_EXCLUDES) -type f -name README.md
 docs/%: README_TMP ?= $(TMP)/README.tmp
 docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
 docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
 
 docs/tmp/%: | guard/program/terraform-docs
-	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("$(TFDOCS) $$(dirname $*)")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
+	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("echo \"$$($(TFDOCS) $$(dirname $*))\"; echo")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
 
 docs/generate/%:
 	@ echo "[$@]: Creating documentation files.."
@@ -297,13 +324,14 @@ docs/lint: | terraform/lint
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
+docker/build: TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
 docker/build: GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
 docker/build: IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f Dockerfile .
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount
@@ -311,15 +339,19 @@ docker/build:
 docker/run: DOCKER_RUN_FLAGS ?= --rm
 docker/run: AWS_DEFAULT_REGION ?= us-east-1
 docker/run: target ?= help
+docker/run: entrypoint ?= make
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
-	-v "$(PWD)/:/ci-harness/" \
+	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/root/.aws/" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
-	-e AWS_PROFILE=$(AWS_PROFILE) \
+	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
+	-e GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN) \
+	-w /workdir/ \
+	--entrypoint $(entrypoint) \
 	$(IMAGE_NAME) $(target)
 
 ## Cleans local docker environment
@@ -332,7 +364,7 @@ docker/clean:
 TERRAFORM_TEST_DIR ?= tests
 terratest/install: | guard/program/go
 	@ echo "[$@] Installing terratest"
-	cd $(TERRAFORM_TEST_DIR) && go mod init tardigarde-ci/tests
+	cd $(TERRAFORM_TEST_DIR) && go mod init tardigrade-ci/tests
 	cd $(TERRAFORM_TEST_DIR) && go build ./...
 	cd $(TERRAFORM_TEST_DIR) && go mod tidy
 	@ echo "[$@]: Completed successfully!"
@@ -366,6 +398,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install
+install: terraform/install shellcheck/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
