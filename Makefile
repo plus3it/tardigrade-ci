@@ -179,6 +179,11 @@ node/install:
 
 npm/install: node/install
 
+goimports/install: | guard/program/go
+	@ echo "[$@]: Installing $(@D)..."
+	go get golang.org/x/tools/cmd/goimports
+	@ echo "[$@]: Completed successfully"
+
 install/npm/%: | guard/program/npm
 	@ echo "[$@]: Installing $*..."
 	npm install -g $(NPM_PKG_NAME)
@@ -234,6 +239,13 @@ python/format:
 	@ echo "[$@]: Formatting Python files..."
 	black $(PYTHON_FILES)
 	@ echo "[$@]: Successfully formatted Python files!"
+
+## Formats Go files
+golang/format: | guard/program/goimports
+golang/format:
+	@ echo "[$@]: Formatting Golang files..."
+	echo $(GOLANG_FILES) | xargs -r goimports -w $(GOLANG_FILES)
+	@ echo "[$@]: Successfully formatted Golang files!"
 
 ## Lints terraform files
 terraform/lint: | guard/program/terraform
@@ -398,6 +410,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terraform/install shellcheck/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install goimports/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
