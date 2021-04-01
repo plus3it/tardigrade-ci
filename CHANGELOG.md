@@ -4,15 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### unreleased
+### 0.12.0
 
-**Released**: tbd
+**Released**: 2021.04.01
 
-**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0...unreleased)
+**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.0...unreleased)
 
 **Summary**:
 
-*   Pins terraform-docs version using multi-stage docker build
+*   Adds support for Golang formatting.
 
 ### 0.11.0
 
