@@ -241,10 +241,11 @@ python/format:
 	@ echo "[$@]: Successfully formatted Python files!"
 
 ## Formats Go files
+golang/%: GOLANG_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.go')
 golang/format: | guard/program/goimports
 golang/format:
 	@ echo "[$@]: Formatting Golang files..."
-	echo $(GOLANG_FILES) | xargs -r goimports -w $(GOLANG_FILES)
+	echo $(GOLANG_FILES) | xargs -r goimports -l -w | grep . && exit 1 || exit 0
 	@ echo "[$@]: Successfully formatted Golang files!"
 
 ## Lints terraform files
@@ -412,4 +413,4 @@ project/validate:
 
 install: terraform/install shellcheck/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install goimports/install
 
-lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
+lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint golang/format
