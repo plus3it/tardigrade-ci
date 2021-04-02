@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 *   Pins terraform-docs version using multi-stage docker build
 *   Pins terraform version using multi-stage docker build
+*   Pins shellcheck version using multi-stage docker build
 
 ### 0.11.0
 
