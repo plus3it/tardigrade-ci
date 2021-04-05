@@ -131,7 +131,7 @@ ec/install:
 	@ echo "[$@]: Completed successfully!"
 
 install/pip/%: PKG_VERSION_CMD ?= $* --version
-install/pip/%: | guard/env/PYPI_PKG_NAME
+install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install --user $(PYPI_PKG_NAME)
 	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
@@ -398,6 +398,8 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+
+install: $(BIN_DIR)
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
