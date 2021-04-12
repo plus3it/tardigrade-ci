@@ -1,10 +1,10 @@
 FROM golang:1.16.3-buster as golang
 FROM quay.io/terraform-docs/terraform-docs:0.11.2 as tfdocs
-FROM hashicorp/terraform:0.14.9 as terraform
 FROM koalaman/shellcheck:v0.7.1 as shellcheck
 FROM bats/bats:1.2.1 as bats
+FROM hashicorp/terraform:0.14.10 as terraform
 
-FROM python:3.9.2-buster
+FROM python:3.9.4-buster
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
 ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
