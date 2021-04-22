@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### unreleased
+### 0.12.0
 
-**Released**: tbd
+**Released**: 2021.04.23
 
-**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0...unreleased)
+**Commit Delta**: [Change from 0.12.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0..0.12.0)
 
 **Summary**:
 
@@ -18,6 +18,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 *   Pins bats version using multi-stage docker build
 *   Pins editorconfig-checker (ec) version using multi-stage docker build
 *   Pins yq version using multi-stage docker build
+*   Pins black version using requirements.txt and multi-stage docker build
+*   Pins pylint version using requirements.txt and multi-stage docker build
+*   Pins pylint-pytest version using requirements.txt and multi-stage docker build
+*   Pins pydocstyle version using requirements.txt and multi-stage docker build
+*   Pins yamllint version using requirements.txt and multi-stage docker build
+*   Pins cfn-lint version using requirements.txt and multi-stage docker build
+*   Pins bumpversion version using requirements.txt and multi-stage docker build
 
 ### 0.11.0
 
