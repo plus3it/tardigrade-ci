@@ -1,6 +1,6 @@
 FROM golang:1.16.3-buster as golang
 
-FROM quay.io/terraform-docs/terraform-docs:0.11.2 as tfdocs
+FROM quay.io/terraform-docs/terraform-docs:0.12.1 as tfdocs
 
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
 
