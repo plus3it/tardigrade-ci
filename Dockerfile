@@ -1,12 +1,19 @@
 FROM golang:1.16.3-buster as golang
+
 FROM quay.io/terraform-docs/terraform-docs:0.11.2 as tfdocs
+
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
+
 FROM bats/bats:1.2.1 as bats
+
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
+
 FROM hashicorp/terraform:0.15.0 as terraform
+
 FROM mikefarah/yq:4.7.0 as yq
 
 FROM python:3.9.4-buster
+
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
 ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
@@ -27,7 +34,7 @@ RUN apt-get update -y && apt-get install -y \
     unzip \
     make \
     && ln -s /opt/bats/bin/bats /usr/local/bin/bats \
-    && make -C /${PROJECT_NAME} install \
+    && python -m pip install --no-cache-dir -r /${PROJECT_NAME}/requirements.txt \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /${PROJECT_NAME}
