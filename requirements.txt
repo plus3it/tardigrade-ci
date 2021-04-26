@@ -8,7 +8,7 @@ cfn-lint==0.48.3
 
 pydocstyle==6.0.0
 
-pylint==2.7.4
+pylint==2.8.1
 
 pylint-pytest==1.1.2
 
