@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.12.1
+
+**Released**: 2021.05.3
+
+**Commit Delta**: [Change from 0.12.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.0..0.12.1)
+
+**Summary**:
+
+* Remove the "--user" option from the "python -m pip install" commands. 
+
 ### 0.12.0
 
 **Released**: 2021.04.23
