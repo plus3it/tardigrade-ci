@@ -61,6 +61,10 @@ parse_github_download_url = $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.c
 # $(call download_github_release,file,owner,repo,version,asset select query)
 download_github_release = $(CURL) $(GITHUB_AUTHORIZATION) -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
 
+# Macro to stream a github binary release
+# $(call stream_github_release,owner,repo,version,asset select query)
+stream_github_release = $(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_github_download_url,$(1),$(2),$(3),$(4)))
+
 # Macro to download a hashicorp archive release
 # $(call download_hashicorp_release,file,app,version)
 download_hashicorp_release = $(CURL) -o $(1) https://releases.hashicorp.com/$(2)/$(3)/$(2)_$(3)_$(OS)_$(ARCH).zip
@@ -87,6 +91,7 @@ install/gh-release/%:
 	@ echo "[$@]: Completed successfully!"
 
 stream/gh-release/%: guard/env/OWNER guard/env/REPO guard/env/VERSION guard/env/QUERY
+	$(warning WARNING: The target stream/gh-release is deprecated and will be removed in a future version. Use the macro "stream_github_release" instead.)
 	$(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_github_download_url,$(OWNER),$(REPO),$(VERSION),$(QUERY)))
 
 zip/install:
@@ -114,10 +119,10 @@ jq/install: | $(BIN_DIR)
 
 shellcheck/install: SHELLCHECK_VERSION ?= latest
 shellcheck/install: $(BIN_DIR) guard/program/xz
-	$(MAKE) -s stream/gh-release/$(@D) OWNER=koalaman REPO=shellcheck VERSION=$(SHELLCHECK_VERSION) QUERY='.name | endswith("$(OS).x86_64.tar.xz")' | tar -xJv
-	mv $(@D)-*/$(@D) $(BIN_DIR)
-	rm -rf $(@D)-*
+	@ echo "[$@]: Installing $(@D)..."
+	$(call stream_github_release,koalaman,$(@D),$(SHELLCHECK_VERSION),.name | endswith("$(OS).x86_64.tar.xz")) | tar -C "$(BIN_DIR)" -xJv --wildcards --no-anchored --strip-components=1 $(@D)
 	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
 
 # For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
@@ -125,8 +130,7 @@ ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
 ec/install: EC_VERSION ?= latest
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
-	$(MAKE) -s stream/gh-release/$(@D) OWNER=editorconfig-checker REPO=editorconfig-checker VERSION=$(EC_VERSION) QUERY='.name | endswith("$(EC_BASE_NAME).tar.gz")' | tar -C "$(BIN_DIR)" --strip-components=1 -xzvf -
-	ln -sf "$(BIN_DIR)/$(EC_BASE_NAME)" "$(BIN_DIR)/$(@D)"
+	$(call stream_github_release,editorconfig-checker,editorconfig-checker,$(EC_VERSION),.name | endswith("$(EC_BASE_NAME).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --transform='s/$(EC_BASE_NAME)/ec/' --strip-components=1 $(EC_BASE_NAME)
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
