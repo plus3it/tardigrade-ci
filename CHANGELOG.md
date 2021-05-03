@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.12.2
+
+**Released**: 2021.05.03
+
+**Commit Delta**: [Change from 0.12.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.1..0.12.2)
+
+**Summary**:
+
+*   Provides a macro "stream_github_release" that supports piping a GitHub Release
+    artifact to another tool (like `tar`). The target "stream/gh-release/%" is
+    deprecated in favor of this macro, to avoid an unnecessary recursive `$(MAKE)`.
+*   Updates the `terraform-docs/install` target to extract the binary from the
+    tar.gz archive hosted by GitHub Releases, as the binary is no longer available
+    as a separate artifact.
+
 ### 0.12.1
 
 **Released**: 2021.05.3
@@ -12,13 +27,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Remove the "--user" option from the "python -m pip install" commands. 
+*   Remove the "--user" option from the "python -m pip install" commands.
 
 ### 0.12.0
 
 **Released**: 2021.04.23
 
-**Commit Delta**: [Change from 0.12.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0..0.12.0)
+**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0..0.12.0)
 
 **Summary**:
 
