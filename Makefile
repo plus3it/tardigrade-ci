@@ -111,7 +111,10 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 
 terraform-docs/install: TFDOCS_VERSION ?= latest
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
-	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=segmentio REPO=$(@D) VERSION=$(TFDOCS_VERSION) QUERY='.name | endswith("$(OS)-$(ARCH)")'
+	@ echo "[$@]: Installing $(@D)..."
+	$(call stream_github_release,$(@D),$(@D),$(TFDOCS_VERSION),.name | endswith("$(OS)-$(ARCH).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
 
 jq/install: JQ_VERSION ?= latest
 jq/install: | $(BIN_DIR)
