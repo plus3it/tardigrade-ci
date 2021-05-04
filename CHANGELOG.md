@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.12.3
+
+**Released**: 2021.05.04
+
+**Commit Delta**: [Change from 0.12.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.2..0.12.3)
+
+**Summary**:
+
+*   Updates version of black. Modifies pydocstyle unit test to accommodate change for the new version of black.
+
 ### 0.12.2
 
 **Released**: 2021.05.03
