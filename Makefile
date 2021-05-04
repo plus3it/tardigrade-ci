@@ -3,11 +3,10 @@ OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
 XARGS ?= xargs -I {}
 BIN_DIR ?= ${HOME}/bin
-PIP_BIN_DIR ?= ${HOME}/.local/bin
 TMP ?= /tmp
 FIND_EXCLUDES ?= -not \( -name .terraform -prune \) -not \( -name .terragrunt-cache -prune \)
 
-PATH := $(BIN_DIR):$(PIP_BIN_DIR):${PATH}
+PATH := $(BIN_DIR):${PATH}
 
 MAKEFLAGS += --no-print-directory
 SHELL := bash
@@ -142,6 +141,7 @@ install/pip/%: PKG_VERSION_CMD ?= $* --version
 install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PYTHON) -m pip install $(PYPI_PKG_NAME)
+	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
 	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
 
