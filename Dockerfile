@@ -12,7 +12,7 @@ FROM hashicorp/terraform:0.15.1 as terraform
 
 FROM mikefarah/yq:4.7.1 as yq
 
-FROM python:3.9.4-buster
+FROM python:3.9.5-buster
 
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
