@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.12.5
+
+**Released**: 2021.05.06
+
+**Commit Delta**: [Change from 0.12.5 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.4..0.12.5)
+
+**Summary**:
+
+*   Update terraform-docs version to v0.13.0
+
 ### 0.12.4
 
 **Released**: 2021.05.05

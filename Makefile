@@ -302,7 +302,7 @@ json/format: | guard/program/jq json/validate
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
-docs/%: TFDOCS ?= terraform-docs --hide modules --hide resources --sort-by-required markdown table
+docs/%: TFDOCS ?= terraform-docs --hide modules --hide resources --sort-by required markdown table
 docs/%: README_FILES ?= find . $(FIND_EXCLUDES) -type f -name README.md
 docs/%: README_TMP ?= $(TMP)/README.tmp
 docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
