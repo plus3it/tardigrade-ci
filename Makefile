@@ -6,7 +6,10 @@ BIN_DIR ?= ${HOME}/bin
 TMP ?= /tmp
 FIND_EXCLUDES ?= -not \( -name .terraform -prune \) -not \( -name .terragrunt-cache -prune \)
 
-PATH := $(BIN_DIR):${PATH}
+# See https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE
+PYTHONUSERBASE ?= $(HOME)/.local
+
+PATH := $(BIN_DIR):$(PYTHONUSERBASE)/bin:${PATH}
 
 MAKEFLAGS += --no-print-directory
 SHELL := bash
@@ -138,16 +141,17 @@ ec/install:
 	@ echo "[$@]: Completed successfully!"
 
 install/pip/%: PKG_VERSION_CMD ?= $* --version
+install/pip/%: PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
 install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
-	$(PYTHON) -m pip install $(PYPI_PKG_NAME)
-	ln -sf ~/.local/bin/$* $(BIN_DIR)/$*
+	$(PIP) install $(PYPI_PKG_NAME)
 	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
 
+install/pip_pkg_with_no_cli/%: PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
 install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
-	$(PYTHON) -m pip install $(PYPI_PKG_NAME)
+	$(PIP) install $(PYPI_PKG_NAME)
 
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.12.4
+
+**Released**: 2021.05.05
+
+**Commit Delta**: [Change from 0.12.3 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.3..0.12.4)
+
+**Summary**:
+
+*   Uses `pip` pyenv shim when available
+*   Adds `PYTHONUSERBASE` bin directory to PATH
+
 ### 0.12.3
 
 **Released**: 2021.05.04
