@@ -35,6 +35,7 @@ RUN apt-get update -y && apt-get install -y \
     make \
     && ln -s /opt/bats/bin/bats /usr/local/bin/bats \
     && python -m pip install --no-cache-dir -r /${PROJECT_NAME}/requirements.txt \
+    && make -C /${PROJECT_NAME} terragrunt/install \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /${PROJECT_NAME}

@@ -112,6 +112,10 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
+terragrunt/install: TERRAGRUNT_VERSION ?= latest
+terragrunt/install: | $(BIN_DIR) guard/program/jq
+	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
+
 terraform-docs/install: TFDOCS_VERSION ?= latest
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
@@ -409,6 +413,6 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terragrunt/install terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
