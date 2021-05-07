@@ -1,17 +1,5 @@
 FROM golang:1.16.5-buster as golang
 
-FROM quay.io/terraform-docs/terraform-docs:0.14.1 as tfdocs
-
-FROM koalaman/shellcheck:v0.7.2 as shellcheck
-
-FROM bats/bats:1.2.1 as bats
-
-FROM mstruebing/editorconfig-checker:2.3.5 as ec
-
-FROM hashicorp/terraform:1.0.0 as terraform
-
-FROM mikefarah/yq:4.9.5 as yq
-
 FROM python:3.9.5-buster
 
 ARG PROJECT_NAME=tardigrade-ci
@@ -20,12 +8,6 @@ ENV PATH="/root/.local/bin:/root/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 COPY --from=golang /go/ /go/
 COPY --from=golang /usr/local/go/ /usr/local/go/
-COPY --from=tfdocs /usr/local/bin/terraform-docs /usr/local/bin/
-COPY --from=terraform /bin/terraform /usr/local/bin/
-COPY --from=shellcheck /bin/shellcheck /usr/local/bin/
-COPY --from=bats /opt/bats /opt/bats
-COPY --from=ec /usr/bin/ec /usr/local/bin/ec
-COPY --from=yq /usr/bin/yq /usr/local/bin/yq
 COPY . /${PROJECT_NAME}
 RUN apt-get update -y && apt-get install -y \
     xz-utils \
@@ -33,9 +15,7 @@ RUN apt-get update -y && apt-get install -y \
     jq \
     unzip \
     make \
-    && ln -s /opt/bats/bin/bats /usr/local/bin/bats \
-    && python -m pip install --no-cache-dir -r /${PROJECT_NAME}/requirements.txt \
-    && make -C /${PROJECT_NAME} terragrunt/install \
+    && make -C /${PROJECT_NAME} install \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /${PROJECT_NAME}

@@ -22,6 +22,8 @@ PYTHON ?= python3
 DEFAULT_HELP_TARGET ?= help
 HELP_FILTER ?= .*
 
+export PWD := $(shell pwd)
+
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
