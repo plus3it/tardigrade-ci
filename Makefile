@@ -25,6 +25,7 @@ HELP_FILTER ?= .*
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
+TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){2}
 
 export TARDIGRADE_CI_AUTO_INIT = false
@@ -162,29 +163,37 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 
+black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
+pylint/install: PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_VERSION)'
 
+pylint-pytest/install: PYLINT_PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint-pytest==','$(SEMVER_PATTERN)')
 pylint-pytest/install:
-	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)'
 
+pydocstyle/install: PYDOCSTYLE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pydocstyle==','$(SEMVER_PATTERN)')
 pydocstyle/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYDOCSTYLE_VERSION)'
 
+yamllint/install: YAMLLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'yamllint==','$(SEMVER_PATTERN)')
 yamllint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(YAMLLINT_VERSION)'
 
+cfn-lint/install: CFN_LINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'cfn-lint==','$(SEMVER_PATTERN)')
 cfn-lint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(CFN_LINT_VERSION)'
 
+yq/install: YQ_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'yq==','$(SEMVER_PATTERN)')
 yq/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(YQ_VERSION)'
 
+bump2version/install: BUMPVERSION_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'bump2version==','$(SEMVER_PATTERN)')
 bump2version/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BUMPVERSION_VERSION)' PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
 
 bumpversion/install: bump2version/install
 
