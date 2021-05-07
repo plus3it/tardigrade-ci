@@ -24,6 +24,8 @@ HELP_FILTER ?= .*
 
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
+TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
+SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){2}
 
 export TARDIGRADE_CI_AUTO_INIT = false
 
@@ -72,6 +74,10 @@ stream_github_release = $(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_git
 # $(call download_hashicorp_release,file,app,version)
 download_hashicorp_release = $(CURL) -o $(1) https://releases.hashicorp.com/$(2)/$(3)/$(2)_$(3)_$(OS)_$(ARCH).zip
 
+# Macro to match a pattern from a line in a file
+# $(call match_pattern_in_file,file,line,pattern)
+match_pattern_in_file = $(or $(shell grep $(2) $(1) 2> /dev/null | grep -oE $(3) 2> /dev/null),$(error Could not match pattern from file: file=$(1), line=$(2), pattern=$(3)))
+
 guard/env/%:
 	@ _="$(or $($*),$(error Make/environment variable '$*' not present))"
 
@@ -102,8 +108,7 @@ zip/install:
 	apt-get install zip -y
 	@ echo "[$@]: Completed successfully!"
 
-terraform/install: TERRAFORM_VERSION_LATEST := $(CURL) https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version' | sed 's/^v//'
-terraform/install: TERRAFORM_VERSION ?= $(shell $(TERRAFORM_VERSION_LATEST))
+terraform/install: TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
@@ -116,7 +121,7 @@ terragrunt/install: TERRAGRUNT_VERSION ?= latest
 terragrunt/install: | $(BIN_DIR) guard/program/jq
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
-terraform-docs/install: TFDOCS_VERSION ?= latest
+terraform-docs/install: TFDOCS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'terraform-docs/terraform-docs','$(SEMVER_PATTERN)')
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,$(@D),$(@D),$(TFDOCS_VERSION),.name | endswith("$(OS)-$(ARCH).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
@@ -127,7 +132,7 @@ jq/install: JQ_VERSION ?= latest
 jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
-shellcheck/install: SHELLCHECK_VERSION ?= latest
+shellcheck/install: SHELLCHECK_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'koalaman/shellcheck','$(SEMVER_PATTERN)')
 shellcheck/install: $(BIN_DIR) guard/program/xz
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,koalaman,$(@D),$(SHELLCHECK_VERSION),.name | endswith("$(OS).x86_64.tar.xz")) | tar -C "$(BIN_DIR)" -xJv --wildcards --no-anchored --strip-components=1 $(@D)
@@ -137,7 +142,7 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 # For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
 ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
-ec/install: EC_VERSION ?= latest
+ec/install: EC_VERSION ?= tags/$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'editorconfig-checker','$(SEMVER_PATTERN)')
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,editorconfig-checker,editorconfig-checker,$(EC_VERSION),.name | endswith("$(EC_BASE_NAME).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --transform='s/$(EC_BASE_NAME)/ec/' --strip-components=1 $(EC_BASE_NAME)
@@ -394,7 +399,7 @@ terratest/test:
 ## Runs terraform tests in the tests directory
 test: terratest/test
 
-bats/install: BATS_VERSION ?= latest
+bats/install: BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
 	$(CURL) $(shell $(CURL) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
 	$(TMP)/bats-core-*/install.sh ~
