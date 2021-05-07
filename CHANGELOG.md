@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.13.1
+
+**Released**: 2021.05.07
+
+**Commit Delta**: [Change from 0.13.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.13.0..0.13.1)
+
+**Summary**:
+
+*   Provides a target for installing terragrunt, `terragrunt/install`, and adds
+    terragrunt to the docker container.
+
 ### 0.13.0
 
 **Released**: 2021.05.06
