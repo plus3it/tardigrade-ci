@@ -132,7 +132,6 @@ terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Completed successfully!"
 
 jq/install: JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'stedolan/jq','$(SEMVER_PATTERN)')
-jq/install: JQ_VERSION ?= latest
 jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
@@ -430,6 +429,8 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terragrunt/install terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
+install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install
+install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
