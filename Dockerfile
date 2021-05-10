@@ -10,7 +10,7 @@ FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
 FROM hashicorp/terraform:0.15.3 as terraform
 
-FROM mikefarah/yq:4.7.1 as yq
+FROM mikefarah/yq:4.8.0 as yq
 
 FROM python:3.9.5-buster
 
