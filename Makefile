@@ -26,6 +26,7 @@ export PWD := $(shell pwd)
 
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
+TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
 TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,2}
@@ -111,7 +112,7 @@ zip/install:
 	apt-get install zip -y
 	@ echo "[$@]: Completed successfully!"
 
-terraform/install: TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
+terraform/install: TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
@@ -124,7 +125,7 @@ terragrunt/install: TERRAGRUNT_VERSION ?= tags/v$(call match_pattern_in_file,$(T
 terragrunt/install: | $(BIN_DIR) guard/program/jq
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
-terraform-docs/install: TFDOCS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'terraform-docs/terraform-docs','$(SEMVER_PATTERN)')
+terraform-docs/install: TFDOCS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'terraform-docs/terraform-docs','$(SEMVER_PATTERN)')
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,$(@D),$(@D),$(TFDOCS_VERSION),.name | endswith("$(OS)-$(ARCH).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
@@ -135,7 +136,7 @@ jq/install: JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_G
 jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
-shellcheck/install: SHELLCHECK_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'koalaman/shellcheck','$(SEMVER_PATTERN)')
+shellcheck/install: SHELLCHECK_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'koalaman/shellcheck','$(SEMVER_PATTERN)')
 shellcheck/install: $(BIN_DIR) guard/program/xz
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,koalaman,$(@D),$(SHELLCHECK_VERSION),.name | endswith("$(OS).x86_64.tar.xz")) | tar -C "$(BIN_DIR)" -xJv --wildcards --no-anchored --strip-components=1 $(@D)
@@ -145,7 +146,7 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 # For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
 ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
-ec/install: EC_VERSION ?= tags/$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'editorconfig-checker/editorconfig-checker','$(SEMVER_PATTERN)')
+ec/install: EC_VERSION ?= tags/$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mstruebing/editorconfig-checker','$(SEMVER_PATTERN)')
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,editorconfig-checker,editorconfig-checker,$(EC_VERSION),.name | endswith("$(EC_BASE_NAME).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --transform='s/$(EC_BASE_NAME)/ec/' --strip-components=1 $(EC_BASE_NAME)
@@ -189,7 +190,7 @@ cfn-lint/install: CFN_LINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_
 cfn-lint/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(CFN_LINT_VERSION)'
 
-yq/install: YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
+yq/install: YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
 yq/install:
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
@@ -410,7 +411,7 @@ terratest/test:
 ## Runs terraform tests in the tests directory
 test: terratest/test
 
-bats/install: BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
+bats/install: BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
 	$(CURL) $(shell $(CURL) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
 	$(TMP)/bats-core-*/install.sh ~

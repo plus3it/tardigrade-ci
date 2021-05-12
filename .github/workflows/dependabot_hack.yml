@@ -1,9 +1,14 @@
 # Support creating Dependabot PRs for GitHub releases
 
 # Dependabot supports updating GitHub Actions (this file) whenever a project creates
-# a new tag/release. By listing all the projects/tools in the action, we get a PR
+# a new tag/release. By listing the projects/tools in the action, we get a PR
 # from Dependabot for any release of these projects. The version is then parsed
 # from this file, in the `*/install` targets in the tardigrade-ci `Makefile`.
+
+# Pinning tool versions this way should be a last resort, since GitHub prevents
+# services like Mergify from automatically merging pull requests that modify
+# `.github/workflows`. Only add a tool here if there is no other option for pinning
+# the version.
 name: Dependabot hack
 on:
   push:
@@ -12,23 +17,11 @@ on:
 
 jobs:
   dependabot_hack:
-    name: Track all project/tool versions with Dependabot
+    name: Track project/tool versions with Dependabot
     runs-on: ubuntu-20.04
     steps:
       # Keep these sorted alphabetically by <user>/<repo>, separated by an empty line
 
-      - uses: bats/bats@v1.2.1
-
-      - uses: editorconfig-checker/editorconfig-checker@2.3.5
-
       - uses: gruntwork-io/terragrunt@v0.29.2
 
-      - uses: hashicorp/terraform@v0.15.3
-
-      - uses: koalaman/shellcheck@v0.7.2
-
-      - uses: mikefarah/yq@v4.7.1
-
       - uses: stedolan/jq@jq-1.6
-
-      - uses: terraform-docs/terraform-docs@v0.13.0
