@@ -1,6 +1,6 @@
 # Keep this list in alphabetical order, with a single blank line between each package
 
-black==21.5b0
+black==21.5b1
 
 bumpversion==0.6.0
 
