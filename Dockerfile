@@ -8,7 +8,7 @@ FROM bats/bats:1.2.1 as bats
 
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
-FROM hashicorp/terraform:0.15.4 as terraform
+FROM hashicorp/terraform:0.15.5 as terraform
 
 FROM mikefarah/yq:4.9.3 as yq
 
