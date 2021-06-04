@@ -1,4 +1,4 @@
-FROM golang:1.16.4-buster as golang
+FROM golang:1.16.5-buster as golang
 
 FROM quay.io/terraform-docs/terraform-docs:0.14.1 as tfdocs
 
