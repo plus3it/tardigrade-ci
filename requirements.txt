@@ -4,7 +4,7 @@ black==21.5b1
 
 bumpversion==0.6.0
 
-cfn-lint==0.49.2
+cfn-lint==0.50.0
 
 pydocstyle==6.1.1
 
