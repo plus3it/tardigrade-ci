@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.14.0
+
+**Released**: 2021.05.28
+
+**Commit Delta**: [Change from 0.13.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.13.1..0.14.0)
+
+**Summary**:
+
+*   Modifies "install" targets to install the version pinned in a file managed
+    by Dependabot. Depending on the tool and how it is packaged/hosted, the version
+    may be pinned in `Dockerfile.tools`, `requirements.txt`, or `.github/workflows/dependabot_hack.yml`.
+*   Uses "install" targets in Dockerfile, to ensure the targets are all tested
+    when building the image in Ci.
+
 ### 0.13.1
 
 **Released**: 2021.05.07

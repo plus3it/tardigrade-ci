@@ -22,8 +22,14 @@ PYTHON ?= python3
 DEFAULT_HELP_TARGET ?= help
 HELP_FILTER ?= .*
 
+export PWD := $(shell pwd)
+
 TARDIGRADE_CI_PATH ?= $(PWD)
 TARDIGRADE_CI_PROJECT ?= tardigrade-ci
+TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
+TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
+TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
+SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,2}
 
 export TARDIGRADE_CI_AUTO_INIT = false
 
@@ -72,6 +78,10 @@ stream_github_release = $(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_git
 # $(call download_hashicorp_release,file,app,version)
 download_hashicorp_release = $(CURL) -o $(1) https://releases.hashicorp.com/$(2)/$(3)/$(2)_$(3)_$(OS)_$(ARCH).zip
 
+# Macro to match a pattern from a line in a file
+# $(call match_pattern_in_file,file,line,pattern)
+match_pattern_in_file = $(or $(shell grep $(2) $(1) 2> /dev/null | grep -oE $(3) 2> /dev/null),$(error Could not match pattern from file: file=$(1), line=$(2), pattern=$(3)))
+
 guard/env/%:
 	@ _="$(or $($*),$(error Make/environment variable '$*' not present))"
 
@@ -102,8 +112,7 @@ zip/install:
 	apt-get install zip -y
 	@ echo "[$@]: Completed successfully!"
 
-terraform/install: TERRAFORM_VERSION_LATEST := $(CURL) https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r -M '.current_version' | sed 's/^v//'
-terraform/install: TERRAFORM_VERSION ?= $(shell $(TERRAFORM_VERSION_LATEST))
+terraform/install: TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
@@ -112,22 +121,22 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-terragrunt/install: TERRAGRUNT_VERSION ?= latest
+terragrunt/install: TERRAGRUNT_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'gruntwork-io/terragrunt','$(SEMVER_PATTERN)')
 terragrunt/install: | $(BIN_DIR) guard/program/jq
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
-terraform-docs/install: TFDOCS_VERSION ?= latest
+terraform-docs/install: TFDOCS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'terraform-docs/terraform-docs','$(SEMVER_PATTERN)')
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,$(@D),$(@D),$(TFDOCS_VERSION),.name | endswith("$(OS)-$(ARCH).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-jq/install: JQ_VERSION ?= latest
+jq/install: JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'stedolan/jq','$(SEMVER_PATTERN)')
 jq/install: | $(BIN_DIR)
 	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
-shellcheck/install: SHELLCHECK_VERSION ?= latest
+shellcheck/install: SHELLCHECK_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'koalaman/shellcheck','$(SEMVER_PATTERN)')
 shellcheck/install: $(BIN_DIR) guard/program/xz
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,koalaman,$(@D),$(SHELLCHECK_VERSION),.name | endswith("$(OS).x86_64.tar.xz")) | tar -C "$(BIN_DIR)" -xJv --wildcards --no-anchored --strip-components=1 $(@D)
@@ -137,7 +146,7 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 # For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
 ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
-ec/install: EC_VERSION ?= latest
+ec/install: EC_VERSION ?= tags/$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mstruebing/editorconfig-checker','$(SEMVER_PATTERN)')
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,editorconfig-checker,editorconfig-checker,$(EC_VERSION),.name | endswith("$(EC_BASE_NAME).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --transform='s/$(EC_BASE_NAME)/ec/' --strip-components=1 $(EC_BASE_NAME)
@@ -157,29 +166,37 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 
+black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
+pylint/install: PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_VERSION)'
 
+pylint-pytest/install: PYLINT_PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint-pytest==','$(SEMVER_PATTERN)')
 pylint-pytest/install:
-	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)'
 
+pydocstyle/install: PYDOCSTYLE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pydocstyle==','$(SEMVER_PATTERN)')
 pydocstyle/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYDOCSTYLE_VERSION)'
 
+yamllint/install: YAMLLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'yamllint==','$(SEMVER_PATTERN)')
 yamllint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(YAMLLINT_VERSION)'
 
+cfn-lint/install: CFN_LINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'cfn-lint==','$(SEMVER_PATTERN)')
 cfn-lint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(CFN_LINT_VERSION)'
 
+yq/install: YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
 yq/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D)
+	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
+bump2version/install: BUMPVERSION_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'bump2version==','$(SEMVER_PATTERN)')
 bump2version/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME=$(@D) PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BUMPVERSION_VERSION)' PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
 
 bumpversion/install: bump2version/install
 
@@ -394,7 +411,7 @@ terratest/test:
 ## Runs terraform tests in the tests directory
 test: terratest/test
 
-bats/install: BATS_VERSION ?= latest
+bats/install: BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
 	$(CURL) $(shell $(CURL) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
 	$(TMP)/bats-core-*/install.sh ~
@@ -413,6 +430,8 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terragrunt/install terraform/install shellcheck/install terraform-docs/install bats/install black/install pylint/install pylint-pytest/install pydocstyle/install ec/install yamllint/install cfn-lint/install yq/install bumpversion/install
+install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
+install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install
+install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint

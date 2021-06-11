@@ -1,8 +1,11 @@
+# This requirements.txt file is used to let Dependabot manage pinned versions of
+# tools that will be installed using the target `make install`
+
 # Keep this list in alphabetical order, with a single blank line between each package
 
 black==21.5b2
 
-bumpversion==0.6.0
+bump2version==1.0.1
 
 cfn-lint==0.50.0
 
