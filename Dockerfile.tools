@@ -13,4 +13,4 @@ FROM mikefarah/yq:4.7.1 as yq
 
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
-FROM quay.io/terraform-docs/terraform-docs:0.13.0 as tfdocs
+FROM quay.io/terraform-docs/terraform-docs:0.14.1 as tfdocs
