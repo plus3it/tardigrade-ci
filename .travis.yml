@@ -29,10 +29,8 @@ jobs:
       script: make sh/lint
     - stage: test
       name: Run Makefile unit tests
-      script: |
-        set -e
-        docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
-        docker run "$IMAGE_NAME" bats/test
+      install: docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
+      script: docker run "$IMAGE_NAME" bats/test
     - stage: deploy
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
