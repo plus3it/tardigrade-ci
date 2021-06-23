@@ -1,0 +1,14 @@
+version: "2.1"
+
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - SERVICES=apigateway,cloudformation,cloudwatch,cloudwatchevents,cloudwatchlogs,dynamodb,ec2,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanager,ses,sns,sqs,ssm,stepfunctions,sts
+      - MAIN_CONTAINER_NAME=localstack
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
