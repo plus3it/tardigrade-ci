@@ -7,7 +7,7 @@ node_js:
 
 env:
   global:
-    - IMAGE_NAME=plus3it/tardigrade-ci
+    - IMAGE_NAME=tardigrade-ci-test
 
 if: branch = master OR type = pull_request OR tag is present
 
@@ -29,10 +29,10 @@ jobs:
       script: make sh/lint
     - stage: test
       name: Run Makefile unit tests
-      script:
-        - docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
-        - docker run "$IMAGE_NAME" bats/test
+      install: docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
+      script: docker run "$IMAGE_NAME" bats/test
     - stage: deploy
+      name: Deploy to GitHub Releases
       if: branch = master AND type = push AND repo = plus3it/tardigrade-ci
       before_script:
         - |
@@ -56,3 +56,27 @@ jobs:
           branch: master
           repo: plus3it/tardigrade-ci
           condition: '"$PRIOR_VERSION" != "$RELEASE_VERSION"'
+
+    - stage: deploy
+      name: Deploy docker image to dockerhub
+      if: (branch = master OR tag is present) AND type != pull_request AND repo = plus3it/tardigrade-ci
+      script: docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
+      before_deploy:
+        - export DOCKERHUB_TARGET="plus3it/tardigrade-ci:${TRAVIS_TAG:-latest}"
+        - docker tag "$IMAGE_NAME" "$DOCKERHUB_TARGET"
+        - echo Pushing image "$DOCKERHUB_TARGET"
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      after_deploy: echo Pushed image "$DOCKERHUB_TARGET"
+      deploy:
+        - provider: script
+          # push "latest" to dockerhub
+          script: docker push "$DOCKERHUB_TARGET"
+          skip_cleanup: true
+          on:
+            branch: master
+        - provider: script
+          # push "tag" to dockerhub
+          script: docker push "$DOCKERHUB_TARGET"
+          skip_cleanup: true
+          on:
+            tags: true

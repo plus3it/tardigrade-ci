@@ -4,16 +4,108 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### unreleased
+### 0.14.0
 
-**Released**: tbd
+**Released**: 2021.05.28
 
-**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0...unreleased)
+**Commit Delta**: [Change from 0.13.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.13.1..0.14.0)
+
+**Summary**:
+
+*   Modifies "install" targets to install the version pinned in a file managed
+    by Dependabot. Depending on the tool and how it is packaged/hosted, the version
+    may be pinned in `Dockerfile.tools`, `requirements.txt`, or `.github/workflows/dependabot_hack.yml`.
+*   Uses "install" targets in Dockerfile, to ensure the targets are all tested
+    when building the image in Ci.
+
+### 0.13.1
+
+**Released**: 2021.05.07
+
+**Commit Delta**: [Change from 0.13.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.13.0..0.13.1)
+
+**Summary**:
+
+*   Provides a target for installing terragrunt, `terragrunt/install`, and adds
+    terragrunt to the docker container.
+
+### 0.13.0
+
+**Released**: 2021.05.06
+
+**Commit Delta**: [Change from 0.12.4 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.4..0.13.0)
+
+**Summary**:
+
+*   Update terraform-docs version to v0.13.0
+
+### 0.12.4
+
+**Released**: 2021.05.05
+
+**Commit Delta**: [Change from 0.12.3 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.3..0.12.4)
+
+**Summary**:
+
+*   Uses `pip` pyenv shim when available
+*   Adds `PYTHONUSERBASE` bin directory to PATH
+
+### 0.12.3
+
+**Released**: 2021.05.04
+
+**Commit Delta**: [Change from 0.12.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.2..0.12.3)
+
+**Summary**:
+
+*   Updates version of black. Modifies pydocstyle unit test to accommodate change for the new version of black.
+
+### 0.12.2
+
+**Released**: 2021.05.03
+
+**Commit Delta**: [Change from 0.12.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.1..0.12.2)
+
+**Summary**:
+
+*   Provides a macro "stream_github_release" that supports piping a GitHub Release
+    artifact to another tool (like `tar`). The target "stream/gh-release/%" is
+    deprecated in favor of this macro, to avoid an unnecessary recursive `$(MAKE)`.
+*   Updates the `terraform-docs/install` target to extract the binary from the
+    tar.gz archive hosted by GitHub Releases, as the binary is no longer available
+    as a separate artifact.
+
+### 0.12.1
+
+**Released**: 2021.05.3
+
+**Commit Delta**: [Change from 0.12.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.12.0..0.12.1)
+
+**Summary**:
+
+*   Remove the "--user" option from the "python -m pip install" commands.
+
+### 0.12.0
+
+**Released**: 2021.04.23
+
+**Commit Delta**: [Change from 0.11.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.11.0..0.12.0)
 
 **Summary**:
 
 *   Pins terraform-docs version using multi-stage docker build
 *   Pins terraform version using multi-stage docker build
+*   Pins shellcheck version using multi-stage docker build
+*   Pins bats version using multi-stage docker build
+*   Pins editorconfig-checker (ec) version using multi-stage docker build
+*   Pins yq version using multi-stage docker build
+*   Pins black version using requirements.txt and multi-stage docker build
+*   Pins pylint version using requirements.txt and multi-stage docker build
+*   Pins pylint-pytest version using requirements.txt and multi-stage docker build
+*   Pins pydocstyle version using requirements.txt and multi-stage docker build
+*   Pins yamllint version using requirements.txt and multi-stage docker build
+*   Pins cfn-lint version using requirements.txt and multi-stage docker build
+*   Pins bumpversion version using requirements.txt and multi-stage docker build
 
 ### 0.11.0
 

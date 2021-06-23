@@ -18,7 +18,7 @@ import os
 
 
 def testing():
-    """This should print the current OS name """
+    """This should print the current OS name"""
 
     print(os.name)
 EOF

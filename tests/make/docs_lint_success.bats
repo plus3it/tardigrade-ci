@@ -28,17 +28,21 @@ No requirements.
 
 ## Providers
 
-No provider.
+No providers.
+
+## Resources
+
+No resources.
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| foo | test var | `string` | `"bar"` | no |
+| <a name="input_foo"></a> [foo](#input\_foo) | test var | `string` | `"bar"` | no |
 
 ## Outputs
 
-No output.
+No outputs.
 
 <!-- END TFDOCS -->
 EOF
