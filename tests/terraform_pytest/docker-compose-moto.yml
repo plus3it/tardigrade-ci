@@ -1,4 +1,4 @@
-version: "2.1"
+version: "3.3"
 
 services:
   motostack:
@@ -7,9 +7,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - SERVICES=apigateway,cloudformation,cloudwatch,cloudwatchevents,cloudwatc
-hlogs,dynamodb,ec2,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanage
-r,ses,sns,sqs,ssm,stepfunctions,sts
+      - SERVICES=apigateway,cloudformation,cloudwatch,cloudwatchevents,cloudwatchlogs,dynamodb,ec2,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanager,ses,sns,sqs,ssm,stepfunctions,sts
       - MAIN_CONTAINER_NAME=moto
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
