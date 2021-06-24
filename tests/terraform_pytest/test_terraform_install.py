@@ -18,7 +18,7 @@ def plan_and_apply(is_mock, use_moto, repo_root_dir):
     """Return the function that will invoke Terraform plan and apply."""
 
     def invoke_plan_and_apply(tf_module):
-        """Helper function to execute Terraform plan and apply."""
+        """Execute Terraform plan and apply."""
         tf_dir = Path(repo_root_dir / "tests")
         tf_test = tftest.TerraformTest(tf_module, basedir=str(tf_dir), env=None)
 

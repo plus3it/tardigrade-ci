@@ -31,7 +31,7 @@ def aws_credentials(tmpdir, monkeypatch):
     # but unfortunately, monkeypatch does not support that scope.
 
     def create_aws_credentials(profile_names):
-        """Helper function to create mocked AWS credentials."""
+        """Create mocked AWS credentials."""
         # Create a temporary AWS credentials file.
         for profile_name in profile_names:
             aws_creds = [
@@ -49,7 +49,9 @@ def aws_credentials(tmpdir, monkeypatch):
         monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
         monkeypatch.setenv("AWS_SECURITY_TOKEN", "testing")
         monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
-        monkeypatch.setenv("AWS_PROFILE", profile_name)
+        monkeypatch.setenv("AWS_PROFILE", DEFAULT_PROFILE_NAME)
+        if ALTERNATE_PROFILE_NAME in profile_names:
+            monkeypatch.setenv("AWS_PROFILE", ALTERNATE_PROFILE_NAME)
 
     return create_aws_credentials
 
@@ -75,7 +77,7 @@ def is_mock(request, aws_credentials):
 @pytest.fixture(scope="session")
 def use_moto(request):
     """Return True if moto should be used, not LocalStack."""
-    if request.config.option.nomock:
+    if request.config.option.moto and request.config.option.nomock:
         pytest.exit(msg="conflicting options:  'moto' and 'nomock'")
     return request.config.option.moto
 
