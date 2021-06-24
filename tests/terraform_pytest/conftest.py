@@ -35,11 +35,13 @@ def aws_credentials(tmpdir, monkeypatch):
         # Create a temporary AWS credentials file.
         aws_creds = []
         for profile_name in profile_names:
-            aws_creds.extend([
-                f"[{profile_name}]",
-                "aws_access_key_id = testing",
-                "aws_secret_access_key = testing",
-            ])
+            aws_creds.extend(
+                [
+                    f"[{profile_name}]",
+                    "aws_access_key_id = testing",
+                    "aws_secret_access_key = testing",
+                ]
+            )
         path = tmpdir.join("aws_test_creds")
         path.write("\n".join(aws_creds))
         monkeypatch.setenv("AWS_SHARED_CREDENTIALS_FILE", str(path))
