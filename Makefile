@@ -418,15 +418,14 @@ terratest/test:
 
 TERRAFORM_PYTEST_ARGS ?=
 TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
-terraform/pytest: | guard/program/terraform guard/program/pytest guard/program/tftest
+terraform/pytest: | guard/program/terraform guard/program/pytest guard/python_pkg/tftest
 	@ echo "[$@] Starting Terraform integration test"
 	pytest -v $(TERRAFORM_PYTEST_DIR) $(TERRAFORM_PYTEST_ARGS)
 	@ echo "[$@]: Completed successfully!"
 
+.PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
 mockstack/%: MOCK_STACK ?= localstack
-
-.PHONY: mockstack/pytest
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against $(MOCK_STACK)"
 	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e LOCALSTACK_HOST=$(MOCK_STACK)" \
@@ -434,7 +433,6 @@ mockstack/pytest:
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
 
-.PHONY: mockstack/up mockstack/down mockstack/clean
 mockstack/up:
 	@ echo "[$@] Starting $(MOCK_STACK) container"
 	docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-$(MOCK_STACK).yml up --detach

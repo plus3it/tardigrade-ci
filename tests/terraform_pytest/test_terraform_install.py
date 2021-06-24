@@ -53,7 +53,7 @@ def plan_and_apply(is_mock, use_moto, repo_root_dir):
     return invoke_plan_and_apply
 
 
-def test_modules(subdir, plan_and_apply):
+def test_modules(subdir, monkeypatch, plan_and_apply):
     """Run plan/apply against a Terraform module found in tests subdir."""
     monkeypatch.setenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
 
