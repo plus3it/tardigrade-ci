@@ -54,7 +54,7 @@ def aws_credentials(tmpdir, monkeypatch):
         monkeypatch.setenv("AWS_SESSION_TOKEN", "testing")
         monkeypatch.setenv("AWS_PROFILE", DEFAULT_PROFILE_NAME)
         if ALTERNATE_PROFILE_NAME in profile_names:
-            monkeypatch.setenv("AWS_PROFILE", ALTERNATE_PROFILE_NAME)
+            monkeypatch.setenv("AWS_ALTERNATE_PROFILE", ALTERNATE_PROFILE_NAME)
 
     return create_aws_credentials
 

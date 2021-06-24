@@ -37,13 +37,14 @@ def plan_and_apply(is_mock, use_moto, repo_root_dir):
         # outputs, resources, modules and variables.  For this test, we're
         # simply looking for pass or fail.
         #
-        # tftest's apply() will return the output as plain text.
+        # tftest's apply() will also raise an exception if the return code
+        # is 1.  Otherwise, it returns the output as plain text.
         try:
             tf_test.plan()
             tf_test.apply()
         except tftest.TerraformTestError as exc:
             pytest.exit(
-                msg=f"Catastropic error running Terraform 'plan' or 'apply':  {exc}",
+                msg=f"catastropic error running Terraform 'plan' or 'apply':  {exc}",
                 returncode=1,
             )
         finally:
