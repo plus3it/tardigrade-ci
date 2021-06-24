@@ -424,19 +424,17 @@ terraform/pytest: | guard/program/terraform guard/program/pytest guard/program/t
 	@ echo "[$@]: Completed successfully!"
 
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
+mockstack/%: MOCK_STACK ?= localstack
 
-.PHONY: localstack/pytest
-localstack/pytest: INTEGRATION_TEST_DOCKERFILE ?= Dockerfile_test
-localstack/pytest:
-	@ echo "[$@] Running Terraform tests against LocalStack"
-	DOCKER_RUN_FLAGS="--network tests_default --rm -e LOCALSTACK_HOST=localstack" \
-		TARDIGRADE_CI_DOCKERFILE=$(INTEGRATION_TEST_DOCKERFILE) \
+.PHONY: mockstack/pytest
+mockstack/pytest:
+	@ echo "[$@] Running Terraform tests against $(MOCK_STACK)"
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e LOCALSTACK_HOST=$(MOCK_STACK)" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
 
 .PHONY: mockstack/up mockstack/down mockstack/clean
-mockstack/%: MOCK_STACK ?= localstack
 mockstack/up:
 	@ echo "[$@] Starting $(MOCK_STACK) container"
 	docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-$(MOCK_STACK).yml up --detach
