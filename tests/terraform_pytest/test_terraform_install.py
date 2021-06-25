@@ -17,12 +17,11 @@ MOTO_PORT = "5000"
 
 
 @pytest.fixture(scope="function")
-def plan_and_apply(is_mock, use_moto, repo_root_dir):
+def plan_and_apply(is_mock, use_moto, tf_dir):
     """Return the function that will invoke Terraform plan and apply."""
 
     def invoke_plan_and_apply(tf_module):
         """Execute Terraform plan and apply."""
-        tf_dir = Path(repo_root_dir / "tests")
         tf_test = tftest.TerraformTest(tf_module, basedir=str(tf_dir), env=None)
 
         # Use the appropriate endpoints, either for a simulated AWS stack

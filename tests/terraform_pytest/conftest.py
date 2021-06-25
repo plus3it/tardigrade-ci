@@ -22,6 +22,12 @@ def pytest_addoption(parser):
         action="store_true",
         help="Use moto versus LocalStack for mocked AWS services",
     )
+    parser.addoption(
+        "--tf_dir",
+        action="store",
+        default=str(Path(Path.cwd() / "tests")),
+        help="Directory of Terraform files under test; default: './tests'",
+    )
 
 
 @pytest.fixture(scope="function")
@@ -86,9 +92,12 @@ def use_moto(request):
 
 
 @pytest.fixture(scope="session")
-def repo_root_dir():
-    """Return path of repo's root directory. Default is the current dir."""
-    return Path.cwd()
+def tf_dir(request):
+    """Return Path of directory where Terraform files are located."""
+    tf_dir = request.config.getoption("--tf_dir")
+    if not Path(tf_dir).exists():
+        pytest.exit(msg=f"'{tf_dir}' is a non-existent directory")
+    return Path(tf_dir).resolve()
 
 
 def pytest_generate_tests(metafunc):
@@ -96,11 +105,17 @@ def pytest_generate_tests(metafunc):
 
     Each subdirectory represents a different Terraform module.
     """
-    # Can't use the fixture repo_root_dir as the pytest_generate_tests()
-    # API does not allow fixtures as arguments.
-    subdirs = [x for x in Path(Path.cwd() / "tests").iterdir() if x.is_dir()]
+    # Can't use the fixture "test_dir" as pytest_generate_tests() does not
+    # allow fixtures as arguments.
+    if "tf_dir" in metafunc.fixturenames:
+        tf_dir = metafunc.config.getoption("--tf_dir")
+        if not Path(tf_dir).exists():
+            pytest.exit(msg=f"'{tf_dir}' is a non-existent directory")
+        tf_dir = Path(tf_dir).resolve()
+
+    subdirs = [x for x in tf_dir.iterdir() if x.is_dir()]
     if not subdirs:
-        pytest.exit(msg="no integration tests")
+        subdirs = [tf_dir]
 
     tf_modules = [x for x in subdirs if Path(x / "main.tf").exists()]
     metafunc.parametrize("subdir", tf_modules, ids=[x.name for x in tf_modules])
