@@ -36,10 +36,7 @@ def plan_and_apply(is_mock, use_moto, tf_dir):
         tf_vars = None
         if is_mock:
             port = MOTO_PORT if use_moto else LOCALSTACK_PORT
-            tf_vars = {
-                "mockstack_host": MOCKSTACK_HOST,
-                "mockstack_port": port
-            }
+            tf_vars = {"mockstack_host": MOCKSTACK_HOST, "mockstack_port": port}
 
         # tftest's plan() will raise an exception if the return code is 1.
         # Otherwise, it returns the text of the plan output.  Adding an
