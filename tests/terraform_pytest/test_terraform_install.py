@@ -7,10 +7,13 @@ import pytest
 import tftest
 
 AWS_DEFAULT_REGION = os.getenv("AWS_REGION", default="us-east-1")
+MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 
-LOCALSTACK_TF_FILENAME = "localstack.tf"
-MOTO_TF_FILENAME = "moto.tf"
+MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
+
+LOCALSTACK_PORT = "4566"
+MOTO_PORT = "5000"
 
 
 @pytest.fixture(scope="function")
@@ -24,12 +27,20 @@ def plan_and_apply(is_mock, use_moto, repo_root_dir):
 
         # Use the appropriate endpoints, either for a simulated AWS stack
         # or the real deal.
-        provider_tf = AWS_TF_FILENAME
-        if is_mock:
-            provider_tf = MOTO_TF_FILENAME if use_moto else LOCALSTACK_TF_FILENAME
+        provider_tf = MOCKSTACK_TF_FILENAME if is_mock else AWS_TF_FILENAME
 
         current_dir = Path(__file__).resolve().parent
         tf_test.setup(extra_files=[str(Path(current_dir / provider_tf))])
+
+        # Update the hostname in the *.tf file to differentiate between using
+        # localhost or using the docker network name.
+        tf_vars = None
+        if is_mock:
+            port = MOTO_PORT if use_moto else LOCALSTACK_PORT
+            tf_vars = {
+                "mockstack_host": MOCKSTACK_HOST,
+                "mockstack_port": port
+            }
 
         # tftest's plan() will raise an exception if the return code is 1.
         # Otherwise, it returns the text of the plan output.  Adding an
@@ -40,8 +51,7 @@ def plan_and_apply(is_mock, use_moto, repo_root_dir):
         # tftest's apply() will also raise an exception if the return code
         # is 1.  Otherwise, it returns the output as plain text.
         try:
-            tf_test.plan()
-            tf_test.apply()
+            tf_test.apply(tf_vars=tf_vars)
         except tftest.TerraformTestError as exc:
             pytest.exit(
                 msg=f"catastropic error running Terraform 'plan' or 'apply':  {exc}",

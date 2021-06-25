@@ -428,9 +428,9 @@ INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
 mockstack/%: MOCK_STACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against $(MOCK_STACK)"
-	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCK_STACK)" \
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCK_STACK) -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
-		$(MAKE) docker/run target=terraform/pytest $(TERRAFORM_PYTEST_ARGS)
+		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
 
 mockstack/up:
