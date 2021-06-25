@@ -94,10 +94,10 @@ def use_moto(request):
 @pytest.fixture(scope="session")
 def tf_dir(request):
     """Return Path of directory where Terraform files are located."""
-    tf_dir = request.config.getoption("--tf_dir")
-    if not Path(tf_dir).exists():
-        pytest.exit(msg=f"'{tf_dir}' is a non-existent directory")
-    return Path(tf_dir).resolve()
+    terraform_dir = request.config.getoption("--tf_dir")
+    if not Path(terraform_dir).exists():
+        pytest.exit(msg=f"'{terraform_dir}' is a non-existent directory")
+    return Path(terraform_dir).resolve()
 
 
 def pytest_generate_tests(metafunc):
@@ -107,15 +107,14 @@ def pytest_generate_tests(metafunc):
     """
     # Can't use the fixture "test_dir" as pytest_generate_tests() does not
     # allow fixtures as arguments.
-    if "tf_dir" in metafunc.fixturenames:
-        tf_dir = metafunc.config.getoption("--tf_dir")
-        if not Path(tf_dir).exists():
-            pytest.exit(msg=f"'{tf_dir}' is a non-existent directory")
-        tf_dir = Path(tf_dir).resolve()
+    terraform_dir = metafunc.config.getoption("--tf_dir")
+    if not Path(terraform_dir).exists():
+        pytest.exit(msg=f"'{terraform_dir}' is a non-existent directory")
+    terraform_dir = Path(terraform_dir).resolve()
 
-    subdirs = [x for x in tf_dir.iterdir() if x.is_dir()]
+    subdirs = [x for x in terraform_dir.iterdir() if x.is_dir()]
     if not subdirs:
-        subdirs = [tf_dir]
+        subdirs = [terraform_dir]
 
     tf_modules = [x for x in subdirs if Path(x / "main.tf").exists()]
     metafunc.parametrize("subdir", tf_modules, ids=[x.name for x in tf_modules])

@@ -16,7 +16,7 @@ EOF
 
 
 @test "test: terraform test success" {
-  run make TERRAFORM_TEST_DIR="../terraform" test
+  run make TERRAFORM_TEST_DIR="../terraform" terratest/test
   [ "$status" -eq 0 ]
 }
 
