@@ -29,10 +29,10 @@ be located in the directory `tests` off the repo\'s root directory.
 
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
-| INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $(PWD))-integration-test |
+| INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
 | MOCKSTACK                        | localstack |
 | TERRAFORM_PYTEST_ARGS            | |
-| TERRAFORM_PYTEST_DIR             | $(PWD)/tests/terraform/pytest |
+| TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
 ### Arguments to the automation script
 
@@ -66,6 +66,8 @@ subdirectory.  For example:
 │   ├── create_groups
 │   │   ├── main.tf
 
+...
+
 ```
 
 To verify that a Terraform test will work, bring up the default AWS mock
@@ -74,6 +76,11 @@ stack (`LocalStack`) first, then execute the test:
 ```bash
 make mockstack/up
 make terraform/pytest
+
+# To execute a specific set of tests, use the "-k" option and a string
+# that will pattern match on the desired subdirectory name.  The "-k"
+# option also allows booleans, e.g., "not" or "or".
+make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
 
 # When testing is complete:
 make mockstack/clean
