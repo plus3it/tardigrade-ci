@@ -442,7 +442,7 @@ mockstack/down:
 	docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-$(MOCKSTACK).yml down
 
 mockstack/clean: | mockstack/down
-	@ echo "[$@] Stopping and removing $(MOCKSTACK) container and images"
+	@ echo "[$@] Stopping and removing $(MOCKSTACK) image"
 	set +o pipefail; docker images | grep $(INTEGRATION_TEST_BASE_IMAGE_NAME) | \
 		awk '{print $$1 ":" $$2}' | xargs -r docker rmi
 
