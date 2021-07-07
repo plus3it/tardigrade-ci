@@ -19,31 +19,34 @@ option to use `moto` instead (refer to the subsections that follow).
 * The Terraform modules used for the integration tests are expected to
 be found in the directory `tests` off the repo\'s root directory.
 
----------------- | ------------------------------------------
-mockstack/pytest | From within a Docker container, invoke `pytest` to execute the integration tests.
-mockstack/up     | Start up a Docker container running the mock AWS stack.
-mockstack/down   | Bring down the Docker container running the mock AWS stack.
-mockstack/clean  | Bring down the Docker container running the mock AWS stack, then remove the docker image.
-terraform/pytest | Invoke `pytest` to execute the integration tests. The mock AWS stack must be started before using this `Makefile` target.
+| Target name      | Description |
+| ---------------- | ------------------------------------------ |
+| mockstack/pytest | From within a Docker container, invoke `pytest` to execute the integration tests. |
+| mockstack/up     | Start up a Docker container running the mock AWS stack. |
+| mockstack/down   | Bring down the Docker container running the mock AWS stack. |
+| mockstack/clean  | Bring down the Docker container running the mock AWS stack, then remove the docker image. |
+| terraform/pytest | Invoke `pytest` to execute the integration tests. The mock AWS stack must be started before using this `Makefile` target. |
 
 ### Environment variables
 
--------------------------------- | ------------------------------------------
-INTEGRATION_TEST_BASE_IMAGE_NAME | $(shell basename $(PWD))-integration-test
-MOCKSTACK                        | localstack
-TERRAFORM_PYTEST_ARGS            | 
-TERRAFORM_PYTEST_DIR             | $(PWD)/tests/terraform/pytest
+| Environment variable             | Default value |
+| -------------------------------- | --------------------------------------- |
+| INTEGRATION_TEST_BASE_IMAGE_NAME | $(shell basename $(PWD))-integration-test |
+| MOCKSTACK                        | localstack |
+| TERRAFORM_PYTEST_ARGS            | |
+| TERRAFORM_PYTEST_DIR             | $(PWD)/tests/terraform/pytest |
 
 ### Arguments to the automation script
 
 These are values that can be specified through the environment variable
 TERRAFORM_PYTEST_ARGS.
 
-------------------- | -----------------------------------------------
---nomock            | Use AWS, not mocked AWS services
---alternate-profile | Configure an alternate profile in addition to default profile
---moto              | Use moto versus LocalStack for mocked AWS services
---tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests'
+| Command line option | Description |
+| ------------------- | ----------------------------------------------- |
+| --nomock            | Use AWS, not mocked AWS services |
+| --alternate-profile | Configure an alternate profile in addition to default profile |
+| --moto              | Use moto versus LocalStack for mocked AWS services |
+| --tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests' |
 
 ## Testing a test
 
