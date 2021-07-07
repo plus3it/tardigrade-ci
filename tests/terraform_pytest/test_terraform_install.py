@@ -38,11 +38,11 @@ def plan_and_apply(is_mock, use_moto, tf_dir):
             port = MOTO_PORT if use_moto else LOCALSTACK_PORT
             tf_vars = {"mockstack_host": MOCKSTACK_HOST, "mockstack_port": port}
 
-        # tftest's plan() will raise an exception if the return code is 1.
-        # Otherwise, it returns the text of the plan output.  Adding an
-        # argument of "output=True" will return an object that has members for
-        # outputs, resources, modules and variables.  For this test, we're
-        # simply looking for pass or fail.
+        # Debugging info:  tftest's plan() will raise an exception if the
+        # return code is 1.  Otherwise, it returns the text of the plan
+        # output.  Adding an argument of "output=True" will return an object
+        # that has members for outputs, resources, modules and variables.
+        # For this test, we're simply looking for pass or fail.
         #
         # tftest's apply() will also raise an exception if the return code
         # is 1.  Otherwise, it returns the output as plain text.
@@ -54,7 +54,7 @@ def plan_and_apply(is_mock, use_moto, tf_dir):
                 returncode=1,
             )
         finally:
-            tf_test.destroy()
+            tf_test.destroy(tf_vars=tf_vars)
 
     return invoke_plan_and_apply
 
