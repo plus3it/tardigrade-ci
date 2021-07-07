@@ -13,7 +13,7 @@ def pytest_addoption(parser):
         "--nomock", action="store_true", help="Use AWS, not mocked AWS services"
     )
     parser.addoption(
-        "--alternate_profile",
+        "--alternate-profile",
         action="store_true",
         help="Configure an alternate profile in addition to default profile",
     )
@@ -23,7 +23,7 @@ def pytest_addoption(parser):
         help="Use moto versus LocalStack for mocked AWS services",
     )
     parser.addoption(
-        "--tf_dir",
+        "--tf-dir",
         action="store",
         default=str(Path(Path.cwd() / "tests")),
         help="Directory of Terraform files under test; default: './tests'",
@@ -94,7 +94,7 @@ def use_moto(request):
 @pytest.fixture(scope="session")
 def tf_dir(request):
     """Return Path of directory where Terraform files are located."""
-    terraform_dir = request.config.getoption("--tf_dir")
+    terraform_dir = request.config.getoption("--tf-dir")
     if not Path(terraform_dir).exists():
         pytest.exit(msg=f"'{terraform_dir}' is a non-existent directory")
     return Path(terraform_dir).resolve()
@@ -107,7 +107,7 @@ def pytest_generate_tests(metafunc):
     """
     # Can't use the fixture "test_dir" as pytest_generate_tests() does not
     # allow fixtures as arguments.
-    terraform_dir = metafunc.config.getoption("--tf_dir")
+    terraform_dir = metafunc.config.getoption("--tf-dir")
     if not Path(terraform_dir).exists():
         pytest.exit(msg=f"'{terraform_dir}' is a non-existent directory")
     terraform_dir = Path(terraform_dir).resolve()

@@ -33,7 +33,7 @@ EOF
 }
 
 @test "test: terraform pytest failure" {
-  run make terraform/pytest TERRAFORM_PYTEST_DIR=../terraform_pytest TERRAFORM_PYTEST_ARGS="--tf_dir $TEST_DIR"
+  run make terraform/pytest TERRAFORM_PYTEST_DIR=../terraform_pytest TERRAFORM_PYTEST_ARGS="--tf-dir $TEST_DIR"
   [ "$status" -eq 2 ]
   [[ "$output" == *"FAILED ../terraform_pytest/test_terraform_install.py::test_modules[test]"* ]]
 }
