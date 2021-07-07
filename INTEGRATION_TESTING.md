@@ -67,7 +67,6 @@ subdirectory.  For example:
 │   │   ├── main.tf
 
 ...
-
 ```
 
 To verify that a Terraform test will work, bring up the default AWS mock
@@ -80,6 +79,8 @@ make terraform/pytest
 # To execute a specific set of tests, use the "-k" option and a string
 # that will pattern match on the desired subdirectory name.  The "-k"
 # option also allows booleans, e.g., "not" or "or".
+#
+# The following will match on the subdirectory name "create_groups".
 make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
 
 # When testing is complete:
