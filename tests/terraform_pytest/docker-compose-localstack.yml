@@ -1,5 +1,9 @@
 version: "3.3"
 
+networks:
+  default:
+    name: terraform_pytest_default
+
 services:
   localstack:
     container_name: localstack
@@ -10,5 +14,6 @@ services:
     environment:
       - SERVICES=apigateway,cloudformation,cloudwatch,cloudwatchevents,cloudwatchlogs,dynamodb,ec2,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanager,ses,sns,sqs,ssm,stepfunctions,sts
       - MAIN_CONTAINER_NAME=localstack
+      - LAMBDA_DOCKER_NETWORK=terraform_pytest_default
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
