@@ -7,12 +7,11 @@ import pytest
 import tftest
 
 AWS_DEFAULT_REGION = os.getenv("AWS_REGION", default="us-east-1")
+MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
+MOCKSTACK_PORT = "4566"
 
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
-
-MOCKSTACK_HOST = "localhost"
-MOCKSTACK_PORT = "4566"
 
 
 @pytest.fixture(scope="function")

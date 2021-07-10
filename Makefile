@@ -425,9 +425,10 @@ terraform/pytest: | guard/program/terraform guard/program/pytest guard/python_pk
 
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
+mockstack/%: MOCKSTACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"
-	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
