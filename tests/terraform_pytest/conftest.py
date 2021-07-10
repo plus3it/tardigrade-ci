@@ -18,11 +18,6 @@ def pytest_addoption(parser):
         help="Configure an alternate profile in addition to default profile",
     )
     parser.addoption(
-        "--moto",
-        action="store_true",
-        help="Use moto versus LocalStack for mocked AWS services",
-    )
-    parser.addoption(
         "--tf-dir",
         action="store",
         default=str(Path(Path.cwd() / "tests")),
@@ -81,14 +76,6 @@ def is_mock(request, aws_credentials):
     if request.config.option.alternate_profile:
         pytest.exit(msg="conflicting options: 'alternate_profile' and 'nomock'")
     return False
-
-
-@pytest.fixture(scope="session")
-def use_moto(request):
-    """Return True if moto should be used, not LocalStack."""
-    if request.config.option.moto and request.config.option.nomock:
-        pytest.exit(msg="conflicting options:  'moto' and 'nomock'")
-    return request.config.option.moto
 
 
 @pytest.fixture(scope="session")

@@ -16,7 +16,7 @@ MOCKSTACK_PORT = "4566"
 
 
 @pytest.fixture(scope="function")
-def plan_and_apply(is_mock, use_moto, tf_dir):
+def plan_and_apply(is_mock, tf_dir):
     """Return the function that will invoke Terraform plan and apply."""
 
     def invoke_plan_and_apply(tf_module):
