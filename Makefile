@@ -425,24 +425,23 @@ terraform/pytest: | guard/program/terraform guard/program/pytest guard/python_pk
 
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
-mockstack/%: MOCKSTACK ?= localstack
 mockstack/pytest:
-	@ echo "[$@] Running Terraform tests against $(MOCKSTACK)"
-	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
+	@ echo "[$@] Running Terraform tests against LocalStack"
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
 
 mockstack/up:
-	@ echo "[$@] Starting $(MOCKSTACK) container"
-	docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-$(MOCKSTACK).yml up --detach
+	@ echo "[$@] Starting LocalStack container"
+	TERRAFORM_PYTEST_DIR=$(TERRAFORM_PYTEST_DIR) docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-localstack.yml up --detach
 
 mockstack/down:
-	@ echo "[$@] Stopping $(MOCKSTACK) container"
-	docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-$(MOCKSTACK).yml down
+	@ echo "[$@] Stopping LocalStack container"
+	TERRAFORM_PYTEST_DIR=$(TERRAFORM_PYTEST_DIR) docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-localstack.yml down
 
 mockstack/clean: | mockstack/down
-	@ echo "[$@] Stopping and removing $(MOCKSTACK) image"
+	@ echo "[$@] Stopping and removing LocalStack image"
 	set +o pipefail; docker images | grep $(INTEGRATION_TEST_BASE_IMAGE_NAME) | \
 		awk '{print $$1 ":" $$2}' | xargs -r docker rmi
 

@@ -10,6 +10,7 @@ services:
     image: localstack/localstack
     ports:
       - "4566:4566"
+      - "4615:4615"
       - "4571:4571"
     environment:
       - SERVICES=apigateway,cloudformation,cloudwatch,cloudwatchevents,cloudwatchlogs,dynamodb,ec2,firehose,iam,kinesis,lambda,route53,redshift,s3,secretsmanager,ses,sns,sqs,ssm,stepfunctions,sts
@@ -17,3 +18,4 @@ services:
       - LAMBDA_DOCKER_NETWORK=terraform_pytest_default
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "${TERRAFORM_PYTEST_DIR}/initaws.d:/docker-entrypoint-initaws.d"

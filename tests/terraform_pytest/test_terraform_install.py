@@ -7,13 +7,12 @@ import pytest
 import tftest
 
 AWS_DEFAULT_REGION = os.getenv("AWS_REGION", default="us-east-1")
-MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
 
-LOCALSTACK_PORT = "4566"
-MOTO_PORT = "5000"
+MOCKSTACK_HOST = "localhost"
+MOCKSTACK_PORT = "4566"
 
 
 @pytest.fixture(scope="function")
@@ -35,8 +34,10 @@ def plan_and_apply(is_mock, use_moto, tf_dir):
         # localhost or using the docker network name.
         tf_vars = None
         if is_mock:
-            port = MOTO_PORT if use_moto else LOCALSTACK_PORT
-            tf_vars = {"mockstack_host": MOCKSTACK_HOST, "mockstack_port": port}
+            tf_vars = {
+                "mockstack_host": MOCKSTACK_HOST,
+                "mockstack_port": MOCKSTACK_PORT,
+            }
 
         # Debugging info:  tftest's plan() will raise an exception if the
         # return code is 1.  Otherwise, it returns the text of the plan
