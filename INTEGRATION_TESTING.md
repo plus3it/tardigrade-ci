@@ -20,8 +20,8 @@ changes to incorporate automated integration testing.
 
 Defaults:
 
-* `LocalStack` is used for the mock AWS stack, but there is an
-option to use `moto` instead (refer to the subsections that follow).
+* `LocalStack` is used for the mock AWS stack, with moto serving ports for 
+services not yet suported by `LocalStack`.
 * The Terraform modules used for the integration tests are expected to
 be located in the directory `tests` off the repo\'s root directory.
 
@@ -30,7 +30,6 @@ be located in the directory `tests` off the repo\'s root directory.
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
-| MOCKSTACK                        | localstack |
 | TERRAFORM_PYTEST_ARGS            | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
@@ -43,7 +42,6 @@ TERRAFORM_PYTEST_ARGS.
 | ------------------- | ----------------------------------------------- |
 | --nomock            | Use AWS, not mocked AWS services |
 | --alternate-profile | Configure an alternate profile in addition to default profile |
-| --moto              | Use moto versus LocalStack for mocked AWS services |
 | --tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests' |
 
 ## Executing a Terraform test
@@ -85,16 +83,6 @@ make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
 
 # When testing is complete:
 make mockstack/clean
-```
-
-Alternatively, `moto` can be used as the AWS mock stack:
-
-```bash
-make mockstack/up MOCKSTACK=moto
-make terraform/pytest TERRAFORM_PYTEST_ARGS=--moto
-
-# When testing is complete:
-make mockstack/clean MOCKSTACK=moto
 ```
 
 ## Potential CI/CD changes 
