@@ -9,7 +9,7 @@ FROM hashicorp/terraform:1.0.1 as terraform
 
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
 
-FROM mikefarah/yq:4.9.6 as yq
+FROM mikefarah/yq:4.9.8 as yq
 
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
