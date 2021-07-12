@@ -103,5 +103,5 @@ def pytest_generate_tests(metafunc):
     if not subdirs:
         subdirs = [terraform_dir]
 
-    tf_modules = [x for x in subdirs if Path(x / "main.tf").exists()]
+    tf_modules = [x for x in subdirs if list(Path(x).glob("*.tf"))]
     metafunc.parametrize("subdir", tf_modules, ids=[x.name for x in tf_modules])
