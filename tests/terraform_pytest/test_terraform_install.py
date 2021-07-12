@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import tftest
 
-AWS_DEFAULT_REGION = os.getenv("AWS_REGION", default="us-east-1")
+AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", default="us-east-1")
 MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 MOCKSTACK_PORT = "4566"
 
