@@ -91,7 +91,7 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars, apply_plan):
     apply_plan(tf_test)
 
     # Destroy the "prereq" resources if a "prereq" subdirectory exists, then
-    # resources for the module under test.
+    # destroy the resources for the module under test.
+    tf_test.destroy(tf_vars=tf_vars)
     if prereq_tf_test:
         prereq_tf_test.destroy(tf_vars=tf_vars)
-    tf_test.destroy(tf_vars=tf_vars)
