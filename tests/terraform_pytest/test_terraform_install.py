@@ -15,11 +15,11 @@ AWS_TF_FILENAME = "aws.tf"
 
 
 @pytest.fixture(scope="function")
-def plan_and_apply(is_mock, tf_dir):
-    """Return the function that will invoke Terraform plan and apply."""
+def tf_test_object(is_mock, tf_dir):
+    """Return function that will create tf_test object using given subdir."""
 
-    def invoke_plan_and_apply(tf_module):
-        """Execute Terraform plan and apply."""
+    def make_tf_test(tf_module):
+        """Return a TerraformTest object for given module."""
         tf_test = tftest.TerraformTest(tf_module, basedir=str(tf_dir), env=None)
 
         # Use the appropriate endpoints, either for a simulated AWS stack
@@ -28,16 +28,34 @@ def plan_and_apply(is_mock, tf_dir):
 
         current_dir = Path(__file__).resolve().parent
         tf_test.setup(extra_files=[str(Path(current_dir / provider_tf))])
+        return tf_test
 
-        # Update the hostname in the *.tf file to differentiate between using
-        # localhost or using the docker network name.
-        tf_vars = None
-        if is_mock:
-            tf_vars = {
-                "mockstack_host": MOCKSTACK_HOST,
-                "mockstack_port": MOCKSTACK_PORT,
-            }
+    return make_tf_test
 
+
+@pytest.fixture(scope="function")
+def tf_vars(is_mock):
+    """Return values for variables used for the Terraform apply.
+
+    Set the Terraform variables for the hostname and port to differentiate
+    between using "localhost" or the docker network name.
+    """
+    return (
+        {
+            "mockstack_host": MOCKSTACK_HOST,
+            "mockstack_port": MOCKSTACK_PORT,
+        }
+        if is_mock
+        else {}
+    )
+
+
+@pytest.fixture(scope="function")
+def apply_plan(tf_vars):
+    """Return function that can be invoked with tf_test parameter."""
+
+    def invoke_plan_and_apply(tf_test):
+        """Execute Terraform plan and apply."""
         # Debugging info:  tftest's plan() will raise an exception if the
         # return code is 1.  Otherwise, it returns the text of the plan
         # output.  Adding an argument of "output=True" will return an object
@@ -49,21 +67,31 @@ def plan_and_apply(is_mock, tf_dir):
         try:
             tf_test.apply(tf_vars=tf_vars)
         except tftest.TerraformTestError as exc:
+            tf_test.destroy(tf_vars=tf_vars)
             pytest.exit(
-                msg=f"catastropic error running Terraform 'plan' or 'apply':  {exc}",
+                msg=f"catastropic error running Terraform 'apply':  {exc}",
                 returncode=1,
             )
-        finally:
-            tf_test.destroy(tf_vars=tf_vars)
 
     return invoke_plan_and_apply
 
 
-def test_modules(subdir, monkeypatch, plan_and_apply):
+def test_modules(subdir, monkeypatch, tf_test_object, tf_vars, apply_plan):
     """Run plan/apply against a Terraform module found in tests subdir."""
     monkeypatch.setenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
 
-    # Run the Terraform module in "prereq" before executing the module itself.
+    # Run the Terraform module in "prereq" before executing the test itself.
+    prereq_tf_test = None
     if Path(subdir / "prereq").exists():
-        plan_and_apply(str(subdir / "prereq"))
-    plan_and_apply(str(subdir))
+        prereq_tf_test = tf_test_object(str(subdir / "prereq"))
+        apply_plan(prereq_tf_test)
+
+    # Apply the plan for the module under test.
+    tf_test = tf_test_object(str(subdir))
+    apply_plan(tf_test)
+
+    # Destroy the "prereq" resources if a "prereq" subdirectory exists, then
+    # resources for the module under test.
+    if prereq_tf_test:
+        prereq_tf_test.destroy(tf_vars=tf_vars)
+    tf_test.destroy(tf_vars=tf_vars)
