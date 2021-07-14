@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.14.1
+
+**Released**: 2021.07.9
+
+**Commit Delta**: [Change from 0.14.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.14.0..0.14.1)
+
+**Summary**:
+
+*   Updates language versions:
+    * python 3.9.6
+*   Updates tool versions:
+    * black 21.6b0
+    * cfn-lint 0.52.0
+    * pylint 2.9.3
+    * terraform 1.0.2
+    * terraform-docs 0.14.1
+    * terragrunt 0.31.0
+    * terratest 0.36.5
+    * yq 4.9.8
+
 ### 0.14.0
 
 **Released**: 2021.05.28
