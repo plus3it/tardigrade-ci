@@ -166,6 +166,10 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 
+docker-compose/install: DOCKER_COMPOSE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'docker-compose==','$(SEMVER_PATTERN)')
+docker-compose/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
+
 black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
@@ -471,5 +475,6 @@ project/validate:
 install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
 install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install tftest/install
 install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
+install: docker-compose/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
