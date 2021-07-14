@@ -54,7 +54,7 @@ def tf_vars(is_mock):
 def apply_plan(tf_vars):
     """Return function that can be invoked with tf_test parameter."""
 
-    def invoke_plan_and_apply(tf_test):
+    def invoke_plan_and_apply(tf_test, destroy_list):
         """Execute Terraform plan and apply, return exception."""
         # Debugging info:  tftest's plan() will raise an exception if the
         # return code is 1.  Otherwise, it returns the text of the plan
@@ -67,9 +67,12 @@ def apply_plan(tf_vars):
         try:
             tf_test.apply(tf_vars=tf_vars)
         except tftest.TerraformTestError as exc:
-            tf_test.destroy(tf_vars=tf_vars)
-            return exc
-        return None
+            for test_obj in destroy_list[::-1]:
+                test_obj.destroy(tf_vars=tf_vars)
+            pytest.exit(
+                msg=f"catastropic error running Terraform 'apply': {exc}",
+                returncode=1,
+            )
 
     return invoke_plan_and_apply
 
@@ -79,34 +82,18 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars, apply_plan):
     monkeypatch.setenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
 
     # Run the Terraform module in "prereq" before executing the test itself.
-    prereq_tf_test = None
+    destroy_list = []
     if Path(subdir / "prereq").exists():
         prereq_tf_test = tf_test_object(str(subdir / "prereq"))
-        # If the prereq plan could not be applied, clean up and exit.
-        exception_value = apply_plan(prereq_tf_test)
-        if exception_value:
-            prereq_tf_test.destroy(tf_vars=tf_vars)
-            pytest.exit(
-                msg=(
-                    f"catastropic error running Terraform prereq 'apply': "
-                    f"{exception_value}"
-                ),
-                returncode=1,
-            )
+        destroy_list.append(prereq_tf_test)
+        apply_plan(prereq_tf_test, destroy_list)
 
     # Apply the plan for the module under test.
     tf_test = tf_test_object(str(subdir))
-    exception_value = apply_plan(tf_test)
+    destroy_list.append(tf_test)
+    apply_plan(tf_test, destroy_list)
 
     # Destroy the "prereq" resources if a "prereq" subdirectory exists, then
     # destroy the resources for the module under test.
-    tf_test.destroy(tf_vars=tf_vars)
-    if prereq_tf_test:
-        prereq_tf_test.destroy(tf_vars=tf_vars)
-
-    # Fail the test if the plan could not be applied.
-    if exception_value:
-        pytest.exit(
-            msg=f"catastropic error running Terraform 'apply': {exception_value}",
-            returncode=1,
-        )
+    for test_obj in destroy_list[::-1]:
+        test_obj.destroy(tf_vars=tf_vars)
