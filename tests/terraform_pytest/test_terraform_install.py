@@ -9,6 +9,7 @@ import tftest
 AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", default="us-east-1")
 MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 MOCKSTACK_PORT = "4566"
+MOTO_PORT = "4615"
 
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
@@ -44,6 +45,7 @@ def tf_vars(is_mock):
         {
             "mockstack_host": MOCKSTACK_HOST,
             "mockstack_port": MOCKSTACK_PORT,
+            "moto_port": MOTO_PORT,
         }
         if is_mock
         else {}
