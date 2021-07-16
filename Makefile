@@ -166,9 +166,21 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 
+docker-compose/install: DOCKER_COMPOSE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'docker-compose==','$(SEMVER_PATTERN)')
+docker-compose/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
+
 black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
+
+tftest/install: TFTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'tftest==','$(SEMVER_PATTERN)')
+tftest/install:
+	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(TFTEST_VERSION)'
+
+pytest/install: PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'^pytest==','$(SEMVER_PATTERN)')
+pytest/install:
+	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYTEST_VERSION)'
 
 pylint/install: PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
@@ -408,8 +420,38 @@ terratest/test:
 	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
 	@ echo "[$@]: Completed successfully!"
 
+TERRAFORM_PYTEST_ARGS ?=
+TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
+terraform/pytest: | guard/program/terraform guard/program/pytest guard/python_pkg/tftest
+	@ echo "[$@] Starting Terraform integration test"
+	pytest -v $(TERRAFORM_PYTEST_DIR) $(TERRAFORM_PYTEST_ARGS)
+	@ echo "[$@]: Completed successfully!"
+
+.PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
+INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
+mockstack/%: MOCKSTACK ?= localstack
+mockstack/pytest:
+	@ echo "[$@] Running Terraform tests against LocalStack"
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
+		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
+		$(MAKE) docker/run target=terraform/pytest
+	@ echo "[$@]: Completed successfully!"
+
+mockstack/up:
+	@ echo "[$@] Starting LocalStack container"
+	TERRAFORM_PYTEST_DIR=$(TERRAFORM_PYTEST_DIR) docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-localstack.yml up --detach
+
+mockstack/down:
+	@ echo "[$@] Stopping LocalStack container"
+	TERRAFORM_PYTEST_DIR=$(TERRAFORM_PYTEST_DIR) docker-compose -f $(TERRAFORM_PYTEST_DIR)/docker-compose-localstack.yml down
+
+mockstack/clean: | mockstack/down
+	@ echo "[$@] Stopping and removing LocalStack image"
+	set +o pipefail; docker images | grep $(INTEGRATION_TEST_BASE_IMAGE_NAME) | \
+		awk '{print $$1 ":" $$2}' | xargs -r docker rmi
+
 ## Runs terraform tests in the tests directory
-test: terratest/test
+test: terraform/pytest
 
 bats/install: BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
@@ -431,7 +473,8 @@ project/validate:
 	@ echo "[$@]: Target test folder validation successful"
 
 install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
-install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install
+install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install tftest/install
 install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
+install: docker-compose/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint

@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.15.0
+
+**Released**: 2021.07.15
+
+**Commit Delta**: [Change from 0.14.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.14.1..0.15.0)
+
+**Summary**:
+
+*   Adds new Makefile targets for the purpose of testing Terraform modules 
+    using Terraform and the mock AWS stacks LocalStack and/or moto.  The new
+    readme file `INTEGRATION_TESTING.md` describes the expected testing
+    environment and the associated Makefile targets.
+
+*   Updates tool versions:
+    * docker-compose 1.29.2
+
+*   Adds install targets for the tools:
+    * pytest-compose 6.2.4
+    * tftest 1.6.0
+
 ### 0.14.1
 
 **Released**: 2021.07.9

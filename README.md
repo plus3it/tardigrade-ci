@@ -35,7 +35,7 @@ Available targets:
   sh/lint                             Lints bash script files
   terraform/format                    Formats terraform files
   terraform/lint                      Lints terraform files
-  test                                Runs terraform tests in the tests directory
+  test                                Runs terraform tests under the tests directory
   yaml/lint                           Lints YAML files
 ```
 

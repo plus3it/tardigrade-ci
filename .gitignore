@@ -13,3 +13,6 @@
 
 # ec (editorconfig-checker)
 .git/
+
+# python caching when pytest is used
+__pycache__
