@@ -16,6 +16,7 @@ provider "aws" {
     firehose         = "http://${var.mockstack_host}:${var.mockstack_port}"
     iam              = "http://${var.mockstack_host}:${var.mockstack_port}"
     kinesis          = "http://${var.mockstack_host}:${var.mockstack_port}"
+    kms              = "http://${var.mockstack_host}:${var.mockstack_port}"
     lambda           = "http://${var.mockstack_host}:${var.mockstack_port}"
     route53          = "http://${var.mockstack_host}:${var.mockstack_port}"
     redshift         = "http://${var.mockstack_host}:${var.mockstack_port}"
