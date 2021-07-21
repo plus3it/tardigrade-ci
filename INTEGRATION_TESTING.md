@@ -67,6 +67,13 @@ subdirectory.  For example:
 ...
 ```
 
+The `prereq` approach solves the problem where the top-level module has a
+count/for_each dependency on the supporting resources being created in
+the test.  It creates two terraform state files, one for the prereq and
+one for the test config. The approach here is just a way of separating
+the supporting resources from the test module, but they are all in the
+same terraform state.
+
 To verify that a Terraform test will work, bring up the default AWS mock
 stack (`LocalStack`) first, then execute the test:
 
@@ -83,6 +90,22 @@ make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
 
 # When testing is complete:
 make mockstack/clean
+```
+
+Alternatively, in lieu of running `make mockstack/up`, LocalStack can be
+run from the command line in a separate window. This will provide you with
+a running log (although you could view the docker log (with no debugging)
+when using `make mockstack/up`).
+
+```
+pip install localstack
+
+# Most of the AWS services are started here, but the list can be tailored
+# to just the ones needed for the test.
+DEBUG=1 SERVICES=ec2,iam,sts,s3,kms,cloudformation,cloudwatch,events,lambda,route53,ssm,sns,sqs,glue,dynamodb localstack start
+
+# Wait for a LocalStack to issue the "Ready" message before starting a test.
+# To exit LocalStack, type Ctrl-C.
 ```
 
 ## Potential CI/CD changes 
