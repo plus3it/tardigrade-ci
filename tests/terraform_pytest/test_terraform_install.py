@@ -56,6 +56,7 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars):
     """Run plan/apply against a Terraform module found in tests subdir."""
     monkeypatch.setenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
 
+    tf_test = None
     prereq_tf_test = None
     try:
         # Run the Terraform module in "prereq" before executing the test
@@ -75,6 +76,7 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars):
     finally:
         # Destroy the resources for the module under test, then destroy the
         # "prereq" resources, if a "prereq" subdirectory exists.
-        tf_test.destroy(tf_vars=tf_vars)
+        if tf_test:
+            tf_test.destroy(tf_vars=tf_vars)
         if prereq_tf_test:
             prereq_tf_test.destroy(tf_vars=tf_vars)
