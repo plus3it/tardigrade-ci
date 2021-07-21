@@ -279,6 +279,13 @@ python/format:
 	black $(PYTHON_FILES)
 	@ echo "[$@]: Successfully formatted Python files!"
 
+# Run pytests, typically for unit tests.
+pytest/%: | guard/program/pytest
+pytest/%:
+	@ echo "[$@] Starting Python tests"
+	pytest $*
+	@ echo "[$@]: Tests executed!"
+
 ## Lints terraform files
 terraform/lint: | guard/program/terraform
 	@ echo "[$@]: Linting Terraform files..."
