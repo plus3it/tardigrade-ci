@@ -30,13 +30,13 @@ be located in the directory `tests` off the repo\'s root directory.
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
-| TERRAFORM_PYTEST_ARGS            | |
+| PYTEST_ARGS                      | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
 ### Arguments to the automation script
 
 These are values that can be specified through the environment variable
-TERRAFORM_PYTEST_ARGS.
+PYTEST_ARGS.
 
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
@@ -67,6 +67,11 @@ subdirectory.  For example:
 ...
 ```
 
+The `prereq` approach solves the problem where the top-level module has a
+count/for_each dependency on the supporting resources being created in
+the test.  It creates two terraform state files, one for the prereq and
+one for the test config.
+
 To verify that a Terraform test will work, bring up the default AWS mock
 stack (`LocalStack`) first, then execute the test:
 
@@ -79,10 +84,26 @@ make terraform/pytest
 # option also allows booleans, e.g., "not" or "or".
 #
 # The following will match on the subdirectory "create_groups".
-make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
+make terraform/pytest PYTEST_ARGS="-k groups"
 
 # When testing is complete:
 make mockstack/clean
+```
+
+Alternatively, in lieu of running `make mockstack/up`, LocalStack can be
+run from the command line in a separate window. This will provide you with
+a running log (although you could view the docker log (with no debugging)
+when using `make mockstack/up`).
+
+```
+pip install localstack
+
+# Most of the AWS services are started here, but the list can be tailored
+# to just the ones needed for the test.
+DEBUG=1 SERVICES=ec2,iam,sts,s3,kms,cloudformation,cloudwatch,events,lambda,route53,ssm,sns,sqs,glue,dynamodb localstack start
+
+# Wait for a LocalStack to issue the "Ready" message before starting a test.
+# To exit LocalStack, type Ctrl-C.
 ```
 
 ## Potential CI/CD changes 

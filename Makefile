@@ -279,6 +279,14 @@ python/format:
 	black $(PYTHON_FILES)
 	@ echo "[$@]: Successfully formatted Python files!"
 
+# Run pytests, typically for unit tests.
+PYTEST_ARGS ?=
+pytest/%: | guard/program/pytest
+pytest/%:
+	@ echo "[$@] Starting Python tests found under the directory \"$*\""
+	pytest $* $(PYTEST_ARGS)
+	@ echo "[$@]: Tests executed!"
+
 ## Lints terraform files
 terraform/lint: | guard/program/terraform
 	@ echo "[$@]: Linting Terraform files..."
@@ -420,19 +428,16 @@ terratest/test:
 	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
 	@ echo "[$@]: Completed successfully!"
 
-TERRAFORM_PYTEST_ARGS ?=
 TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
-terraform/pytest: | guard/program/terraform guard/program/pytest guard/python_pkg/tftest
-	@ echo "[$@] Starting Terraform integration test"
-	pytest -v $(TERRAFORM_PYTEST_DIR) $(TERRAFORM_PYTEST_ARGS)
-	@ echo "[$@]: Completed successfully!"
+terraform/pytest: | guard/program/terraform guard/python_pkg/tftest
+terraform/pytest: | pytest/$(TERRAFORM_PYTEST_DIR)
 
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
 mockstack/%: MOCKSTACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"
-	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e TERRAFORM_PYTEST_ARGS=$(TERRAFORM_PYTEST_ARGS)" \
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e PYTEST_ARGS=\"$(PYTEST_ARGS)\"" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"

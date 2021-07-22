@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.16.0
+
+**Released**: 2021.07.22
+
+**Commit Delta**: [Change from 0.15.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.15.0..0.16.0)
+
+**Summary**:
+
+*   Adds the target "pytest/%" for Python unit testing.
+
+*   Replaces the environment variable TERRAFORM_PYTEST_ARGS with PYTEST_ARGS.
+
+*   Corrects an error with the integration test utility that occurs when 
+    Terraform fails during the apply.
+
+*   No changes to tool versions.
+
 ### 0.15.0
 
 **Released**: 2021.07.15

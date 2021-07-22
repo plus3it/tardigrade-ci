@@ -22,7 +22,7 @@ done
 }
 
 @test "test: terraform pytest success" {
-  run make terraform/pytest TERRAFORM_PYTEST_DIR=../terraform_pytest TERRAFORM_PYTEST_ARGS="--tf-dir $TEST_DIR"
+  run make terraform/pytest TERRAFORM_PYTEST_DIR=../terraform_pytest PYTEST_ARGS="-v --tf-dir $TEST_DIR"
   [ "$status" -eq 0 ]
   [[ "$output" == *"test_modules[test] PASSED [100%]"* ]]
 }
