@@ -30,13 +30,13 @@ be located in the directory `tests` off the repo\'s root directory.
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
-| TERRAFORM_PYTEST_ARGS            | |
+| PYTEST_ARGS                      | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
 ### Arguments to the automation script
 
 These are values that can be specified through the environment variable
-TERRAFORM_PYTEST_ARGS.
+PYTEST_ARGS.
 
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
@@ -84,7 +84,7 @@ make terraform/pytest
 # option also allows booleans, e.g., "not" or "or".
 #
 # The following will match on the subdirectory "create_groups".
-make terraform/pytest TERRAFORM_PYTEST_ARGS="-k groups"
+make terraform/pytest PYTEST_ARGS="-k groups"
 
 # When testing is complete:
 make mockstack/clean
