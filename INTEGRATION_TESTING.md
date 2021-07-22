@@ -70,9 +70,7 @@ subdirectory.  For example:
 The `prereq` approach solves the problem where the top-level module has a
 count/for_each dependency on the supporting resources being created in
 the test.  It creates two terraform state files, one for the prereq and
-one for the test config. The approach here is just a way of separating
-the supporting resources from the test module, but they are all in the
-same terraform state.
+one for the test config.
 
 To verify that a Terraform test will work, bring up the default AWS mock
 stack (`LocalStack`) first, then execute the test:
