@@ -429,7 +429,8 @@ terratest/test:
 	@ echo "[$@]: Completed successfully!"
 
 TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
-terraform/pytest: | guard/program/terraform guard/python_pkg/tftest pytest/$(TERRAFORM_PYTEST_DIR)
+terraform/pytest: | guard/program/terraform guard/python_pkg/tftest
+terraform/pytest: | pytest/$(TERRAFORM_PYTEST_DIR)
 
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test

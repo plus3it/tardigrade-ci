@@ -23,7 +23,6 @@ EOF
 @test "pytest: failure" {
   run make pytest/$TEST_DIR
   [ "$status" -eq 2 ]
-  echo $output
   [[ "$output" == *"assert 3 == 4"* ]]
   [[ "$output" == *"FAILED"* ]]
 }
