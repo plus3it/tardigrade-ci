@@ -280,10 +280,11 @@ python/format:
 	@ echo "[$@]: Successfully formatted Python files!"
 
 # Run pytests, typically for unit tests.
+pytest/%: PYTEST_ARGS ?=
 pytest/%: | guard/program/pytest
 pytest/%:
-	@ echo "[$@] Starting Python tests"
-	pytest $*
+	@ echo "[$@] Starting Python tests found under the directory \"$*\""
+	pytest $* $(PYTEST_ARGS)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files
