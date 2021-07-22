@@ -29,7 +29,7 @@ provider "aws" {
     stepfunctions    = "http://${var.mockstack_host}:${var.mockstack_port}"
     sts              = "http://${var.mockstack_host}:${var.mockstack_port}"
 
-    configservice    = "http://${var.mockstack_host}:${var.moto_port}"
+    configservice = "http://${var.mockstack_host}:${var.moto_port}"
   }
 }
 

@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.16.1
+
+**Released**: 2021.07.22
+
+**Commit Delta**: [Change from 0.16.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.16.0..0.16.1)
+
+**Summary**:
+
+*   Modifies Travis workflow to run lint generically, not just ec and a shell check.
+
+*   Corrects various lint errors.
+
+*   No changes to tool versions.
+
 ### 0.16.0
 
 **Released**: 2021.07.22
