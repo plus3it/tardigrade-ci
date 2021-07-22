@@ -1,9 +1,6 @@
-dist: bionic
+dist: focal
 
-language: node_js
-
-node_js:
-  - "12"
+language: minimal
 
 env:
   global:
@@ -22,11 +19,8 @@ services:
 jobs:
   include:
     - stage: lint
-      name: EditorConfig Syntax Verification
-      script: make ec/lint
-    - stage: lint
-      name: Shell Script Syntax Verification
-      script: make sh/lint
+      name: Project Syntax Verification
+      script: make lint
     - stage: test
       name: Run Makefile unit tests
       install: docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
