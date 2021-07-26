@@ -3,7 +3,7 @@
 
 # Keep these sorted alphabetically, separated by an empty line
 
-FROM bats/bats:1.2.1 as bats
+FROM bats/bats:v1.4.1 as bats
 
 FROM hashicorp/terraform:1.0.2 as terraform
 
