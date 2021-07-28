@@ -383,7 +383,10 @@ docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDK
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(TARDIGRADE_CI_DOCKERFILE) .
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
+		--build-arg USER_ID=$$(id -u) \
+		--build-arg GROUP_ID=$$(id -g) \
+		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount
