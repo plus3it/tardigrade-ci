@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.17.0
+
+**Released**: 2021.07.29
+
+**Commit Delta**: [Change from 0.16.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.16.1..0.17.0)
+
+**Summary**:
+
+*   Creates a non-root user in docker image and passes user context when
+    building the image. This ensures that files created in volumes mounted to
+    the docker container are owned by the user running the container.
+*   Mounts the `.aws` directory as read-only in the docker container.
+
 ### 0.16.1
 
 **Released**: 2021.07.22
