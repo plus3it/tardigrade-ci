@@ -383,7 +383,11 @@ docker/build: DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDK
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) -f $(TARDIGRADE_CI_DOCKERFILE) .
+	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
+		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
+		--build-arg USER_UID=$$(id -u) \
+		--build-arg USER_GID=$$(id -g) \
+		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
 # Adds the current Makefile working directory as a bind mount
@@ -398,7 +402,7 @@ docker/run: docker/build
 	docker run $(DOCKER_RUN_FLAGS) \
 	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
-	-v "$(HOME)/.aws/:/root/.aws/" \
+	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
 	-e GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN) \
