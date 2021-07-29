@@ -28,7 +28,7 @@ RUN apt-get update -y && apt-get install -y \
 # Things to do as $USER
 USER ${USER}
 
-ENV PATH="/${USER}/.local/bin:/${USER}/bin:/go/bin:/usr/local/go/bin:${PATH}"
+ENV PATH="/home/${USER}/.local/bin:/home/${USER}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 
 COPY --chown=${USER}:${USER} --from=golang /go/ /go/
