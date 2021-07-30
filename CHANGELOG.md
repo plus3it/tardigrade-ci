@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.17.1
+
+**Released**: 2021.07.30
+
+**Commit Delta**: [Change from 0.17.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.17.0..0.17.1)
+
+**Summary**:
+
+*   Uses fixuid in entrypoint to fix permissions issues with bindmounts.
+    The user that builds the tardigrade-ci container and the user that runs
+    the tardigrade-ci container (or containers built from it) must have the
+    same UID, or permissions issues will occur. Fixuid checks the user running
+    the container and chowns any file or directory owned by a specified user/group
+    in its configuration. This ensures the user has permissions to those files
+    and directories.
+
 ### 0.17.0
 
 **Released**: 2021.07.29
