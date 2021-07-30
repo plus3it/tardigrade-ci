@@ -166,6 +166,14 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 
+fixuid/install: FIXUID_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'boxboat/fixuid','$(SEMVER_PATTERN)')
+fixuid/install: QUERY = .name | endswith("$(OS)-$(ARCH).tar.gz")
+fixuid/install: | $(BIN_DIR) guard/program/jq
+	@ echo "[$@]: Installing $(@D)..."
+	$(call stream_github_release,boxboat,$(@D),$(FIXUID_VERSION),$(QUERY)) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
+	which $(@D)
+	@ echo "[$@]: Completed successfully!"
+
 docker-compose/install: DOCKER_COMPOSE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'docker-compose==','$(SEMVER_PATTERN)')
 docker-compose/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
@@ -395,11 +403,12 @@ docker/build:
 docker/run: DOCKER_RUN_FLAGS ?= --rm
 docker/run: AWS_DEFAULT_REGION ?= us-east-1
 docker/run: target ?= help
-docker/run: entrypoint ?= make
+docker/run: entrypoint ?= entrypoint.sh
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
 	docker run $(DOCKER_RUN_FLAGS) \
+	--user "$$(id -u):$$(id -g)" \
 	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
