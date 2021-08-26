@@ -31,7 +31,7 @@ def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
 
         It's not possible with Terraform to use a variable for an alias.
         """
-        with open(str(alias_path), "r") as fhandle:
+        with open(str(alias_path), encoding="utf8") as fhandle:
             all_lines = fhandle.read()
         path = tmp_path / alias_path.name
         path.write_text(all_lines.replace(ALIAS_PLACEHOLDER, provider_alias))
