@@ -289,10 +289,11 @@ python/format:
 
 # Run pytests, typically for unit tests.
 PYTEST_ARGS ?=
+PYTEST_ALIAS_ARG ?= $(if $(PROVIDER_ALIAS),--alias $(PROVIDER_ALIAS),)
 pytest/%: | guard/program/pytest
 pytest/%:
 	@ echo "[$@] Starting Python tests found under the directory \"$*\""
-	pytest $* $(PYTEST_ARGS)
+	pytest $* $(PYTEST_ARGS) $(PYTEST_ALIAS_ARG)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files
@@ -450,7 +451,7 @@ INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
 mockstack/%: MOCKSTACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"
-	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e PYTEST_ARGS=\"$(PYTEST_ARGS)\"" \
+	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e PYTEST_ARGS=\"$(PYTEST_ARGS) $(PYTEST_ALIAS_ARG)\"" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
 		$(MAKE) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
