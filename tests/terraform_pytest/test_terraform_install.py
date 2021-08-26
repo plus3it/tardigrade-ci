@@ -99,7 +99,8 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars):
         tf_test.apply(tf_vars=tf_vars)
     except tftest.TerraformTestError as exc:
         pytest.exit(
-            msg=f"catastropic error running Terraform 'apply': {exc}", returncode=1,
+            msg=f"catastropic error running Terraform 'apply': {exc}",
+            returncode=1,
         )
     finally:
         # Destroy the resources for the module under test, then destroy the
