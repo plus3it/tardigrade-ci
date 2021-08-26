@@ -23,6 +23,11 @@ def pytest_addoption(parser):
         default=str(Path(Path.cwd() / "tests")),
         help="Directory of Terraform files under test; default: './tests'",
     )
+    parser.addoption(
+        "--alias",
+        action="store",
+        help="Name of Terraform provider alias to include in test",
+    )
 
 
 @pytest.fixture(scope="function")
@@ -85,6 +90,12 @@ def tf_dir(request):
     if not Path(terraform_dir).exists():
         pytest.exit(msg=f"'{terraform_dir}' is a non-existent directory")
     return Path(terraform_dir).resolve()
+
+
+@pytest.fixture(scope="session")
+def provider_alias(request):
+    """Return name of alias for provider, if one was given."""
+    return request.config.getoption("--alias")
 
 
 def pytest_generate_tests(metafunc):

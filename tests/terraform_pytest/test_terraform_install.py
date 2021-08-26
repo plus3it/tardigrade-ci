@@ -11,24 +11,53 @@ MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 MOCKSTACK_PORT = "4566"
 MOTO_PORT = "4615"
 
+VARIABLES_TF_FILENAME = "test_variables.tf"
+
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
+MOCKSTACK_ALIAS_TF_FILENAME = "mockstack_alias.tf"
+
 AWS_TF_FILENAME = "aws.tf"
+AWS_ALIAS_TF_FILENAME = "aws_alias.tf"
+
+ALIAS_PLACEHOLDER = "REPLACE_WITH_ALIAS"
 
 
 @pytest.fixture(scope="function")
-def tf_test_object(is_mock, tf_dir):
+def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
     """Return function that will create tf_test object using given subdir."""
+
+    def replace_provider_alias(alias_path):
+        """Edit Terraform files to replace placeholder with actual alias.
+
+        It's not possible with Terraform to use a variable for an alias.
+        """
+        with open(str(alias_path), "r") as fhandle:
+            all_lines = fhandle.read()
+        path = tmp_path / alias_path.name
+        path.write_text(all_lines.replace(ALIAS_PLACEHOLDER, provider_alias))
+        return str(path)
 
     def make_tf_test(tf_module):
         """Return a TerraformTest object for given module."""
         tf_test = tftest.TerraformTest(tf_module, basedir=str(tf_dir), env=None)
 
-        # Use the appropriate endpoints, either for a simulated AWS stack
-        # or the real deal.
-        provider_tf = MOCKSTACK_TF_FILENAME if is_mock else AWS_TF_FILENAME
-
+        # Create a list of provider files that contain endpoints for all
+        # the services in use.  The endpoints will be represented by
+        # Terraform variables.
         current_dir = Path(__file__).resolve().parent
-        tf_test.setup(extra_files=[str(Path(current_dir / provider_tf))])
+        copy_files = [str(Path(current_dir / VARIABLES_TF_FILENAME))]
+
+        if is_mock:
+            copy_files.append(str(Path(current_dir / MOCKSTACK_TF_FILENAME)))
+            alias_path = Path(current_dir / MOCKSTACK_ALIAS_TF_FILENAME)
+        else:
+            copy_files.append(str(Path(current_dir / AWS_TF_FILENAME)))
+            alias_path = Path(current_dir / AWS_ALIAS_TF_FILENAME)
+
+        if provider_alias:
+            copy_files.append(replace_provider_alias(alias_path))
+
+        tf_test.setup(extra_files=copy_files)
         return tf_test
 
     return make_tf_test
@@ -70,8 +99,7 @@ def test_modules(subdir, monkeypatch, tf_test_object, tf_vars):
         tf_test.apply(tf_vars=tf_vars)
     except tftest.TerraformTestError as exc:
         pytest.exit(
-            msg=f"catastropic error running Terraform 'apply': {exc}",
-            returncode=1,
+            msg=f"catastropic error running Terraform 'apply': {exc}", returncode=1,
         )
     finally:
         # Destroy the resources for the module under test, then destroy the
