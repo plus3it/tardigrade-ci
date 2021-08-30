@@ -12,29 +12,25 @@ MOCKSTACK_PORT = "4566"
 MOTO_PORT = "4615"
 
 VARIABLES_TF_FILENAME = "test_variables.tf"
-
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
-MOCKSTACK_ALIAS_TF_FILENAME = "mockstack_alias.tf"
-
 AWS_TF_FILENAME = "aws.tf"
-AWS_ALIAS_TF_FILENAME = "aws_alias.tf"
-
-ALIAS_PLACEHOLDER = "REPLACE_WITH_ALIAS"
 
 
 @pytest.fixture(scope="function")
 def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
     """Return function that will create tf_test object using given subdir."""
 
-    def replace_provider_alias(alias_path):
-        """Edit Terraform files to replace placeholder with actual alias.
+    def create_provider_alias_file(alias_path):
+        """Create copy of Terraform file to insert alias into provider block.
 
         It's not possible with Terraform to use a variable for an alias.
         """
         with open(str(alias_path), encoding="utf8") as fhandle:
-            all_lines = fhandle.read()
-        path = tmp_path / alias_path.name
-        path.write_text(all_lines.replace(ALIAS_PLACEHOLDER, provider_alias))
+            all_lines = fhandle.readlines()
+        all_lines.insert(1, f'  alias = "{provider_alias}"\n\n')
+
+        path = tmp_path / f"{alias_path.stem}_alias.tf"
+        path.write_text("".join(all_lines))
         return str(path)
 
     def make_tf_test(tf_module):
@@ -48,14 +44,13 @@ def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
         copy_files = [str(Path(current_dir / VARIABLES_TF_FILENAME))]
 
         if is_mock:
-            copy_files.append(str(Path(current_dir / MOCKSTACK_TF_FILENAME)))
-            alias_path = Path(current_dir / MOCKSTACK_ALIAS_TF_FILENAME)
+            tf_provider_path = Path(current_dir / MOCKSTACK_TF_FILENAME)
         else:
-            copy_files.append(str(Path(current_dir / AWS_TF_FILENAME)))
-            alias_path = Path(current_dir / AWS_ALIAS_TF_FILENAME)
+            tf_provider_path = Path(current_dir / AWS_TF_FILENAME)
+        copy_files.append(str(tf_provider_path))
 
         if provider_alias:
-            copy_files.append(replace_provider_alias(alias_path))
+            copy_files.append(create_provider_alias_file(tf_provider_path))
 
         tf_test.setup(extra_files=copy_files)
         return tf_test
