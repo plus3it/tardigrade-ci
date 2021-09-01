@@ -13,7 +13,6 @@ provider "aws" {
     cloudwatchlogs   = "http://${var.mockstack_host}:${var.mockstack_port}"
     dynamodb         = "http://${var.mockstack_host}:${var.mockstack_port}"
     ec2              = "http://${var.mockstack_host}:${var.mockstack_port}"
-    firehose         = "http://${var.mockstack_host}:${var.mockstack_port}"
     iam              = "http://${var.mockstack_host}:${var.mockstack_port}"
     kinesis          = "http://${var.mockstack_host}:${var.mockstack_port}"
     kms              = "http://${var.mockstack_host}:${var.mockstack_port}"
@@ -30,5 +29,6 @@ provider "aws" {
     sts              = "http://${var.mockstack_host}:${var.mockstack_port}"
 
     configservice = "http://${var.mockstack_host}:${var.moto_port}"
+    firehose      = "http://${var.mockstack_host}:${var.moto_port}"
   }
 }
