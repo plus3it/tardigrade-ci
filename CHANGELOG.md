@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.18.0
+
+**Released**: 2021.09.13
+
+**Commit Delta**: [Change from 0.17.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.17.0..0.18.0)
+
+**Summary**:
+
+*   The new environment variable "PROVIDER_ALIAS" can be used to specify the 
+    name of a Terraform provider alias.  Used as a value for the new "--alias" 
+    command line option, it instructs the automated integration test tool
+    to create the aliased provider information in preparation for a test run.
+
+*   When running Terraform tests, the Firehose service will now be provided
+    by moto and not LocalStack.
+
+*   No changes to tool versions.
+
 ### 0.17.1
 
 **Released**: 2021.07.30
