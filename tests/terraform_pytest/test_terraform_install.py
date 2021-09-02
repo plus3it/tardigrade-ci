@@ -11,7 +11,7 @@ MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 MOCKSTACK_PORT = "4566"
 MOTO_PORT = "4615"
 
-VARIABLES_TF_FILENAME = "test_variables.tf"
+VARIABLES_TF_FILENAME = "mockstack_variables.tf"
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
 
