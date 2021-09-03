@@ -11,6 +11,7 @@ provider "aws" {
     cloudwatch       = "http://${var.mockstack_host}:${var.mockstack_port}"
     cloudwatchevents = "http://${var.mockstack_host}:${var.mockstack_port}"
     cloudwatchlogs   = "http://${var.mockstack_host}:${var.mockstack_port}"
+    configservice    = "http://${var.mockstack_host}:${var.mockstack_port}"
     dynamodb         = "http://${var.mockstack_host}:${var.mockstack_port}"
     ec2              = "http://${var.mockstack_host}:${var.mockstack_port}"
     iam              = "http://${var.mockstack_host}:${var.mockstack_port}"
@@ -28,7 +29,6 @@ provider "aws" {
     stepfunctions    = "http://${var.mockstack_host}:${var.mockstack_port}"
     sts              = "http://${var.mockstack_host}:${var.mockstack_port}"
 
-    configservice = "http://${var.mockstack_host}:${var.moto_port}"
     firehose      = "http://${var.mockstack_host}:${var.moto_port}"
   }
 }
