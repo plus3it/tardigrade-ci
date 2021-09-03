@@ -20,7 +20,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 *   When running Terraform tests, the Firehose service will now be provided
     by moto and not LocalStack.
 
-*   No changes to tool versions.
+*   No explicit changes to tool versions, but dependabot changes since prior 
+    release:
+    * black 21.8b0
+    * cfn-lint 0.53.0
+    * pylint 2.10.2
+    * terragrunt 0.31
+    * terraform 1.0.5
+    * terraform-docs 0.15.0
+    * terratest 0.37.7k
+    * yamllint 1.26.3
+    * yq 4.12.1
+    * Docker now using golang:1.17.0-buster
 
 ### 0.17.1
 
