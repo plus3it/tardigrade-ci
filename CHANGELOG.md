@@ -25,10 +25,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * black 21.8b0
     * cfn-lint 0.53.0
     * pylint 2.10.2
-    * terragrunt 0.31
+    * terragrunt 0.31.7
     * terraform 1.0.5
     * terraform-docs 0.15.0
-    * terratest 0.37.7k
+    * terratest 0.37.7
     * yamllint 1.26.3
     * yq 4.12.1
     * Docker now using golang:1.17.0-buster
