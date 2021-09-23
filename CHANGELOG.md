@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Released**: 2021.09.13
 
-**Commit Delta**: [Change from 0.17.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.17.0..0.18.0)
+**Commit Delta**: [Change from 0.17.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.17.1..0.18.0)
 
 **Summary**:
 
@@ -20,18 +20,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 *   When running Terraform tests, the Firehose service will now be provided
     by moto and not LocalStack.
 
-*   No explicit changes to tool versions, but dependabot changes since prior 
-    release:
-    * black 21.8b0
-    * cfn-lint 0.53.0
-    * pylint 2.10.2
-    * terragrunt 0.31.7
-    * terraform 1.0.5
+*   Updates tool versions:
+    * black 21.9b0
+    * cfn-lint 0.54.1
+    * pylint 2.11.1
+    * pytest 6.2.5
+    * terragrunt 0.31.10
+    * terraform 1.0.7
     * terraform-docs 0.15.0
-    * terratest 0.37.7
+    * terratest 0.37.8
     * yamllint 1.26.3
-    * yq 4.12.1
-    * Docker now using golang:1.17.0-buster
+    * yq 4.13.2
+    * Docker now using golang:1.17.1-buster
+    * Docker now using python:3.9.7-buster
 
 ### 0.17.1
 
