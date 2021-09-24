@@ -289,10 +289,11 @@ python/format:
 
 # Run pytests, typically for unit tests.
 PYTEST_ARGS ?=
+PYTEST_ALIAS_ARG ?= $(if $(PROVIDER_ALIAS),--alias $(PROVIDER_ALIAS),)
 pytest/%: | guard/program/pytest
 pytest/%:
 	@ echo "[$@] Starting Python tests found under the directory \"$*\""
-	pytest $* $(PYTEST_ARGS)
+	pytest $* $(PYTEST_ARGS) $(PYTEST_ALIAS_ARG)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files

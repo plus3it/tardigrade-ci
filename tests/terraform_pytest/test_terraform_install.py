@@ -11,24 +11,48 @@ MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
 MOCKSTACK_PORT = "4566"
 MOTO_PORT = "4615"
 
+VARIABLES_TF_FILENAME = "mockstack_variables.tf"
 MOCKSTACK_TF_FILENAME = "mockstack.tf"
 AWS_TF_FILENAME = "aws.tf"
 
 
 @pytest.fixture(scope="function")
-def tf_test_object(is_mock, tf_dir):
+def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
     """Return function that will create tf_test object using given subdir."""
+
+    def create_provider_alias_file(alias_path):
+        """Create copy of Terraform file to insert alias into provider block.
+
+        It's not possible with Terraform to use a variable for an alias.
+        """
+        with open(str(alias_path), encoding="utf8") as fhandle:
+            all_lines = fhandle.readlines()
+        all_lines.insert(1, f'  alias = "{provider_alias}"\n\n')
+
+        path = tmp_path / f"{alias_path.stem}_alias.tf"
+        path.write_text("".join(all_lines))
+        return str(path)
 
     def make_tf_test(tf_module):
         """Return a TerraformTest object for given module."""
         tf_test = tftest.TerraformTest(tf_module, basedir=str(tf_dir), env=None)
 
-        # Use the appropriate endpoints, either for a simulated AWS stack
-        # or the real deal.
-        provider_tf = MOCKSTACK_TF_FILENAME if is_mock else AWS_TF_FILENAME
-
+        # Create a list of provider files that contain endpoints for all
+        # the services in use.  The endpoints will be represented by
+        # Terraform variables.
         current_dir = Path(__file__).resolve().parent
-        tf_test.setup(extra_files=[str(Path(current_dir / provider_tf))])
+        copy_files = [str(Path(current_dir / VARIABLES_TF_FILENAME))]
+
+        if is_mock:
+            tf_provider_path = Path(current_dir / MOCKSTACK_TF_FILENAME)
+        else:
+            tf_provider_path = Path(current_dir / AWS_TF_FILENAME)
+        copy_files.append(str(tf_provider_path))
+
+        if provider_alias:
+            copy_files.append(create_provider_alias_file(tf_provider_path))
+
+        tf_test.setup(extra_files=copy_files)
         return tf_test
 
     return make_tf_test
