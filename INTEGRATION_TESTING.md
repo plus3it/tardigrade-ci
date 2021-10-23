@@ -1,11 +1,12 @@
 # Tardigrade-ci Integration Testing
 
-The tardigrade-ci `Makefile` provides targets to facilitate automated 
-integration testing of terraform modules through the use of a mock AWS stack.
+The tardigrade-ci `Makefile` provides targets to facilitate
+integration testing of terraform modules.  The testing can be manual or
+automated; if automated, a mock AWS stack is provided by `LocalStack` and `moto`.
 
 This document describes the integration-specific `Makefile` targets and
 the environment variables to customize those targets.  In addition,
-the steps to try out a test are described as are the potential CI/CD
+the steps to execute a test are described, as are the potential CI/CD
 changes to incorporate automated integration testing.
 
 ## Integration test-specific targets and environment variables
@@ -20,8 +21,9 @@ changes to incorporate automated integration testing.
 
 Defaults:
 
-* `LocalStack` is used for the mock AWS stack, with moto serving ports for 
-services not yet suported by `LocalStack`.
+* `LocalStack` and `moto` are used for the mock AWS stack, with moto serving
+ports for services not yet suported by `LocalStack`.  However, there is an
+option ("only-moto") to specify that only `moto` ports be used.
 * The Terraform modules used for the integration tests are expected to
 be located in the directory `tests` off the repo\'s root directory.
 
@@ -30,6 +32,8 @@ be located in the directory `tests` off the repo\'s root directory.
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
+| ONLY_MOTO                        | False; adds "--only-moto" to PYTEST_ARGS |
+| PROVIDER_ALIAS                   | No default; adds "--alias \<alias\>" to PYTEST_ARGS |
 | PYTEST_ARGS                      | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
@@ -41,13 +45,15 @@ PYTEST_ARGS.
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
 | --nomock            | Use AWS, not mocked AWS services |
+| --alias ALIAS       | Add a provider ALIAS to the Terraform test |
 | --alternate-profile | Configure an alternate profile in addition to default profile |
+| --only-moto         | Use moto ports only for mock AWS services |
 | --tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests' |
 
 ## Executing a Terraform test
 
-The tardigrade-ci `Makefile` expects the test Terraform modules to be under
-the repo\s `tests` directory.  There can be multiple sets of tests, each
+The tardigrade-ci `Makefile` expects Terraform test modules to be under
+the repo's `tests` directory.  There can be multiple sets of tests, each
 under their own `tests` subdirectory.
 
 If a test requires an initial test setup, then those Terraform "test setup"
@@ -92,15 +98,16 @@ make mockstack/clean
 
 Alternatively, in lieu of running `make mockstack/up`, LocalStack can be
 run from the command line in a separate window. This will provide you with
-a running log (although you could view the docker log (with no debugging)
-when using `make mockstack/up`).
+a running log, although you could view the docker log (with no debugging)
+when using `make mockstack/up`.
 
 ```
 pip install localstack
 
 # Most of the AWS services are started here, but the list can be tailored
 # to just the ones needed for the test.
-DEBUG=1 SERVICES=ec2,iam,sts,s3,kms,cloudformation,cloudwatch,events,lambda,route53,ssm,sns,sqs,glue,dynamodb localstack start
+DEBUG=1 SERVICES=ec2,iam,sts,s3,kms,cloudformation,cloudwatch,events,lambda,route53,ssm,sns,sqs,glue,dynamodb \
+localstack start
 
 # Wait for a LocalStack to issue the "Ready" message before starting a test.
 # To exit LocalStack, type Ctrl-C.
@@ -118,21 +125,15 @@ These are suggested changes and may not apply to all repos:
 tests/__pycache__/
 ```
 
-2.  For a Travis workflow, logic similar to the following would
-    need to be added to the `.travis.yml` file:
+2.  For a Travis workflow, logic similar to the following can be added
+    to the `.travis.yml` file:
 
 ```bash
-stage: test
-
-name: Terraform Integration Tests
-
-language: python
-
-python:
-  - "3.8"
-
-install: make mockstack/up
-
-script: make mockstack/pytest
-after_script: make mockstack/clean
+- stage: test
+  name: Terraform Integration Tests
+  install:
+    - make docker-compose/install
+    - make mockstack/up
+  script: make mockstack/pytest
+  after_script: make mockstack/clean
 ```
