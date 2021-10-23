@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.0
+
+**Released**: 2021.10.25
+
+**Commit Delta**: [Change from 0.18.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.18.0..0.19.0)
+
+**Summary**:
+
+*   The new environment variable "ONLY_MOTO" can be used to specify that
+    moto should be used for mock AWS services, and not LocalStack or some
+    combination of moto and LocalStack.
+
+* Updates tool versions:
+    * black 21.9.b0
+    * cfn-lint 0.54.2
+    * pylint 2.11.1
+    * pytest 6.2.5
+    * terraform 1.0.9
+    * terraform-docs 1.16.0
+    * terragrunt 0.35.3
+    * terratest 0.38.2
+    * yq 4.13.4
+    * Docker now using golang:1.17.2-buster
+    * Docker now using python:3.10.0-buster
+
 ### 0.18.0
 
 **Released**: 2021.09.13
@@ -21,18 +46,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     by moto and not LocalStack.
 
 *   Updates tool versions:
-    * black 21.9b0
-    * cfn-lint 0.54.1
-    * pylint 2.11.1
-    * pytest 6.2.5
-    * terragrunt 0.31.10
-    * terraform 1.0.7
+    * cfn-lint 0.53.0
+    * pylint 2.10.2
+    * terraform 1.0.5
     * terraform-docs 0.15.0
-    * terratest 0.37.8
-    * yamllint 1.26.3
-    * yq 4.13.2
-    * Docker now using golang:1.17.1-buster
-    * Docker now using python:3.9.7-buster
+    * terragrunt 0.31.5
+    * terratest 0.37.7
+    * yamlint 1.26.3
+    * yq 4.12.0
+    * Docker now using golang:1.17.0-buster
 
 ### 0.17.1
 
