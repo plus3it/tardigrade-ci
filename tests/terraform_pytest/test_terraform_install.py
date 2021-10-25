@@ -59,7 +59,7 @@ def tf_test_object(is_mock, provider_alias, tf_dir, tmp_path):
 
 
 @pytest.fixture(scope="function")
-def tf_vars(is_mock):
+def tf_vars(is_mock, only_moto):
     """Return values for variables used for the Terraform apply.
 
     Set the Terraform variables for the hostname and port to differentiate
@@ -68,7 +68,7 @@ def tf_vars(is_mock):
     return (
         {
             "mockstack_host": MOCKSTACK_HOST,
-            "mockstack_port": MOCKSTACK_PORT,
+            "mockstack_port": MOTO_PORT if only_moto else MOCKSTACK_PORT,
             "moto_port": MOTO_PORT,
         }
         if is_mock

@@ -28,6 +28,11 @@ def pytest_addoption(parser):
         action="store",
         help="Name of Terraform provider alias to include in test",
     )
+    parser.addoption(
+        "--only-moto",
+        action="store_true",
+        help="Only use moto ports for mock AWS services",
+    )
 
 
 @pytest.fixture(scope="function")
@@ -80,6 +85,9 @@ def is_mock(request, aws_credentials):
 
     if request.config.option.alternate_profile:
         pytest.exit(msg="conflicting options: 'alternate_profile' and 'nomock'")
+    elif request.config.option.only_moto:
+        pytest.exit(msg="conflicting options: 'only_moto' and 'nomock'")
+
     return False
 
 
@@ -96,6 +104,12 @@ def tf_dir(request):
 def provider_alias(request):
     """Return name of alias for provider, if one was given."""
     return request.config.getoption("--alias")
+
+
+@pytest.fixture(scope="session")
+def only_moto(request):
+    """Return True if only moto ports are to be used for mock services."""
+    return request.config.option.only_moto
 
 
 def pytest_generate_tests(metafunc):
