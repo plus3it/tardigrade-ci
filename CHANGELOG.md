@@ -44,7 +44,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     by moto and not LocalStack.
 
 *   Updates tool versions:
-    * black 21.9.b0
+    * black 21.9b0
     * cfn-lint 0.54.1
     * pylint 2.11.1
     * pytest 6.2.5
@@ -52,7 +52,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * terraform-docs 1.15.0
     * terragrunt 0.31.10
     * terratest 0.37.8
-    * yamlint 1.26.3
+    * yamllint 1.26.3
     * yq 4.13.2
     * Docker now using golang:1.17.1-buster
     * Docker now using python:3.9.7-buster
