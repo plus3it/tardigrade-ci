@@ -17,15 +17,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     combination of moto and LocalStack.
 
 * Updates tool versions:
+    * bats 1.50
     * black 21.9.b0
-    * cfn-lint 0.54.2
+    * cfn-lint 0.54.3
     * pylint 2.11.1
     * pytest 6.2.5
     * terraform 1.0.9
     * terraform-docs 1.16.0
-    * terragrunt 0.35.3
+    * terragrunt 0.35.4
     * terratest 0.38.2
-    * yq 4.13.4
+    * yq 4.13.5
     * Docker now using golang:1.17.2-buster
     * Docker now using python:3.10.0-buster
 
