@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.1
+
+**Released**: 2021.11.01
+
+**Commit Delta**: [Change from 0.19.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.0..0.19.1)
+
+**Summary**:
+
+*   Added moto-only services to mockstack.tf:  Cloudtrail, Directory Service, 
+    Route53 and Route53 Resolver.
+
+* Updates tool versions:
+    * black 21.10b0
+    * cfn-lint 0.54.4
+    * terraform 1.0.10
+    * yq 4.14.1
+    * terragrunt 0.35.5
+
 ### 0.19.0
 
 **Released**: 2021.10.25
