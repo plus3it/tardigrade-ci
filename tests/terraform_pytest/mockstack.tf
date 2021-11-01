@@ -29,6 +29,9 @@ provider "aws" {
     stepfunctions    = "http://${var.mockstack_host}:${var.mockstack_port}"
     sts              = "http://${var.mockstack_host}:${var.mockstack_port}"
 
-    firehose = "http://${var.mockstack_host}:${var.moto_port}"
+    cloudtrail      = "http://${var.mockstack_host}:${var.moto_port}"
+    ds              = "http://${var.mockstack_host}:${var.moto_port}"
+    firehose        = "http://${var.mockstack_host}:${var.moto_port}"
+    route53resolver = "http://${var.mockstack_host}:${var.moto_port}"
   }
 }
