@@ -18,7 +18,6 @@ provider "aws" {
     kinesis          = "http://${var.mockstack_host}:${var.mockstack_port}"
     kms              = "http://${var.mockstack_host}:${var.mockstack_port}"
     lambda           = "http://${var.mockstack_host}:${var.mockstack_port}"
-    route53          = "http://${var.mockstack_host}:${var.mockstack_port}"
     redshift         = "http://${var.mockstack_host}:${var.mockstack_port}"
     s3               = "http://${var.mockstack_host}:${var.mockstack_port}"
     secretsmanager   = "http://${var.mockstack_host}:${var.mockstack_port}"
@@ -29,6 +28,10 @@ provider "aws" {
     stepfunctions    = "http://${var.mockstack_host}:${var.mockstack_port}"
     sts              = "http://${var.mockstack_host}:${var.mockstack_port}"
 
-    firehose = "http://${var.mockstack_host}:${var.moto_port}"
+    cloudtrail      = "http://${var.mockstack_host}:${var.moto_port}"
+    ds              = "http://${var.mockstack_host}:${var.moto_port}"
+    firehose        = "http://${var.mockstack_host}:${var.moto_port}"
+    route53         = "http://${var.mockstack_host}:${var.moto_port}"
+    route53resolver = "http://${var.mockstack_host}:${var.moto_port}"
   }
 }
