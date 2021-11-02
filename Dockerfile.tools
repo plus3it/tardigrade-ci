@@ -14,3 +14,5 @@ FROM mikefarah/yq:4.14.1 as yq
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.16.0 as tfdocs
+
+FROM rclone/rclone:1.53.4 as rclone
