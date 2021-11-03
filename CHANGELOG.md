@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.2
+
+**Released**: 2021.11.03
+
+**Commit Delta**: [Change from 0.19.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.1..0.19.2)
+
+**Summary**:
+
+*   Adds new Makefile targets for the purpose of installing packer and rclone
+
+*   Adds install targets for the tools:
+    * packer 1.7.8
+    * rclone 1.57.0
+    
 ### 0.19.1
 
 **Released**: 2021.11.01

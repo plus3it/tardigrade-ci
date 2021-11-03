@@ -112,6 +112,26 @@ zip/install:
 	apt-get install zip -y
 	@ echo "[$@]: Completed successfully!"
 
+packer/install: PACKER_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/packer','$(SEMVER_PATTERN)')
+packer/install: | $(BIN_DIR) guard/program/jq
+	@ echo "[$@]: Installing $(@D) $(PACKER_VERSION)..."
+	$(call download_hashicorp_release,$(@D).zip,$(@D),$(PACKER_VERSION))
+	unzip $(@D).zip && rm -f $(@D).zip && chmod +x $(@D)
+	mv $(@D) "$(BIN_DIR)"
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
+
+rclone/install: RCLONE_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'rclone/rclone','$(SEMVER_PATTERN)')
+rclone/install: | $(BIN_DIR) guard/program/unzip
+	@ echo "[$@]: Installing $(@D) $(RCLONE_VERSION) ..."
+	$(call download_github_release,$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
+	unzip $(@D).zip
+	mv $(@D)-*/$(@D) $(BIN_DIR)
+	rm -rf $(@D)*
+	chmod +x $(BIN_DIR)/$(@D)
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
+
 terraform/install: TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
@@ -495,6 +515,6 @@ project/validate:
 install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
 install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install tftest/install
 install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
-install: docker-compose/install
+install: docker-compose/install rclone/install packer/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint

@@ -5,6 +5,8 @@
 
 FROM bats/bats:1.5.0 as bats
 
+FROM hashicorp/packer:1.7.8 as packer
+
 FROM hashicorp/terraform:1.0.10 as terraform
 
 FROM koalaman/shellcheck:v0.7.2 as shellcheck
@@ -14,3 +16,5 @@ FROM mikefarah/yq:4.14.1 as yq
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.16.0 as tfdocs
+
+FROM rclone/rclone:1.57.0 as rclone

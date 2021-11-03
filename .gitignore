@@ -16,3 +16,6 @@
 
 # python caching when pytest is used
 __pycache__
+
+#ide folders
+.idea/
