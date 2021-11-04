@@ -44,7 +44,7 @@ PYTEST_ARGS.
 
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
-| --nomock            | Use AWS, not mocked AWS services |
+| --nomock            | Use AWS, not mocked AWS services.  Takes precedence over the "--only-moto" option. |
 | --alias ALIAS       | Add a provider ALIAS to the Terraform test |
 | --alternate-profile | Configure an alternate profile in addition to default profile |
 | --only-moto         | Use moto ports only for mock AWS services |

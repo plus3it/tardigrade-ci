@@ -1,5 +1,6 @@
 """Fixtures and command line processing for testing Terraform installation."""
 from pathlib import Path
+import warnings
 
 import pytest
 
@@ -86,7 +87,7 @@ def is_mock(request, aws_credentials):
     if request.config.option.alternate_profile:
         pytest.exit(msg="conflicting options: 'alternate_profile' and 'nomock'")
     elif request.config.option.only_moto:
-        pytest.exit(msg="conflicting options: 'only_moto' and 'nomock'")
+        warnings.warn(UserWarning("Ignoring command line option: 'only_moto'"))
 
     return False
 
