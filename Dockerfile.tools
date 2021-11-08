@@ -9,7 +9,7 @@ FROM hashicorp/packer:1.7.8 as packer
 
 FROM hashicorp/terraform:1.0.10 as terraform
 
-FROM koalaman/shellcheck:v0.7.2 as shellcheck
+FROM koalaman/shellcheck:v0.8.0 as shellcheck
 
 FROM mikefarah/yq:4.14.1 as yq
 
