@@ -11,7 +11,7 @@ FROM hashicorp/terraform:1.0.11 as terraform
 
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 
-FROM mikefarah/yq:4.14.1 as yq
+FROM mikefarah/yq:4.14.2 as yq
 
 FROM mstruebing/editorconfig-checker:2.3.5 as ec
 
