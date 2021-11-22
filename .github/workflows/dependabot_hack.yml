@@ -24,6 +24,6 @@ jobs:
 
       - uses: boxboat/fixuid@v0.5.1
 
-      - uses: gruntwork-io/terragrunt@v0.35.10
+      - uses: gruntwork-io/terragrunt@v0.35.12
 
       - uses: stedolan/jq@jq-1.6
