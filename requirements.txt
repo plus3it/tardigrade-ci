@@ -19,6 +19,6 @@ pylint-pytest==1.1.2
 
 pytest==6.2.5
 
-tftest==1.6.0
+tftest==1.6.1
 
 yamllint==1.26.3
