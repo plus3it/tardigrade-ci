@@ -7,7 +7,7 @@ black==21.11b1
 
 bump2version==1.0.1
 
-cfn-lint==0.56.2
+cfn-lint==0.56.3
 
 docker-compose==1.29.2
 
