@@ -20,11 +20,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Updates tool versions:
     * black 21.12b0
     * cfn-lint 0.56.3
-    * golang 1.17.4-buster
+    * golang 1.17.5-buster
     * pylint 2.12.2
+    * python 3.10.1-buster
     * shellcheck 0.8.0
-    * terraform 1.0.11
-    * terragrunt 0.35.13
+    * terraform 1.1.0
+    * terragrunt 0.35.14
     * terratest 0.38.6
     * tftest 1.6.1
     * yq 4.16.1
