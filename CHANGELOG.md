@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.4
+
+**Released**: 2021.12.13
+
+**Commit Delta**: [Change from 0.19.3 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.3..0.19.4)
+
+**Summary**:
+
+*   Adds the environment variable MOTO_DOCKER_NETWORK_NAME to the docker
+    compose file used for LocalStack and moto.  This environment variable 
+    is used by moto_server to determine the IP address for the docker 
+    container.
+
+* Updates tool versions:
+    * black 21.12b0
+    * cfn-lint 0.56.3
+    * golang 1.17.5-buster
+    * pylint 2.12.2
+    * python 3.10.1-buster
+    * shellcheck 0.8.0
+    * terraform 1.1.0
+    * terragrunt 0.35.14
+    * terratest 0.38.6
+    * tftest 1.6.1
+    * yq 4.16.1
+
 ### 0.19.3
 
 **Released**: 2021.11.04
