@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.5
+
+**Released**: 2021.12.21
+
+**Commit Delta**: [Change from 0.19.4 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.4..0.19.5)
+
+**Summary**:
+
+* Patch release primarily to include terraform 1.1.2, as 1.1.0 had regressions
+  that did not work with modules that specify refs. See: https://github.com/hashicorp/terraform/issues/30119
+
+* Updates tool versions:
+    * terraform 1.1.2
+    * terragrunt 0.35.16
+    * terratest 0.38.8
+
 ### 0.19.4
 
 **Released**: 2021.12.13
