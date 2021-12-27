@@ -13,7 +13,7 @@ FROM koalaman/shellcheck:v0.8.0 as shellcheck
 
 FROM mikefarah/yq:4.16.1 as yq
 
-FROM mstruebing/editorconfig-checker:2.3.5 as ec
+FROM mstruebing/editorconfig-checker:2.4.0 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.16.0 as tfdocs
 
