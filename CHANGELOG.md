@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.7
+
+**Released**: 2022.01.03
+
+**Commit Delta**: [Change from 0.19.6 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.6..0.19.7)
+
+**Summary**:
+
+* Updates tool versions:
+    * localstack 0.13.2
+
 ### 0.19.6
 
 **Released**: 2021.12.27
@@ -18,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Updates tool versions:
     * editorconfig-checker 2.4.0
     * localstack 0.12.20
+    * tftest 1.6.2
     * yq 4.16.2
 
 ### 0.19.5
