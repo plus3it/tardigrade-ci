@@ -29,7 +29,7 @@ TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
 TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
-SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,2}
+SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
 
 export TARDIGRADE_CI_AUTO_INIT = false
 
@@ -469,6 +469,7 @@ terraform/pytest: | pytest/$(TERRAFORM_PYTEST_DIR)
 
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
+mockstack/%: export LOCALSTACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'localstack/localstack','$(SEMVER_PATTERN)')
 mockstack/%: MOCKSTACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"

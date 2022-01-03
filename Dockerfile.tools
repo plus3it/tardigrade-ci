@@ -11,6 +11,8 @@ FROM hashicorp/terraform:1.1.2 as terraform
 
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 
+FROM localstack/localstack:0.12.20 as localstack
+
 FROM mikefarah/yq:4.16.2 as yq
 
 FROM mstruebing/editorconfig-checker:2.4.0 as ec

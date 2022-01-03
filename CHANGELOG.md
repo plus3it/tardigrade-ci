@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.19.6
+
+**Released**: 2021.12.27
+
+**Commit Delta**: [Change from 0.19.5 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.5..0.19.6)
+
+**Summary**:
+
+* Pins localstack version, with updates managed by dependabot. This helps stabilize
+  the mockstack usage of tardigrade-ci in other projects.
+
+* Updates tool versions:
+    * editorconfig-checker 2.4.0
+    * localstack 0.12.20
+    * yq 4.16.2
+
 ### 0.19.5
 
 **Released**: 2021.12.21
