@@ -76,6 +76,58 @@ def tf_vars(is_mock, only_moto):
     )
 
 
+@pytest.fixture(scope="function")
+def aws_provider_override(only_moto):
+    """Return override config for mock aws provider."""
+    mockstack_port = MOTO_PORT if only_moto else MOCKSTACK_PORT
+    mockstack_endpoint = f"http://{MOCKSTACK_HOST}:{mockstack_port}"
+    moto_endpoint = f"http://{MOCKSTACK_HOST}:{MOTO_PORT}"
+    return {
+        "provider": {
+            "aws": [
+                {
+                    "skip_credentials_validation": True,
+                    "skip_get_ec2_platforms": True,
+                    "skip_metadata_api_check": True,
+                    "skip_region_validation": True,
+                    "skip_requesting_account_id": True,
+                    "s3_force_path_style": True,
+                    "endpoints": {
+                        # Supported by localstack
+                        "apigateway": mockstack_endpoint,
+                        "cloudformation": mockstack_endpoint,
+                        "cloudwatch": mockstack_endpoint,
+                        "cloudwatchevents": mockstack_endpoint,
+                        "cloudwatchlogs": mockstack_endpoint,
+                        "configservice": mockstack_endpoint,
+                        "dynamodb": mockstack_endpoint,
+                        "ec2": mockstack_endpoint,
+                        "iam": mockstack_endpoint,
+                        "kinesis": mockstack_endpoint,
+                        "kms": mockstack_endpoint,
+                        "lambda": mockstack_endpoint,
+                        "redshift": mockstack_endpoint,
+                        "s3": mockstack_endpoint,
+                        "secretsmanager": mockstack_endpoint,
+                        "ses": mockstack_endpoint,
+                        "sns": mockstack_endpoint,
+                        "sqs": mockstack_endpoint,
+                        "ssm": mockstack_endpoint,
+                        "stepfunctions": mockstack_endpoint,
+                        "sts": mockstack_endpoint,
+                        # Supported by moto only
+                        "cloudtrail": moto_endpoint,
+                        "ds": moto_endpoint,
+                        "firehose": moto_endpoint,
+                        "route53": moto_endpoint,
+                        "route53resolver": moto_endpoint,
+                    },
+                }
+            ]
+        }
+    }
+
+
 def test_modules(subdir, monkeypatch, tf_test_object, tf_vars):
     """Run plan/apply against a Terraform module found in tests subdir."""
     monkeypatch.setenv("AWS_DEFAULT_REGION", AWS_DEFAULT_REGION)
