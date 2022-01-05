@@ -303,12 +303,11 @@ python/format:
 
 # Run pytests, typically for unit tests.
 PYTEST_ARGS ?=
-PYTEST_ALIAS_ARG ?= $(if $(PROVIDER_ALIAS),--alias $(PROVIDER_ALIAS),)
 PYTEST_ONLY_MOTO_ARG ?= $(if $(ONLY_MOTO),--only-moto,)
 pytest/%: | guard/program/pytest
 pytest/%:
 	@ echo "[$@] Starting Python tests found under the directory \"$*\""
-	pytest $* $(PYTEST_ARGS) $(PYTEST_ALIAS_ARG) $(PYTEST_ONLY_MOTO_ARG)
+	pytest $* $(PYTEST_ARGS) $(PYTEST_ONLY_MOTO_ARG)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files
