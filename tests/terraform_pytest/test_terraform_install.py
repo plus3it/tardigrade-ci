@@ -79,7 +79,7 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
             extra_files.append(
                 write_file(tf_provider_path, json.dumps(mock_provider, indent=4))
             )
-        tf_test.setup(extra_files=extra_files, upgrade=True)
+        tf_test.setup(extra_files=extra_files, upgrade=True, cleanup_on_exit=False)
         return tf_test
 
     return make_tf_test
