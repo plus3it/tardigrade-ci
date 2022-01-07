@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### 0.20.0
+### 0.21.0
 
 **Released**: 2022.01.06
 
-**Commit Delta**: [Change from 0.19.7 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.7..0.20.0)
+**Commit Delta**: [Change from 0.19.7 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.7..0.21.0)
 
 **Summary**:
 
