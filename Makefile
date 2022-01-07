@@ -173,15 +173,14 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
+install/pip/% install/pip_pkg_with_no_cli/% pytest/install: PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
 install/pip/%: PKG_VERSION_CMD ?= $* --version
-install/pip/%: PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
 install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
 	$(PKG_VERSION_CMD)
 	@ echo "[$@]: Completed successfully!"
 
-install/pip_pkg_with_no_cli/%: PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
 install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
@@ -202,13 +201,8 @@ black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYT
 black/install:
 	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
-tftest/install: TFTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'tftest==','$(SEMVER_PATTERN)')
-tftest/install:
-	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(TFTEST_VERSION)'
-
-pytest/install: PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'^pytest==','$(SEMVER_PATTERN)')
 pytest/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYTEST_VERSION)'
+	@ $(PIP) install -r $(TERRAFORM_PYTEST_DIR)/requirements.txt
 
 pylint/install: PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
@@ -309,12 +303,11 @@ python/format:
 
 # Run pytests, typically for unit tests.
 PYTEST_ARGS ?=
-PYTEST_ALIAS_ARG ?= $(if $(PROVIDER_ALIAS),--alias $(PROVIDER_ALIAS),)
 PYTEST_ONLY_MOTO_ARG ?= $(if $(ONLY_MOTO),--only-moto,)
 pytest/%: | guard/program/pytest
 pytest/%:
 	@ echo "[$@] Starting Python tests found under the directory \"$*\""
-	pytest $* $(PYTEST_ARGS) $(PYTEST_ALIAS_ARG) $(PYTEST_ONLY_MOTO_ARG)
+	pytest $* $(PYTEST_ARGS) $(PYTEST_ONLY_MOTO_ARG)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files
@@ -514,7 +507,7 @@ project/validate:
 	@ echo "[$@]: Target test folder validation successful"
 
 install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
-install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install tftest/install
+install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install
 install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
 install: docker-compose/install rclone/install packer/install
 

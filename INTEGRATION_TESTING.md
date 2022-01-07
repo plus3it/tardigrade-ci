@@ -33,7 +33,6 @@ be located in the directory `tests` off the repo\'s root directory.
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
 | ONLY_MOTO                        | False; adds "--only-moto" to PYTEST_ARGS |
-| PROVIDER_ALIAS                   | No default; adds "--alias \<alias\>" to PYTEST_ARGS |
 | PYTEST_ARGS                      | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
@@ -45,7 +44,6 @@ PYTEST_ARGS.
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
 | --nomock            | Use AWS, not mocked AWS services.  Takes precedence over the "--only-moto" option. |
-| --alias ALIAS       | Add a provider ALIAS to the Terraform test |
 | --alternate-profile | Configure an alternate profile in addition to default profile |
 | --only-moto         | Use moto ports only for mock AWS services |
 | --tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests' |

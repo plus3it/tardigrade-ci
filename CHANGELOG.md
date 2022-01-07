@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.20.0
+
+**Released**: 2022.01.06
+
+**Commit Delta**: [Change from 0.19.7 release](https://github.com/plus3it/tardigrade-ci/compare/0.19.7..0.20.0)
+
+**Summary**:
+
+* Uses override file to inject mockstack config for aws provider. Allows test configs
+  to manage their aws provider config entirely, including any argument supported
+  by the aws provider. Test configs should now always work without modification
+  for the "--nomock" use case, running against real aws endpoints. For more,
+  see [PR #372](https://github.com/plus3it/tardigrade-ci/pull/372).
+* Removes pytest argument `--alias`.
+* Skips tftest cleanup on exit, so the tfstate remains intact. This is useful if
+  there were errors when tftest ran the destroy action, as it allows us to manually
+  inspect the state and re-run `terraform destroy`.
+
+* Updates tool versions:
+    * tftest 1.6.3
+
 ### 0.19.7
 
 **Released**: 2022.01.03
