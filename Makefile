@@ -366,35 +366,21 @@ json/format: | guard/program/jq json/validate
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
-docs/%: TFDOCS ?= terraform-docs --hide modules --hide resources --sort-by required markdown table
-docs/%: README_FILES ?= find . $(FIND_EXCLUDES) -type f -name README.md
-docs/%: README_TMP ?= $(TMP)/README.tmp
-docs/%: TFDOCS_START_MARKER ?= <!-- BEGIN TFDOCS -->
-docs/%: TFDOCS_END_MARKER ?= <!-- END TFDOCS -->
-
-docs/tmp/%: | guard/program/terraform-docs
-	@ sed '/$(TFDOCS_START_MARKER)/,/$(TFDOCS_END_MARKER)/{//!d}' $* | awk '{print $$0} /$(TFDOCS_START_MARKER)/ {system("echo \"$$($(TFDOCS) $$(dirname $*))\"; echo")} /$(TFDOCS_END_MARKER)/ {f=1}' > $(README_TMP)
-
-docs/generate/%:
-	@ echo "[$@]: Creating documentation files.."
-	@ $(MAKE) docs/tmp/$*
-	mv -f $(README_TMP) $*
-	@ echo "[$@]: Documentation files creation complete!"
-
-docs/lint/%:
-	@ echo "[$@]: Linting documentation files.."
-	@ $(MAKE) docs/tmp/$*
-	diff $* $(README_TMP)
-	rm -f $(README_TMP)
-	@ echo "[$@]: Documentation files PASSED lint test!"
+docs/%: TFDOCS ?= terraform-docs
+docs/%: TFDOCS_OPTIONS ?= --hide modules --hide resources --sort-by required
+docs/%: TFDOCS_RECURSIVE ?= $(if $(wildcard $(TFDOCS_PATH)/modules),--recursive,)
+docs/%: TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- END TFDOCS -->
+docs/%: TFDOCS_FILE ?= README.md
+docs/%: TFDOCS_PATH ?= .
+docs/%: TFDOCS_CMD ?= $(TFDOCS_OPTIONS) $(TFDOCS_RECURSIVE) --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table $(TFDOCS_PATH)
 
 ## Generates Terraform documentation
 docs/generate: | terraform/format
-	@ $(README_FILES) | $(XARGS) $(MAKE) docs/generate/{}
+	$(TFDOCS) $(TFDOCS_CMD)
 
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
-	@ $(README_FILES) | $(XARGS) $(MAKE) docs/lint/{}
+	$(TFDOCS) --output-check $(TFDOCS_CMD)
 
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
