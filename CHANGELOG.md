@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.1
+
+**Released**: 2022.01.20
+
+**Commit Delta**: [Change from 0.20.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.20.0..0.21.1)
+
+**Summary**:
+
+* Uses built-in features of terraform-docs to inject content into readme files.
+
 ### 0.21.0
 
 **Released**: 2022.01.06
