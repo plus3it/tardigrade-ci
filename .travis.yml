@@ -21,7 +21,7 @@ jobs:
     - stage: lint
       name: Project Syntax Verification
       install: make install
-      script: make lint
+      script: make -o docs/lint lint
     - stage: test
       name: Run Makefile unit tests
       install: docker build --build-arg GITHUB_ACCESS_TOKEN=$GITHUB_ACCESS_TOKEN -t "$IMAGE_NAME" -f Dockerfile .
