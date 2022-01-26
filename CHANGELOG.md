@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.2
+
+**Released**: 2022.01.26
+
+**Commit Delta**: [Change from 0.20.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.20.1..0.21.2)
+
+**Summary**:
+
+* Allows callers to use any name for the Makefile, set with `make -f`.
+
 ### 0.21.1
 
 **Released**: 2022.01.20
