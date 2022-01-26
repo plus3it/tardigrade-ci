@@ -1,3 +1,4 @@
+THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
 ARCH ?= amd64
 OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
@@ -33,7 +34,7 @@ SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
 
 export TARDIGRADE_CI_AUTO_INIT = false
 
-export SELF ?= $(MAKE)
+export SELF ?= $(MAKE) -f $(THIS_MAKEFILE)
 
 default:: $(DEFAULT_HELP_TARGET)
 	@exit 0
@@ -86,10 +87,10 @@ guard/env/%:
 	@ _="$(or $($*),$(error Make/environment variable '$*' not present))"
 
 guard/program/%:
-	@ which $* > /dev/null || $(MAKE) $*/install
+	@ which $* > /dev/null || $(SELF) $*/install
 
 guard/python_pkg/%:
-	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(MAKE) $*/install
+	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(SELF) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
@@ -143,7 +144,7 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 
 terragrunt/install: TERRAGRUNT_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'gruntwork-io/terragrunt','$(SEMVER_PATTERN)')
 terragrunt/install: | $(BIN_DIR) guard/program/jq
-	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
+	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
 terraform-docs/install: TFDOCS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'terraform-docs/terraform-docs','$(SEMVER_PATTERN)')
 terraform-docs/install: | $(BIN_DIR) guard/program/jq
@@ -154,7 +155,7 @@ terraform-docs/install: | $(BIN_DIR) guard/program/jq
 
 jq/install: JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'stedolan/jq','$(SEMVER_PATTERN)')
 jq/install: | $(BIN_DIR)
-	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
+	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
 shellcheck/install: SHELLCHECK_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'koalaman/shellcheck','$(SEMVER_PATTERN)')
 shellcheck/install: $(BIN_DIR) guard/program/xz
@@ -195,42 +196,42 @@ fixuid/install: | $(BIN_DIR) guard/program/jq
 
 docker-compose/install: DOCKER_COMPOSE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'docker-compose==','$(SEMVER_PATTERN)')
 docker-compose/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
 
 black/install: BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
 pytest/install:
 	@ $(PIP) install -r $(TERRAFORM_PYTEST_DIR)/requirements.txt
 
 pylint/install: PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_VERSION)'
 
 pylint-pytest/install: PYLINT_PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint-pytest==','$(SEMVER_PATTERN)')
 pylint-pytest/install:
-	@ $(MAKE) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)'
+	@ $(SELF) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)'
 
 pydocstyle/install: PYDOCSTYLE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pydocstyle==','$(SEMVER_PATTERN)')
 pydocstyle/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYDOCSTYLE_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(PYDOCSTYLE_VERSION)'
 
 yamllint/install: YAMLLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'yamllint==','$(SEMVER_PATTERN)')
 yamllint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(YAMLLINT_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(YAMLLINT_VERSION)'
 
 cfn-lint/install: CFN_LINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'cfn-lint==','$(SEMVER_PATTERN)')
 cfn-lint/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(CFN_LINT_VERSION)'
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(CFN_LINT_VERSION)'
 
 yq/install: YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
 yq/install:
-	@ $(MAKE) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
+	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
 bump2version/install: BUMPVERSION_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'bump2version==','$(SEMVER_PATTERN)')
 bump2version/install:
-	@ $(MAKE) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BUMPVERSION_VERSION)' PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
+	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BUMPVERSION_VERSION)' PKG_VERSION_CMD="bumpversion -h | grep 'bumpversion: v'"
 
 bumpversion/install: bump2version/install
 
@@ -454,7 +455,7 @@ mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"
 	DOCKER_RUN_FLAGS="--network terraform_pytest_default --rm -e MOCKSTACK_HOST=$(MOCKSTACK) -e PYTEST_ARGS=\"$(PYTEST_ARGS)\"" \
 		IMAGE_NAME=$(INTEGRATION_TEST_BASE_IMAGE_NAME):latest \
-		$(MAKE) docker/run target=terraform/pytest
+		$(SELF) docker/run target=terraform/pytest
 	@ echo "[$@]: Completed successfully!"
 
 mockstack/up:
