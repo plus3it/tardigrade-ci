@@ -2,4 +2,4 @@ module tardigrade-ci/tests
 
 go 1.13
 
-require github.com/gruntwork-io/terratest v0.38.9
+require github.com/gruntwork-io/terratest v0.39.0
