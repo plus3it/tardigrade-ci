@@ -3,7 +3,7 @@
 
 # Keep this list in alphabetical order, with a single blank line between each package
 
-pytest==6.2.5
+pytest==7.0.0
 
 python-hcl2==3.0.1
 
