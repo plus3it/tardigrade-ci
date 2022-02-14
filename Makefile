@@ -368,21 +368,31 @@ json/format: | guard/program/jq json/validate
 	@ echo "[$@]: Successfully formatted JSON files!"
 
 docs/%: TFDOCS ?= terraform-docs
-docs/%: TFDOCS_OPTIONS ?= --hide modules --hide resources --sort-by required
+docs/%: TFDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required
+docs/%: HCLDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required --hide outputs --hide requirements --hide providers --indent 3
+docs/%: TFDOCS_OPTIONS ?= $(TFDOCS_RECURSIVE) --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table $(TFDOCS_PATH)
 docs/%: TFDOCS_RECURSIVE ?= $(if $(wildcard $(TFDOCS_PATH)/modules),--recursive,)
 docs/%: TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- END TFDOCS -->
 docs/%: TFDOCS_FILE ?= README.md
 docs/%: TFDOCS_PATH ?= .
-docs/%: TFDOCS_CMD ?= $(TFDOCS_OPTIONS) $(TFDOCS_RECURSIVE) --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table $(TFDOCS_PATH)
+docs/%: README_FILES ?=  $(if $(wildcard $(TFDOCS_FILE)),true,)
+docs/%: TF_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,)
+docs/%: HCL_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.pkr.hcl),true,)
+docs/%: TFCMD_OPTS ?= $(if $(README_FILES),$(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),)),)
+docs/%: TFDOCS_CMD ?= $(if $(TFCMD_OPTS),$(TFDOCS) $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
+docs/%: TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
 
 ## Generates Terraform documentation
 docs/generate: | terraform/format
-	$(TFDOCS) $(TFDOCS_CMD)
+	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
+	$(TFDOCS_CMD)
+	
 
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
-	$(TFDOCS) --output-check $(TFDOCS_CMD)
-
+	@[ "${TFDOCS_LINT_CMD}" ] && ( echo "[$@]: Linting docs";)  || ( echo "[$@]: No docs to lint";)
+	$(TFDOCS_LINT_CMD)
+	
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
