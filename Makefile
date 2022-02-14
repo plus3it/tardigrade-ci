@@ -386,13 +386,12 @@ docs/%: TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_
 docs/generate: | terraform/format
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
-	
 
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
 	@[ "${TFDOCS_LINT_CMD}" ] && ( echo "[$@]: Linting docs";)  || ( echo "[$@]: No docs to lint";)
 	$(TFDOCS_LINT_CMD)
-	
+
 docker/%: IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
