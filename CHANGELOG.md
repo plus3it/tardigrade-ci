@@ -14,6 +14,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Detects README.md and terrraform or packer files to detect whether to generate and/or lint docs.
 
+* Updates tool versions: 
+    * cfn-lint 0.58.0
+    * black 22.1.0    
+    * localstack 0.14.0
+    * packer 1.7.10
+    * pytest 7.0.1
+    * terraform 1.1.5
+    * terragrunt 0.36.1
+    * terratest 0.40.1
+    * tftest 1.6.4
+    * yq 4.19.1
+    * Docker now using golang 1.17.7-buster
+
 ### 0.21.2
 
 **Released**: 2022.01.26
