@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.3
+
+**Released**: 2022.02.15
+
+**Commit Delta**: [Change from 0.21.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.2..0.21.3)
+
+**Summary**:
+
+* Detects README.md and terrraform or packer files to detect whether to generate and/or lint docs.
+
 ### 0.21.2
 
 **Released**: 2022.01.26
