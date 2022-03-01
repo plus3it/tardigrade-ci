@@ -20,7 +20,7 @@ done
 @test "python/format: success" {
   run make python/format
   [ "$status" -eq 0 ]
-  [[ "$output" == *"[python/format]: Successfully formatted Python files!"* ]]
+  [[ "$output" == *"[python/format/exec]: Successfully formatted Python files!"* ]]
 
   run make python/format PYTHON_FILES="$TEST_DIR/nested/*.py"
   [ "$status" -eq 0 ]
