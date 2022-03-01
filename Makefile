@@ -281,9 +281,11 @@ ec/lint:
 
 python/%: PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
 ## Checks format and lints Python files
-python/lint: PYLINT_RCFILE ?= $(TARDIGRADE_CI_PATH)/.pylintrc
-python/lint: | guard/program/pylint guard/python_pkg/pylint-pytest guard/program/black guard/program/pydocstyle guard/program/git
 python/lint:
+	@if [[ -n "$(PYTHON_FILES)" ]]; then $(SELF) python/lint/exec; fi
+python/lint/exec: PYLINT_RCFILE ?= $(TARDIGRADE_CI_PATH)/.pylintrc
+python/lint/exec: | guard/program/pylint guard/python_pkg/pylint-pytest guard/program/black guard/program/pydocstyle guard/program/git
+python/lint/exec:
 	@ echo "[$@]: Linting Python files..."
 	@ echo "[$@]: Pylint rcfile:  $(PYLINT_RCFILE)"
 	black --check $(PYTHON_FILES)
@@ -296,8 +298,10 @@ python/lint:
 	@ echo "[$@]: Python files PASSED lint test!"
 
 ## Formats Python files
-python/format: | guard/program/black guard/program/git
 python/format:
+	@if [[ -n "$(PYTHON_FILES)" ]]; then $(SELF) python/format/exec; fi
+python/format/exec: | guard/program/black guard/program/git
+python/format/exec:
 	@ echo "[$@]: Formatting Python files..."
 	black $(PYTHON_FILES)
 	@ echo "[$@]: Successfully formatted Python files!"
