@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.4
+
+**Released**: 2022.02.15
+
+**Commit Delta**: [Change from 0.21.3 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.3..0.21.4)
+
+**Summary**:
+
+* Detects python files to determine whether to format/lint.
+
+* Updates tool versions:
+    * bats 1.6.0
+    * cfn-lint 0.58.2
+    * hcl2 3.0.4
+    * terraform 1.1.6
+    * terragrunt 0.36.2
+    * terratest 0.40.4
+    * yq 4.21.1
+
 ### 0.21.3
 
 **Released**: 2022.02.15
@@ -14,9 +33,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Detects README.md and terrraform or packer files to detect whether to generate and/or lint docs.
 
-* Updates tool versions: 
+* Updates tool versions:
     * cfn-lint 0.58.0
-    * black 22.1.0    
+    * black 22.1.0
     * localstack 0.14.0
     * packer 1.7.10
     * pytest 7.0.1
@@ -121,8 +140,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 *   Adds the environment variable MOTO_DOCKER_NETWORK_NAME to the docker
-    compose file used for LocalStack and moto.  This environment variable 
-    is used by moto_server to determine the IP address for the docker 
+    compose file used for LocalStack and moto.  This environment variable
+    is used by moto_server to determine the IP address for the docker
     container.
 
 * Updates tool versions:
@@ -163,7 +182,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 *   Adds install targets for the tools:
     * packer 1.7.8
     * rclone 1.57.0
-    
+
 ### 0.19.1
 
 **Released**: 2021.11.01
@@ -172,7 +191,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Added moto-only services to mockstack.tf:  Cloudtrail, Directory Service, 
+*   Added moto-only services to mockstack.tf:  Cloudtrail, Directory Service,
     Route53 and Route53 Resolver.
 
 * Updates tool versions:
@@ -213,8 +232,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   The new environment variable "PROVIDER_ALIAS" can be used to specify the 
-    name of a Terraform provider alias.  Used as a value for the new "--alias" 
+*   The new environment variable "PROVIDER_ALIAS" can be used to specify the
+    name of a Terraform provider alias.  Used as a value for the new "--alias"
     command line option, it instructs the automated integration test tool
     to create the aliased provider information in preparation for a test run.
 
@@ -290,7 +309,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 *   Replaces the environment variable TERRAFORM_PYTEST_ARGS with PYTEST_ARGS.
 
-*   Corrects an error with the integration test utility that occurs when 
+*   Corrects an error with the integration test utility that occurs when
     Terraform fails during the apply.
 
 *   No changes to tool versions.
@@ -303,7 +322,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds new Makefile targets for the purpose of testing Terraform modules 
+*   Adds new Makefile targets for the purpose of testing Terraform modules
     using Terraform and the mock AWS stacks LocalStack and/or moto.  The new
     readme file `INTEGRATION_TESTING.md` describes the expected testing
     environment and the associated Makefile targets.
@@ -461,7 +480,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 *   No longer requires a docker file with the fixed name of `Dockerfile`.
     The environment variable `TARDIGRADE_CI_DOCKERFILE` can be used to
-    specify an alternative docker filename for the `docker/build` 
+    specify an alternative docker filename for the `docker/build`
     target or for the file used for the bootstrap.
 *   Corrects misspelling of the module name for terratest golang test.
 
