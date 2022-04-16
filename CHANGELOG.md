@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.5
+
+**Released**: 2022.04.13
+
+**Commit Delta**: [Change from 0.21.4 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.4..0.21.5)
+
+**Summary**:
+
+* Updates tool versions:
+     * black 22.3
+     * cfn-lint 0.58.4
+     * golang 1.17.8
+     * hcl2 3.0.5
+     * localstack 0.14.2
+     * packer 1.8.0
+     * pylint 2.13.5
+     * pytest 7.1.0
+     * python 3.10.4
+     * rclone 1.58.0
+     * terraform 1.1.8
+     * terragrunt 0.36.3
+     * terratest 0.40.6
+     * yq 4.24.2
+
 ### 0.21.4
 
 **Released**: 2022.02.15
