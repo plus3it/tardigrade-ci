@@ -1,4 +1,4 @@
-FROM golang:1.18.1-buster as golang
+FROM golang:1.18.2-buster as golang
 
 FROM python:3.10.4-buster
 
