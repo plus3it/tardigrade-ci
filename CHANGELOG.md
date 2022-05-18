@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.6
+
+**Released**: 2022.05.18
+
+**Commit Delta**: [Change from 0.21.5 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.5..0.21.6)
+
+**Summary**:
+
+* Updates cfn-lint specs with each tardigrade-ci release
+
+* Updates tool versions:
+    * bats 1.7.0
+    * cfn-lint 0.60.0
+    * golang 1.18.2
+    * pylint 2.13.9
+    * pytest 7.1.2
+    * rclone 1.58.1
+    * terraform 1.1.9
+    * terragrunt 0.37.1
+    * terratest 0.40.8
+    * tftest 1.6.5
+    * yq 4.25.1
+
 ### 0.21.5
 
 **Released**: 2022.04.13
@@ -13,20 +36,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Updates tool versions:
-     * black 22.3
-     * cfn-lint 0.58.4
-     * golang 1.17.8
-     * hcl2 3.0.5
-     * localstack 0.14.2
-     * packer 1.8.0
-     * pylint 2.13.5
-     * pytest 7.1.0
-     * python 3.10.4
-     * rclone 1.58.0
-     * terraform 1.1.8
-     * terragrunt 0.36.3
-     * terratest 0.40.6
-     * yq 4.24.2
+    * black 22.3
+    * cfn-lint 0.58.4
+    * golang 1.17.8
+    * hcl2 3.0.5
+    * localstack 0.14.2
+    * packer 1.8.0
+    * pylint 2.13.5
+    * pytest 7.1.0
+    * python 3.10.4
+    * rclone 1.58.0
+    * terraform 1.1.8
+    * terragrunt 0.36.3
+    * terratest 0.40.6
+    * yq 4.24.2
 
 ### 0.21.4
 
