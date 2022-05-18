@@ -43,7 +43,8 @@ ENV HOME="/home/${USER}"
 ENV PATH="/${HOME}/.local/bin:/${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 
-RUN make -C /${PROJECT_NAME} install
+RUN make -C /${PROJECT_NAME} install \
+    && cfn-lint --update-specs
 
 WORKDIR /${PROJECT_NAME}
 ENTRYPOINT ["entrypoint.sh"]
