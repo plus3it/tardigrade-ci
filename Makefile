@@ -1,4 +1,4 @@
-THIS_MAKEFILE := $(lastword $(MAKEFILE_LIST))
+THIS_MAKEFILE := $(firstword $(MAKEFILE_LIST))
 ARCH ?= amd64
 OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 CURL ?= curl --fail -sSL
