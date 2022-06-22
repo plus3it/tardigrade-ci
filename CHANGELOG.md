@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.7
+
+**Released**: 2022.06.22
+
+**Commit Delta**: [Change from 0.21.6 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.6..0.21.7)
+
+**Summary**:
+
+* Ensures root Makefile targets are available even to "guard" targets
+
+* Updates tool versions:
+    * cfn-lint 0.61.0
+    * golang 1.18.3
+    * localstack 0.14.3
+    * packer 1.8.1
+    * pylint 2.14.3
+    * python 3.10.5
+    * terraform 1.2.3
+    * terragrunt 0.38.0
+    * terratest 0.40.17
+    * yq 4.25.2
+
 ### 0.21.6
 
 **Released**: 2022.05.18
