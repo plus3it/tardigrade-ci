@@ -235,7 +235,7 @@ bump2version/install:
 
 bumpversion/install: bump2version/install
 
-node/install: NODE_VERSION ?= 10.x
+node/install: NODE_VERSION ?= 16.x
 node/install: NODE_SOURCE ?= https://deb.nodesource.com/setup_$(NODE_VERSION)
 node/install:
 	@ echo "[$@]: Installing $(@D)..."
