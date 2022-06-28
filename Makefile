@@ -290,9 +290,10 @@ python/lint/exec:
 	@ echo "[$@]: Pylint rcfile:  $(PYLINT_RCFILE)"
 	black --check $(PYTHON_FILES)
 	for python_file in $(PYTHON_FILES); do \
+		echo "[$@]: pylint file: $$python_file"; \
 		$(PYTHON) -m pylint --rcfile $(PYLINT_RCFILE) \
 			--msg-template="{path}:{line} [{symbol}] {msg}" \
-			-rn -sn $$python_file; \
+			--report no --score no $$python_file; \
 	done
 	pydocstyle $(PYTHON_FILES)
 	@ echo "[$@]: Python files PASSED lint test!"
