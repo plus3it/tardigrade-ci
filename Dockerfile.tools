@@ -7,7 +7,7 @@ FROM bats/bats:1.7.0 as bats
 
 FROM hashicorp/packer:1.8.2 as packer
 
-FROM hashicorp/terraform:1.2.3 as terraform
+FROM hashicorp/terraform:1.2.4 as terraform
 
 FROM koalaman/shellcheck:v0.8.0 as shellcheck
 
