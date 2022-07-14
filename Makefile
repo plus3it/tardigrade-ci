@@ -127,7 +127,9 @@ packer/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-rclone/install: export RCLONE_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'rclone/rclone','$(SEMVER_PATTERN)')
+# Do not export RCLONE_VERSION, because rclone is weird and processes RCLONE_ envs even for the --version command
+# See also: https://github.com/rclone/rclone/issues/4888
+rclone/install: RCLONE_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'rclone/rclone','$(SEMVER_PATTERN)')
 rclone/install: | $(BIN_DIR) guard/program/unzip
 	@ echo "[$@]: Installing $(@D) $(RCLONE_VERSION) ..."
 	$(call download_github_release,$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
