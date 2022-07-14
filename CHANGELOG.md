@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.21.9
+
+**Released**: 2022.07.14
+
+**Commit Delta**: [Change from 0.21.8 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.8..0.21.9)
+
+**Summary**:
+
+* Exports all variables that support overrides using `?=`
+* Marks make macros as unexported, fixing .EXPORT_ALL_VARIABLES
+
+* Updates tool versions:
+    * black 22.6.0
+    * cfn-lint 0.61.2
+    * localstack 0.14.5
+    * pylint 2.14.4
+    * rclone 1.59.0
+    * terraform 1.2.4
+    * terragrunt 0.38.4
+    * yamllint 1.27.1
+
 ### 0.21.8
 
 **Released**: 2022.06.28
