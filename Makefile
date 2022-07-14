@@ -66,22 +66,27 @@ GITHUB_AUTHORIZATION := $(if $(GITHUB_ACCESS_TOKEN),-H "Authorization: token $$G
 # To pin a release, use version=tags/<tag>
 # $(call parse_github_download_url,owner,repo,version,asset select query)
 parse_github_download_url = $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.com/repos/$(1)/$(2)/releases/$(3) | jq --raw-output  '.assets[] | select($(4)) | .browser_download_url'
+unexport parse_github_download_url
 
 # Macro to download a github binary release
 # $(call download_github_release,file,owner,repo,version,asset select query)
 download_github_release = $(CURL) $(GITHUB_AUTHORIZATION) -o $(1) $(shell $(call parse_github_download_url,$(2),$(3),$(4),$(5)))
+unexport download_github_release
 
 # Macro to stream a github binary release
 # $(call stream_github_release,owner,repo,version,asset select query)
 stream_github_release = $(CURL) $(GITHUB_AUTHORIZATION) $(shell $(call parse_github_download_url,$(1),$(2),$(3),$(4)))
+unexport stream_github_release
 
 # Macro to download a hashicorp archive release
 # $(call download_hashicorp_release,file,app,version)
 download_hashicorp_release = $(CURL) -o $(1) https://releases.hashicorp.com/$(2)/$(3)/$(2)_$(3)_$(OS)_$(ARCH).zip
+unexport download_hashicorp_release
 
 # Macro to match a pattern from a line in a file
 # $(call match_pattern_in_file,file,line,pattern)
 match_pattern_in_file = $(or $(shell grep $(2) $(1) 2> /dev/null | grep -oE $(3) 2> /dev/null),$(error Could not match pattern from file: file=$(1), line=$(2), pattern=$(3)))
+unexport match_pattern_in_file
 
 guard/env/%:
 	@ _="$(or $($*),$(error Make/environment variable '$*' not present))"
