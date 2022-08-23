@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.22.0
+
+**Released**: 2022.08.23
+
+**Commit Delta**: [Change from 0.21.9 release](https://github.com/plus3it/tardigrade-ci/compare/0.21.9..0.22.0)
+
+**Summary**:
+
+* Replaces all "find" logic with `git ls-files` to honor `.gitignore` by default
+    * Patterns for FIND_EXCLUDES will now need to be based on the git pathspec (e.g. `':!:*/.terraform/*'`), instead of `find`. See also, <https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec>
+    * ECLINT_FILES now takes the command that returns the files, and not the list of files
+    * All FIND_* variables can now be overriden by providing the command that returns the files
+
+* Updates tool versions:
+    * cfn-lint 0.61.5
+    * golang 1.19.0
+    * localstack 1.0.4
+    * packer 1.8.3
+    * pylint 2.14.5
+    * python 3.10.6
+    * rclone 1.59.1
+    * terraform 1.2.7
+    * terragrunt 0.38.7
+    * terratest 0.40.19
+    * tftest 1.7.1
+    * yq 4.27.2
+
 ### 0.21.9
 
 **Released**: 2022.07.14
