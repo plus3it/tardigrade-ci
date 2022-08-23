@@ -5,7 +5,8 @@ export CURL ?= curl --fail -sSL
 export XARGS ?= xargs -I {}
 export BIN_DIR ?= ${HOME}/bin
 export TMP ?= /tmp
-export FIND_EXCLUDES ?= -not \( -name .terraform -prune \) -not \( -name .terragrunt-cache -prune \)
+export FIND_EXCLUDES ?= ':!:*/.terraform/*' ':!:*/.terragrunt-cache/*'
+export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
 
 # See https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE
 export PYTHONUSERBASE ?= $(HOME)/.local
@@ -264,7 +265,7 @@ bumpversion/%: export BUMPVERSION_ARGS ?=
 bumpversion/major bumpversion/minor bumpversion/patch: | guard/program/bump2version
 	@ bumpversion $(BUMPVERSION_ARGS) $(@F)
 
-yaml/%: export FIND_YAML ?= find . $(FIND_EXCLUDES) -type f \( -name '*.yml' -o -name "*.yaml" \)
+yaml/%: export FIND_YAML ?= $(GIT_LS_FILES) -- '*.yml' '*.yaml' $(FIND_EXCLUDES)
 ## Lints YAML files
 yaml/lint: | guard/program/yamllint
 yaml/lint: export YAMLLINT_CONFIG ?= .yamllint.yml
@@ -273,20 +274,20 @@ yaml/lint:
 	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
 	@ echo "[$@]: Project PASSED yamllint test!"
 
-cfn/%: export FIND_CFN ?= find . $(FIND_EXCLUDES) -name '*.template.cfn.*' -type f
+cfn/%: export FIND_CFN ?= $(GIT_LS_FILES) -- '*.template.cfn.*' $(FIND_EXCLUDES)
 ## Lints CloudFormation files
 cfn/lint: | guard/program/cfn-lint
 	$(FIND_CFN) | $(XARGS) cfn-lint -t {}
 
 ## Runs editorconfig-checker, aka 'ec', against the project
 ec/lint: | guard/program/ec guard/program/git
-ec/lint: export ECLINT_FILES ?= $(shell git ls-files | grep -v ".bats")
+ec/lint: export ECLINT_FILES ?= $(GIT_LS_FILES) -- ':!:*.bats' $(FIND_EXCLUDES)
 ec/lint:
 	@ echo "[$@]: Running ec..."
-	ec $(ECLINT_FILES)
+	ec -v $$($(ECLINT_FILES))
 	@ echo "[$@]: Project PASSED ec lint test!"
 
-python/%: export PYTHON_FILES ?= $(shell git ls-files --cached --others --exclude-standard '*.py')
+python/%: export PYTHON_FILES ?= $(shell $(GIT_LS_FILES) -- '*.py' $(FIND_EXCLUDES))
 ## Checks format and lints Python files
 python/lint:
 	@if [[ -n "$(PYTHON_FILES)" ]]; then $(SELF) python/lint/exec; fi
@@ -335,7 +336,7 @@ terraform/format: | guard/program/terraform
 	terraform fmt -recursive
 	@ echo "[$@]: Successfully formatted terraform files!"
 
-hcl/%: FIND_HCL := find . $(FIND_EXCLUDES) -type f \( -name "*.hcl" \)
+hcl/%: export FIND_HCL ?= $(GIT_LS_FILES) -- '*.hcl' $(FIND_EXCLUDES)
 
 ## Validates hcl files
 hcl/validate: | guard/program/terraform
@@ -355,14 +356,14 @@ hcl/format: | guard/program/terraform hcl/validate
 	$(FIND_HCL) | $(XARGS) bash -c 'echo "$$(cat "{}" | terraform fmt -)" > "{}"'
 	@ echo "[$@]: Successfully formatted hcl files!"
 
-sh/%: FIND_SH := find . $(FIND_EXCLUDES) -name '*.sh' -type f
+sh/%: export FIND_SH ?= $(GIT_LS_FILES) -- '*.sh' $(FIND_EXCLUDES)
 ## Lints bash script files
 sh/lint: | guard/program/shellcheck
 	@ echo "[$@]: Linting shell scripts..."
 	$(FIND_SH) | $(XARGS) shellcheck {}
 	@ echo "[$@]: Shell scripts PASSED lint test!"
 
-json/%: FIND_JSON := find . $(FIND_EXCLUDES) -name '*.json' -type f
+json/%: export FIND_JSON ?= $(GIT_LS_FILES) -- '*.json' $(FIND_EXCLUDES)
 json/validate:
 	@ $(FIND_JSON) | $(XARGS) bash -c 'jq --indent 4 -S . "{}" > /dev/null 2>&1 || (echo "[{}]: Found invalid JSON file: "{}" "; exit 1)'
 	@ echo "[$@]: JSON files PASSED validation test!"
