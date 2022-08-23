@@ -19,7 +19,7 @@ done
 
 @test "ec/lint: success" {
   # The 'ec/lint' Makefile target excludes *.bats files.
-  ECLINT_FILES=$(find "${TEST_DIR}" -type f | xargs echo)
+  ECLINT_FILES="find ${TEST_DIR} -type f | xargs echo"
 
   run make ec/lint ECLINT_FILES="${ECLINT_FILES}"
   [ "$status" -eq 0 ]
