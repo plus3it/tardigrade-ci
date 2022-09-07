@@ -400,9 +400,9 @@ docs/generate: | terraform/format
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
 	@if [ -n $(README_FILES) ] && [ "$$(tail -c1 $(TFDOCS_FILE))" != "$('\n')" ]; then \
-        echo "Adding newline to the end of $(TFDOCS_FILE) file"; \
+		echo "Adding newline to the end of $(TFDOCS_FILE) file"; \
 		echo "" >> $(TFDOCS_FILE); \
-    fi
+	fi
 
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
