@@ -389,14 +389,19 @@ docs/%: export TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- 
 docs/%: export TFDOCS_FILE ?= README.md
 docs/%: export TFDOCS_PATH ?= .
 docs/%: export README_FILES ?=  $(if $(wildcard $(TFDOCS_FILE)),true,)
-docs/%: export TF_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,)
-docs/%: export HCL_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.pkr.hcl),true,)
+#docs/%: export TF_FILES_OLD ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,)
+docs/%: export TF_FILES = $(if $(shell find ./ -type f -name '*.tf'), true,)
+#docs/%: export HCL_FILES_OLD ?= $(if $(wildcard $(TFDOCS_PATH)/*.pkr.hcl),true,)
+docs/%: export HCL_FILES = $(if $(shell find ./ -type f -name '*.pkr.hcl'), true,)
 docs/%: export TFCMD_OPTS ?= $(if $(README_FILES),$(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),)),)
 docs/%: export TFDOCS_CMD ?= $(if $(TFCMD_OPTS),$(TFDOCS) $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
 docs/%: export TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
 
 ## Generates Terraform documentation
 docs/generate: | terraform/format
+	@echo "[$@]: TF_FILES: $(TF_FILES)"
+	@echo "[$@]: HCL_FILES: $(HCL_FILES)"
+	@echo "[$@]: README_FILES: $(README_FILES)"
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
 	@if [ -n $(README_FILES) ] && [ "$$(tail -c1 $(TFDOCS_FILE))" != "$('\n')" ]; then \
