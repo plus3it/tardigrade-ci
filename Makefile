@@ -397,9 +397,6 @@ docs/%: export TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $
 
 ## Generates Terraform documentation
 docs/generate: | terraform/format
-	@echo "[$@]: TF_FILES: $(TF_FILES)"
-	@echo "[$@]: HCL_FILES: $(HCL_FILES)"
-	@echo "[$@]: README_FILES: $(README_FILES)"
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
 	@if [ -n $(README_FILES) ] && [ "$$(tail -c1 $(TFDOCS_FILE))" != "$('\n')" ]; then \
