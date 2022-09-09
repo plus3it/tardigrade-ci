@@ -400,14 +400,14 @@ docs/%: export MARKDOWN_FILES ?= $(shell $(GIT_LS_FILES) -- '*.md' $(FIND_EXCLUD
 docs/generate: | terraform/format
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
-	@make docs/format
+	@$(SELF) docs/format
 
-## Adds a newline to the end of all project markdown files if one does not already existGenerates Terraform documentation
+## Adds a newline to the end of all project markdown files if one does not already exist
 docs/format:
 	@for markdown_file in $(MARKDOWN_FILES); do \
-		if [ "$$(tail -c1 $$markdown_file)" != "$('\n')" ]; then \
-			echo "Adding newline to the end of $$markdown_file file"; \
-			echo "" >> $$markdown_file; \
+		if [ "$$(tail -c1 $${markdown_file})" != "$('\n')" ]; then \
+			echo "Adding newline to the end of $${markdown_file} file"; \
+			echo "" >> $${markdown_file}; \
 		fi; \
 	done
 
