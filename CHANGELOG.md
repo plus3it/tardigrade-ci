@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.23.1
+
+**Released**: 2022.09.09
+
+**Commit Delta**: [Change from 0.23.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.23.0..0.23.1)
+
+**Summary**:
+
+* Adds a newline to all makedown files if one does not exist.  Runs terraform-docs on all Terraform files in the root and modules directories.  This fixes a bug with the previous version that would not run terraform-docs on modules directories if a Terraform files did not exist at the root level.  
+
 ### 0.23.0
 
 **Released**: 2022.09.07
@@ -13,6 +23,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Adds a newline to the end of a README.md file if one does not exist.  
+
+* Updates tool versions:
+    * cfn-lint 0.61.5
+    * localstack 1.1.0
+    * terragrunt 0.38.7
+    * terratest 0.40.21
+    * yq 4.27.3
 
 ### 0.22.0
 

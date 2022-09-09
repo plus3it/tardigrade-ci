@@ -388,21 +388,28 @@ docs/%: export TFDOCS_RECURSIVE ?= $(if $(wildcard $(TFDOCS_PATH)/modules),--rec
 docs/%: export TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- END TFDOCS -->
 docs/%: export TFDOCS_FILE ?= README.md
 docs/%: export TFDOCS_PATH ?= .
-docs/%: export README_FILES ?=  $(if $(wildcard $(TFDOCS_FILE)),true,)
-docs/%: export TF_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,)
+docs/%: export README_FILES ?=  $(if $(wildcard $(TFDOCS_FILE)),true,$(if $(wildcard modules/*/$(TFDOCS_FILE)),true,))
+docs/%: export TF_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,$(if $(wildcard modules/*/*.tf),true,))
 docs/%: export HCL_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.pkr.hcl),true,)
 docs/%: export TFCMD_OPTS ?= $(if $(README_FILES),$(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),)),)
 docs/%: export TFDOCS_CMD ?= $(if $(TFCMD_OPTS),$(TFDOCS) $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
 docs/%: export TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
+docs/%: export MARKDOWN_FILES ?= $(shell $(GIT_LS_FILES) -- '*.md' $(FIND_EXCLUDES))
 
 ## Generates Terraform documentation
 docs/generate: | terraform/format
 	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
 	$(TFDOCS_CMD)
-	@if [ -n $(README_FILES) ] && [ "$$(tail -c1 $(TFDOCS_FILE))" != "$('\n')" ]; then \
-		echo "Adding newline to the end of $(TFDOCS_FILE) file"; \
-		echo "" >> $(TFDOCS_FILE); \
-	fi
+	@$(SELF) docs/format
+
+## Adds a newline to the end of all project markdown files if one does not already exist
+docs/format:
+	@for markdown_file in $(MARKDOWN_FILES); do \
+		if [ "$$(tail -c1 $${markdown_file})" != "$('\n')" ]; then \
+			echo "Adding newline to the end of $${markdown_file} file"; \
+			echo "" >> $${markdown_file}; \
+		fi; \
+	done
 
 ## Lints Terraform documentation
 docs/lint: | terraform/lint
