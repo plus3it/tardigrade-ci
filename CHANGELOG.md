@@ -24,6 +24,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Adds a newline to the end of a README.md file if one does not exist.  
 
+* Updates tool versions:
+    * cfn-lint 0.61.5
+    * localstack 1.1.0
+    * terragrunt 0.38.7
+    * terratest 0.40.21
+    * yq 4.27.3
+
 ### 0.22.0
 
 **Released**: 2022.08.23
