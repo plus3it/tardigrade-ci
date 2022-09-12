@@ -527,10 +527,11 @@ bats/install:
 	rm -rf $(TMP)/bats-core-*
 	@ echo "[$@]: Completed successfully!"
 
+bats/test: BATS_OPTS ?= --print-output-on-failure -r *.bats
 bats/test: | guard/program/bats
 bats/test:
 	@ echo "[$@]: Starting make target unit tests"
-	cd tests/make; bats -r *.bats
+	cd tests/make; bats $(BATS_OPTS)
 	@ echo "[$@]: Completed successfully!"
 
 project/validate:
