@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.23.2
+
+**Released**: 2022.09.12
+
+**Commit Delta**: [Change from 0.23.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.23.1..0.23.2)
+
+**Summary**:
+
+* Creates target for each file in scope for docs lint and generate
+
+* Updates tool versions:
+    * black 22.8.0
+    * cfn-lint 0.64.1
+    * golang 1.19.1
+    * pylint 2.15.2
+    * pytest 7.1.3
+    * python 3.10.7
+    * terraform 1.2.9
+    * terragrunt 0.38.9
+    * terratest 0.40.22
+    * yq 4.27.5
+
 ### 0.23.1
 
 **Released**: 2022.09.09
@@ -12,7 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Adds a newline to all makedown files if one does not exist.  Runs terraform-docs on all Terraform files in the root and modules directories.  This fixes a bug with the previous version that would not run terraform-docs on modules directories if a Terraform files did not exist at the root level.  
+* Adds a newline to all makedown files if one does not exist.  Runs terraform-docs on all Terraform files in the root and modules directories.  This fixes a bug with the previous version that would not run terraform-docs on modules directories if a Terraform files did not exist at the root level.
 
 ### 0.23.0
 
