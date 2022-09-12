@@ -380,41 +380,53 @@ json/format: | guard/program/jq json/validate
 	$(FIND_JSON) | $(XARGS) bash -c 'echo "$$(jq --indent 4 -S . "{}")" > "{}"'
 	@ echo "[$@]: Successfully formatted JSON files!"
 
+# Establish default for TFDOCS
+TFDOCS_FILE ?= README.md
+TFDOCS_PATH ?= .
+
+# Get lists of existing TF and HCL files
+TF_FILES ?= $(wildcard $(TFDOCS_PATH)/*.tf $(TFDOCS_PATH)/modules/*/*.tf)
+HCL_FILES ?= $(wildcard $(TFDOCS_PATH)/*.pkr.hcl)
+
+# Get lists of the parent dirs of TF and HCL files
+TF_DIRS ?= $(sort $(dir $(TF_FILES)))
+HCL_DIRS ?= $(sort $(dir $(HCL_FILES)))
+
+# Get list of existing files matching $(TFDOC_FILE)
+TFDOCS_FILES ?= $(wildcard $(TFDOCS_PATH)/$(TFDOCS_FILE) $(TFDOCS_PATH)/modules/*/$(TFDOCS_FILE))
+
+# Get list of intersection of directories with TFDOCS_FILES that are also TF_DIRS or HCL_DIRS
+TFDOCS_DIRS ?= $(filter $(TF_DIRS) $(HCL_DIRS),$(sort $(dir $(TFDOCS_FILES) $(HCL_FILES))))
+
+# Establish targets of TFDOCS_FILES that meet requirement for TF and HCL files to exist
+TFDOCS_TARGETS ?= $(addsuffix $(TFDOCS_FILE),$(TFDOCS_DIRS))
+
 docs/%: export TFDOCS ?= terraform-docs
 docs/%: export TFDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required
 docs/%: export HCLDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required --hide outputs --hide requirements --hide providers --indent 3
-docs/%: export TFDOCS_OPTIONS ?= $(TFDOCS_RECURSIVE) --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table $(TFDOCS_PATH)
-docs/%: export TFDOCS_RECURSIVE ?= $(if $(wildcard $(TFDOCS_PATH)/modules),--recursive,)
+docs/%: export TFDOCS_OPTIONS ?= --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table
 docs/%: export TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- END TFDOCS -->
-docs/%: export TFDOCS_FILE ?= README.md
-docs/%: export TFDOCS_PATH ?= .
-docs/%: export README_FILES ?=  $(if $(wildcard $(TFDOCS_FILE)),true,$(if $(wildcard modules/*/$(TFDOCS_FILE)),true,))
-docs/%: export TF_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.tf),true,$(if $(wildcard modules/*/*.tf),true,))
-docs/%: export HCL_FILES ?= $(if $(wildcard $(TFDOCS_PATH)/*.pkr.hcl),true,)
-docs/%: export TFCMD_OPTS ?= $(if $(README_FILES),$(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),)),)
+docs/%: export TFCMD_OPTS ?= $(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),))
 docs/%: export TFDOCS_CMD ?= $(if $(TFCMD_OPTS),$(TFDOCS) $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
 docs/%: export TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
-docs/%: export MARKDOWN_FILES ?= $(shell $(GIT_LS_FILES) -- '*.md' $(FIND_EXCLUDES))
 
 ## Generates Terraform documentation
-docs/generate: | terraform/format
-	@[ "${TFDOCS_CMD}" ] && ( echo "[$@]: Generating docs";) || ( echo "[$@]: No docs to generate";)
-	$(TFDOCS_CMD)
-	@$(SELF) docs/format
+docs/generate: $(addprefix docs/generate/,$(TFDOCS_TARGETS))
+	@ echo "[$@]: Successfully generated all docs files!"
 
-## Adds a newline to the end of all project markdown files if one does not already exist
-docs/format:
-	@for markdown_file in $(MARKDOWN_FILES); do \
-		if [ "$$(tail -c1 $${markdown_file})" != "$('\n')" ]; then \
-			echo "Adding newline to the end of $${markdown_file} file"; \
-			echo "" >> $${markdown_file}; \
-		fi; \
-	done
+docs/generate/%: | terraform/format guard/program/terraform-docs
+	$(TFDOCS_CMD) $(dir $*)
+	@ if [ -e $* ] && [ "$$(tail -c1 '$*')" != "$('\n')" ]; then \
+		echo "Adding newline to the end of '$*'"; \
+		echo "" >> "$*"; \
+	fi
 
 ## Lints Terraform documentation
-docs/lint: | terraform/lint
-	@[ "${TFDOCS_LINT_CMD}" ] && ( echo "[$@]: Linting docs";)  || ( echo "[$@]: No docs to lint";)
-	$(TFDOCS_LINT_CMD)
+docs/lint: $(addprefix docs/lint/,$(TFDOCS_TARGETS))
+	@ echo "[$@]: Docs files PASSED lint test!"
+
+docs/lint/%: | terraform/lint guard/program/terraform-docs
+	$(TFDOCS_LINT_CMD) $(dir $*)
 
 docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
