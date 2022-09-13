@@ -18,6 +18,7 @@ RUN apt-get update -y && apt-get install -y \
     jq \
     unzip \
     make \
+    vim \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 
