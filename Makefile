@@ -432,12 +432,9 @@ docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
-docker/build: export GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
-docker/build: export IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: export DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
-	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
 	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
 		--build-arg USER_UID=$$(id -u) \
