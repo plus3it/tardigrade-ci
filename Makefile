@@ -549,9 +549,12 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
-install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install
-install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
-install: docker-compose/install rclone/install packer/install pyenv/install
+lint/install: black/install pylint/install pylint-pytest/install pydocstyle/install
+lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/install
+lint/install: ec/install shellcheck/install jq/install
+
+install: lint/install
+install: terragrunt/install bats/install yq/install bumpversion/install docker-compose/install
+install: rclone/install packer/install pyenv/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint

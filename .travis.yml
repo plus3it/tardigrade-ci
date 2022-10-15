@@ -20,7 +20,7 @@ jobs:
   include:
     - stage: lint
       name: Project Syntax Verification
-      install: make install
+      install: make lint/install
       script: make -o docs/lint lint
     - stage: test
       name: Run Makefile unit tests
