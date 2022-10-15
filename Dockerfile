@@ -9,6 +9,8 @@ ARG USER=${PROJECT_NAME}
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
+ARG PYTHON_38_VERSION=3.8.15
+
 # Things to do as root
 USER root
 
@@ -19,6 +21,19 @@ RUN apt-get update -y && apt-get install -y \
     unzip \
     make \
     vim \
+    build-essential \
+    libssl-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    llvm \
+    libncursesw5-dev \
+    tk-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    libffi-dev \
+    liblzma-dev \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 
@@ -41,11 +56,20 @@ RUN make -C /${PROJECT_NAME} fixuid/install \
 USER ${USER}
 
 ENV HOME="/home/${USER}"
-ENV PATH="/${HOME}/.local/bin:/${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
+ENV PYTHON_38_VERSION=${PYTHON_38_VERSION}
+ENV PYENV_ROOT=${HOME}/.pyenv
+ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 
 RUN make -C /${PROJECT_NAME} install \
     && cfn-lint --update-specs
+
+# Install python versions
+RUN pyenv install ${PYTHON_38_VERSION} \
+    && pyenv rehash \
+    && pyenv global system ${PYTHON_38_VERSION} \
+    && python --version \
+    && python3.8 --version
 
 WORKDIR /${PROJECT_NAME}
 ENTRYPOINT ["entrypoint.sh"]
