@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.24.0
+
+**Released**: 2022.10.17
+
+**Commit Delta**: [Change from 0.23.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.23.2..0.24.0)
+
+**Summary**:
+
+* Provides make target to install pyenv, and adds pyenv to docker image
+* Uses pyenv to install Python 3.8 to the docker image
+* Eliminates check whether to rebuild image, relying on docker change detection
+
+* Updates tool versions:
+    * bats 1.8.0
+    * black 22.10.0
+    * cfn-lint 0.66.1
+    * golang 1.19.2
+    * localstack 1.2.0
+    * pyenv (master)
+    * pylint 2.15.3
+    * python 3.8.15
+    * rclone 1.59.2
+    * terraform 1.3.2
+    * terragrunt 0.39.1
+    * tftest 1.7.4
+    * yamllint 1.28.0
+    * yq 4.28.1
+
 ### 0.23.2
 
 **Released**: 2022.09.12
