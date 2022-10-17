@@ -29,6 +29,7 @@ export PWD := $(shell pwd)
 export TARDIGRADE_CI_PATH ?= $(PWD)
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
+export TARDIGRADE_CI_DOCKERFILE_PYTHON38 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python38/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
@@ -209,6 +210,16 @@ docker-compose/install:
 black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
 	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
+
+# pyenv is not version-pinned by default, so recent python versions are always available
+# To get a specific version, export PYENV_VERSION
+pyenv/install: export PYENV_INSTALLER ?= https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
+pyenv/install: export PYENV_GIT_TAG = $(PYENV_VERSION)
+pyenv/install:
+	@ echo "[$@]: Installing $(@D)..."
+	$(CURL) $(PYENV_INSTALLER) | bash
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
 
 pytest/install:
 	@ $(PIP) install -r $(TERRAFORM_PYTEST_DIR)/requirements.txt
@@ -431,15 +442,14 @@ docs/lint/%: | terraform/lint guard/program/terraform-docs
 docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
+docker/build: export PYTHON_38_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON38),'python:3.8','$(SEMVER_PATTERN)')
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
-docker/build: export GET_IMAGE_ID ?= docker inspect --type=image -f '{{.Id}}' "$(IMAGE_NAME)" 2> /dev/null || true
-docker/build: export IMAGE_ID ?= $(shell $(GET_IMAGE_ID))
 docker/build: export DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
-	[ -n "$(IMAGE_ID)" ] && echo "[$@]: Image already present: $(IMAGE_ID)" || \
 	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
+		--build-arg PYTHON_38_VERSION=$(PYTHON_38_VERSION) \
 		--build-arg USER_UID=$$(id -u) \
 		--build-arg USER_GID=$$(id -g) \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
@@ -539,9 +549,12 @@ project/validate:
 	[ "$$(ls -A $(PWD))" ] || (echo "Project root folder is empty. Please confirm docker has been configured with the correct permissions" && exit 1)
 	@ echo "[$@]: Target test folder validation successful"
 
-install: terragrunt/install terraform/install shellcheck/install terraform-docs/install
-install: bats/install black/install pylint/install pylint-pytest/install pydocstyle/install pytest/install
-install: ec/install yamllint/install cfn-lint/install yq/install bumpversion/install jq/install
-install: docker-compose/install rclone/install packer/install
+lint/install: black/install pylint/install pylint-pytest/install pydocstyle/install
+lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/install
+lint/install: ec/install shellcheck/install jq/install
+
+install: lint/install
+install: terragrunt/install bats/install yq/install bumpversion/install docker-compose/install
+install: rclone/install packer/install pyenv/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
