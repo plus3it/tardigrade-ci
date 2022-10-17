@@ -61,8 +61,7 @@ ENV PYENV_ROOT=${HOME}/.pyenv
 ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 
-RUN make -C /${PROJECT_NAME} install \
-    && cfn-lint --update-specs
+RUN make -C /${PROJECT_NAME} install
 
 # Install python versions
 RUN pyenv install ${PYTHON_38_VERSION} \

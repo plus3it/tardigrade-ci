@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Provides make target to install pyenv, and adds pyenv to docker image
 * Uses pyenv to install Python 3.8 to the docker image
 * Eliminates check whether to rebuild image, relying on docker change detection
+* Uses specs bundled with cfn-lint
 
 * Updates tool versions:
     * bats 1.8.0
