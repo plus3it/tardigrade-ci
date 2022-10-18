@@ -9,8 +9,6 @@ ARG USER=${PROJECT_NAME}
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
-ARG PYTHON_38_VERSION=3.8.15
-
 # Things to do as root
 USER root
 
@@ -56,7 +54,6 @@ RUN make -C /${PROJECT_NAME} fixuid/install \
 USER ${USER}
 
 ENV HOME="/home/${USER}"
-ENV PYTHON_38_VERSION=${PYTHON_38_VERSION}
 ENV PYENV_ROOT=${HOME}/.pyenv
 ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
@@ -64,11 +61,7 @@ ENV GOPATH=/go
 RUN make -C /${PROJECT_NAME} install
 
 # Install python versions
-RUN pyenv install ${PYTHON_38_VERSION} \
-    && pyenv rehash \
-    && pyenv global system ${PYTHON_38_VERSION} \
-    && python --version \
-    && python3.8 --version
+RUN make -C /${PROJECT_NAME} python38/install
 
 WORKDIR /${PROJECT_NAME}
 ENTRYPOINT ["entrypoint.sh"]
