@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.24.1
+
+**Released**: 2022.10.18
+
+**Commit Delta**: [Change from 0.24.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.0..0.24.1)
+
+**Summary**:
+
+* Creates targets for installing python 3.8 and returning the expected version
+
+* Updates tool versions:
+    * python 3.11.0rc2
+
 ### 0.24.0
 
 **Released**: 2022.10.17
