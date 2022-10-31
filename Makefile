@@ -546,7 +546,7 @@ test: terraform/pytest
 
 bats/install: export BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
-	$(CURL) $(shell $(CURL) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
+	$(CURL) $(GITHUB_AUTHORIZATION) $(shell $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
 	$(TMP)/bats-core-*/install.sh ~
 	bats --version
 	rm -rf $(TMP)/bats-core-*
