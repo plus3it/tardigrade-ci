@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.24.2
+
+**Released**: 2022.10.31
+
+**Commit Delta**: [Change from 0.24.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.1..0.24.2)
+
+**Summary**:
+
+* Adds github auth header to bats/install target
+
+* Updates tool versions:
+    * bats 1.8.2
+    * cfn-lint 0.69.1
+    * packer 1.8.4
+    * pytest 7.2.0
+    * python 3.12.0a1
+    * terraform 1.3.3
+    * terragrunt 0.39.2
+    * yq 4.29.2
+
 ### 0.24.1
 
 **Released**: 2022.10.18
