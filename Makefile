@@ -342,7 +342,7 @@ python/format/exec:
 	@ echo "[$@]: Successfully formatted Python files!"
 
 # Run pytests, typically for unit tests.
-export PYTEST_ARGS ?=
+export PYTEST_ARGS ?= -v
 export PYTEST_ONLY_MOTO_ARG ?= $(if $(ONLY_MOTO),--only-moto,)
 pytest/%: | guard/program/pytest
 pytest/%:
