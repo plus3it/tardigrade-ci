@@ -4,11 +4,43 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.24.3
+
+**Released**: 2023.01.12
+
+**Commit Delta**: [Change from 0.24.2 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.2..0.24.3)
+
+**Summary**:
+
+* Updates mockstack tf provider config with endpoints for all aws services
+* Defaults to pytest verbose output so tf stdout is displayed in tests
+* Addresses deprecation warnings in mock provider config
+* Uses localstack 1.3 location for init scripts
+
+* Updates tool versions:
+    * black 22.12.0
+    * cfn-lint 0.72.6
+    * golang 1.19.4
+    * localstack 1.3.1
+    * packer 1.8.5
+    * pydocstyle 6.2.3
+    * pylint 2.15.9
+    * python 3.8.16
+    * python 3.12.0a3
+    * python-hcl2 4.2.0
+    * rclone 1.61.1
+    * shellcheck 0.9.0
+    * terraform 1.3.7
+    * terragrunt 0.42.7
+    * terratest 0.41.7
+    * tftest 1.8.1
+    * yq 4.30.6
+
 ### 0.24.2
 
 **Released**: 2022.10.31
 
-**Commit Delta**: [Change from 0.24.0 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.1..0.24.2)
+**Commit Delta**: [Change from 0.24.1 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.1..0.24.2)
 
 **Summary**:
 
