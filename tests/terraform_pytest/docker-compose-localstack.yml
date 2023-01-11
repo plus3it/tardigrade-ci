@@ -18,4 +18,4 @@ services:
       - MOTO_DOCKER_NETWORK_NAME=terraform_pytest_default
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "${TERRAFORM_PYTEST_DIR}/initaws.d:/docker-entrypoint-initaws.d"
+      - "${TERRAFORM_PYTEST_DIR}/ready.d:/etc/localstack/init/ready.d"
