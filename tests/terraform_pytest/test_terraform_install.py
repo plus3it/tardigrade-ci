@@ -96,11 +96,10 @@ def aws_provider_override(only_moto):
             "aws": [
                 {
                     "skip_credentials_validation": True,
-                    "skip_get_ec2_platforms": True,
                     "skip_metadata_api_check": True,
                     "skip_region_validation": True,
                     "skip_requesting_account_id": True,
-                    "s3_force_path_style": True,
+                    "s3_use_path_style": True,
                     "endpoints": {
                         # Supported by localstack community
                         "apigateway": mockstack_endpoint,
