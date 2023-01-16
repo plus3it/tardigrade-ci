@@ -13,7 +13,7 @@ docker-compose==1.29.2
 
 pydocstyle==6.2.3
 
-pylint==2.15.9
+pylint==2.15.10
 
 pylint-pytest==1.1.2
 
