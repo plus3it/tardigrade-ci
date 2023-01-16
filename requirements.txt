@@ -17,4 +17,4 @@ pylint==2.15.9
 
 pylint-pytest==1.1.2
 
-yamllint==1.28.0
+yamllint==1.29.0
