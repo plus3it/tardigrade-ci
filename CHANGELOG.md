@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### 0.24.4
+
+**Released**: 2023.02.02
+
+**Commit Delta**: [Change from 0.24.3 release](https://github.com/plus3it/tardigrade-ci/compare/0.24.3..0.24.4)
+
+**Summary**:
+
+* Adds tftest target to makefile for dependency support
+
 ### 0.24.3
 
 **Released**: 2023.01.12

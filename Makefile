@@ -513,6 +513,8 @@ terratest/test:
 	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
 	@ echo "[$@]: Completed successfully!"
 
+tftest/install: pytest/install
+
 export TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
 terraform/pytest: | guard/program/terraform guard/python_pkg/tftest
 terraform/pytest: | pytest/$(TERRAFORM_PYTEST_DIR)
