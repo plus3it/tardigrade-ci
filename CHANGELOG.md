@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.5)
+
+**Released**: 2023.02.10
+
+**Summary**:
+
+* Updates shebang in mockstack startup script so moto server is started properly,
+  and listening for connections
+
+* Updates tool versions:
+    * black 23.1.0
+    * golang 1.20.0
+    * pylint 2.16.1
+    * terragrunt 0.43.2
+    * terratest 0.41.10
+
 ### 0.24.4
 
 **Released**: 2023.02.02
@@ -13,6 +29,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Adds tftest target to makefile for dependency support
+
+* Updates tool versions:
+    * cfn-lint 0.72.10
+    * golang 1.19.5
+    * pydocstyle 6.3.0
+    * pylint 2.15.10
+    * pytest 7.2.1
+    * python 3.12.0a4
+    * python-hcl2 4.3.0
+    * terragrunt 0.43.0
+    * terratest 0.41.9
+    * yamllint 1.29.0
+    * yq 4.30.8
 
 ### 0.24.3
 
