@@ -1,6 +1,6 @@
 FROM golang:1.20.0-buster as golang
 
-FROM python:3.12.0a4-buster
+FROM python:3.12.0a5-buster
 
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
