@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.6)
+
+**Released**: 2023.02.15
+
+**Summary**:
+
+* Updates .pylintrc to specify module name for overgeneral-exceptions
+
 ### [0.24.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.5)
 
 **Released**: 2023.02.10
