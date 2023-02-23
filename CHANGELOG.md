@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.6)
+
+**Released**: 2023.02.15
+
+**Summary**:
+
+* Updates .pylintrc to specify module name for overgeneral-exceptions
+
+* Updates tool versions:
+    * bats 1.9.0
+    * cfn-lint 0.73.2
+    * editorconfig-checker 2.7.0
+    * golang 1.20.1
+    * localstack 1.4.0
+    * packer 1.8.6
+    * pylint 2.16.2
+    * python 3.12.0a5
+    * terraform 1.3.9
+    * terratest 0.41.11
+    * tftest==1.8.2
+    * yq 4.31.1 
+
 ### [0.24.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.5)
 
 **Released**: 2023.02.10
