@@ -16,6 +16,7 @@ PATH := $(BIN_DIR):$(PYTHONUSERBASE)/bin:${PATH}
 MAKEFLAGS += --no-print-directory
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
+.SUFFIXES:
 
 export PYTHON ?= python3
 
@@ -213,18 +214,20 @@ black/install:
 
 python38/%: export PYTHON_38_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON38),'python:3.8','$(SEMVER_PATTERN)')
 
-python38/install: guard/program/pyenv
 python38/install:
-	@ echo "[$@]: Installing $(@D)"
-	pyenv install $(PYTHON_38_VERSION)
-	pyenv rehash
-	pyenv global system $(PYTHON_38_VERSION)
-	python --version
+	@ $(SELF) install/pyenv/$(PYTHON_38_VERSION)
 	python3.8 --version
-	@ echo "[$@]: Completed successfully!"
 
 python38/version:
 	@ echo $(PYTHON_38_VERSION)
+
+install/pyenv/%: | guard/program/pyenv
+	@ echo "[$@]: Installing python $(@F)"
+	pyenv install $(@F)
+	pyenv rehash
+	pyenv global system $(@F)
+	python --version
+	@ echo "[$@]: Completed successfully!"
 
 # pyenv is not version-pinned by default, so recent python versions are always available
 # To get a specific version, export PYENV_VERSION
