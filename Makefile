@@ -297,7 +297,7 @@ bumpversion/major bumpversion/minor bumpversion/patch: | guard/program/bump2vers
 yaml/%: export FIND_YAML ?= $(GIT_LS_FILES) -- '*.yml' '*.yaml' $(FIND_EXCLUDES)
 ## Lints YAML files
 yaml/lint: | guard/program/yamllint
-yaml/lint: export YAMLLINT_CONFIG ?= .yamllint.yml
+yaml/lint: export YAMLLINT_CONFIG ?= $(or $(wildcard .yamllint.yml),$(TARDIGRADE_CI_PATH)/.yamllint.yml)
 yaml/lint:
 	@ echo "[$@]: Running yamllint..."
 	$(FIND_YAML) | $(XARGS) yamllint -c $(YAMLLINT_CONFIG) --strict {}
@@ -571,10 +571,10 @@ project/validate:
 
 lint/install: black/install pylint/install pylint-pytest/install pydocstyle/install
 lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/install
-lint/install: ec/install shellcheck/install jq/install
+lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
 install: terragrunt/install bats/install yq/install bumpversion/install docker-compose/install
 install: rclone/install packer/install pyenv/install
 
-lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint
+lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint

@@ -1,38 +1,38 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 10
-- package-ecosystem: pip
-  directory: "/tests/terraform_pytest"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 10
-- package-ecosystem: docker
-  directory: "/"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 10
-- package-ecosystem: docker
-  directory: "/.github/dependencies/python38"
-  schedule:
-    interval: weekly
-  ignore:
-    # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
-    - dependency-name: python
-      update-types:
-        # Ignore major/minor to pin python 3.8.x
-        - "version-update:semver-major"
-        - "version-update:semver-minor"
-  open-pull-requests-limit: 10
-- package-ecosystem: gomod
-  directory: "/tests/terraform"
-  schedule:
-    interval: weekly
-  open-pull-requests-limit: 10
-- package-ecosystem: github-actions
-  directory: "/"
-  schedule:
-    interval: weekly
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+  - package-ecosystem: pip
+    directory: "/tests/terraform_pytest"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/.github/dependencies/python38"
+    schedule:
+      interval: weekly
+    ignore:
+      # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
+      - dependency-name: python
+        update-types:
+          # Ignore major/minor to pin python 3.8.x
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+    open-pull-requests-limit: 10
+  - package-ecosystem: gomod
+    directory: "/tests/terraform"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
