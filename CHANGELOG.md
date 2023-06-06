@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
+
+**Released**: 2023.06.06
+
+**Summary**:
+
+* Adds general target for installing any python version using pyenv, `install/pyenv/%`
+* Adds `yamllint` to container image and lints yaml as part of `lint` target
+
+* Updates tool versions:
+    * black 23.3.0
+    * cfn-lint 0.77.6
+    * golang 1.20.4
+    * localstack 2.1.0
+    * packer 1.9.1
+    * pylint 2.17.4
+    * pytest 7.3.1
+    * python 3.12.0b1
+    * python-hcl2 4.3.2
+    * rclone 1.62.2
+    * terraform 1.4.6
+    * terragrunt 0.46.1
+    * terratest 0.43.0
+    * tftest 1.8.4
+    * yamllint 1.32.0
+    * yq 4.34.1
+
 ### [0.24.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.6)
 
 **Released**: 2023.02.15
