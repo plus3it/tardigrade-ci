@@ -5,4 +5,5 @@ rules:
   document-start: disable
   truthy:
     ignore: |
+      .github/workflows/*
       .travis.yml

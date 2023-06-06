@@ -24,6 +24,9 @@ indent_size = 1
 indent_style = tab
 indent_size = 1
 
+[Dockerfile*]
+indent_size = 4
+
 [Makefile]
 indent_style = tab
 indent_size = 1
