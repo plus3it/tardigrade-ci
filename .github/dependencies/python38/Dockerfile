@@ -5,4 +5,4 @@
 # entry in the Dependabot config that ignores major and minor version updates, in
 # order to keep this pinned to Python 3.8.
 
-FROM python:3.8.16 as python38
+FROM python:3.8.17 as python38
