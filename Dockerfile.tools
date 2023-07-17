@@ -13,7 +13,7 @@ FROM koalaman/shellcheck:v0.9.0 as shellcheck
 
 FROM localstack/localstack:2.1.0 as localstack
 
-FROM mikefarah/yq:4.34.1 as yq
+FROM mikefarah/yq:4.34.2 as yq
 
 FROM mstruebing/editorconfig-checker:2.7.0 as ec
 
