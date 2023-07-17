@@ -3,7 +3,7 @@
 
 # Keep these sorted alphabetically, separated by an empty line
 
-FROM bats/bats:1.9.0 as bats
+FROM bats/bats:v1.10.0 as bats
 
 FROM hashicorp/packer:1.9.1 as packer
 
