@@ -9,7 +9,7 @@ bump2version==1.0.1
 
 cfn-lint==0.78.1
 
-docker-compose==2.0.1
+docker compose==2.0.1
 
 pydocstyle==6.3.0
 
