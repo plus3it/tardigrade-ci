@@ -130,7 +130,6 @@ tests/__pycache__/
 - stage: test
   name: Terraform Integration Tests
   install:
-    - make docker-compose/install
     - make mockstack/up
   script: make mockstack/pytest
   after_script: make mockstack/clean
