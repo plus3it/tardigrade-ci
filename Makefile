@@ -204,10 +204,6 @@ fixuid/install: | $(BIN_DIR) guard/program/jq
 	which $(@D)
 	@ echo "[$@]: Completed successfully!"
 
-docker-compose/install: export DOCKER_COMPOSE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'docker compose==','$(SEMVER_PATTERN)')
-docker-compose/install:
-	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(DOCKER_COMPOSE_VERSION)'
-
 black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
 	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
@@ -574,9 +570,6 @@ lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/i
 lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
-install: terragrunt/install bats/install yq/install bumpversion/install docker compose/install
 install: rclone/install packer/install pyenv/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
-
-#
