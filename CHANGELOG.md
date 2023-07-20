@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.TBD]
+
+ **Released**: 2023.07.TBD
+
+ **Summary**:
+
+ * Removed Docker Compose support from the project.
+
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
 
 **Released**: 2023.06.06
