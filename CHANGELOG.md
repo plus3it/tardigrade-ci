@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
  **Summary**:
 
- * Removed Docker Compose support from the project.
+ * Removed docker-compose v1 the project, replacing with `docker compose` v2
 
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
 
