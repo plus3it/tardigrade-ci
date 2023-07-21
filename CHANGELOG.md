@@ -11,20 +11,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  **Summary**:
 
  * Removed docker-compose v1 the project, replacing with `docker compose` v2
+ * Python version is being restored to the latest stable version, 3.11.4.
 
  * Updates tool versions:
-    * python 3.8.17
-    * terragrunt v0.48.1
-    * golang 1.20.5-buster
-    * python 3.11.4-buster
     * bats v1.10.0
-    * terraform 1.5.3
-    * yq 4.34.2
-    * rclone 1.63.0
     * black 23.7.0
     * cfn-lint 0.78.1
-    * terratest v0.43.8
+    * golang 1.20.5-buster
     * pytest 7.4.0
+    * python 3.8.17
+    * python 3.11.4-buster
+    * rclone 1.63.0
+    * terraform 1.5.3
+    * terragrunt v0.48.1
+    * terratest v0.43.8
+    * yq 4.34.2
+    
 
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
 
