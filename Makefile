@@ -212,17 +212,26 @@ python38/%: export PYTHON_38_VERSION ?= $(call match_pattern_in_file,$(TARDIGRAD
 
 python38/install:
 	@ $(SELF) install/pyenv/$(PYTHON_38_VERSION)
-	python3.8 --version
+
+python38/select:
+	@ $(SELF) select/pyenv/$(PYTHON_38_VERSION)
 
 python38/version:
 	@ echo $(PYTHON_38_VERSION)
+
+select/pyenv/%: | guard/program/pyenv
+	@ echo "[$@]: Selecting python $(@F)"
+	pyenv global $(@F)
+	python --version
+	@ python --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python $(@F)"; exit 1)
+	@ echo "[$@]: Completed successfully!"
 
 install/pyenv/%: | guard/program/pyenv
 	@ echo "[$@]: Installing python $(@F)"
 	pyenv install $(@F)
 	pyenv rehash
-	pyenv global system $(@F)
-	python --version
+	@ pyenv versions | grep $(@F) || (echo "[$@]: Failed to install python $(@F)"; exit 1)
+	pyenv versions | grep $(@F)
 	@ echo "[$@]: Completed successfully!"
 
 # pyenv is not version-pinned by default, so recent python versions are always available

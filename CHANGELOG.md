@@ -4,16 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.9](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
+
+**Released**: 2023.07.21
+
+**Summary**:
+
+* Adds dedicated target for selecting python version, removes global python selection
+  from python install
+
 ### [0.24.8](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.8)
 
- **Released**: 2023.07.21
+**Released**: 2023.07.21
 
- **Summary**:
+**Summary**:
 
- * Removed docker-compose v1 the project, replacing with `docker compose` v2
- * Python version is being restored to the latest stable version, 3.11.4
+* Removed docker-compose v1 the project, replacing with `docker compose` v2
+* Python version is being restored to the latest stable version, 3.11.4
 
- * Updates tool versions:
+* Updates tool versions:
     * bats v1.10.0
     * black 23.7.0
     * cfn-lint 0.78.1
