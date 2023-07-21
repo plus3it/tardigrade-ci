@@ -11,7 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
  **Summary**:
 
  * Removed docker-compose v1 the project, replacing with `docker compose` v2
- * Python version is being restored to the latest stable version, 3.11.4.
+ * Python version is being restored to the latest stable version, 3.11.4
 
  * Updates tool versions:
     * bats v1.10.0
