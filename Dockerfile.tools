@@ -5,7 +5,7 @@
 
 FROM bats/bats:v1.10.0 as bats
 
-FROM hashicorp/packer:1.9.1 as packer
+FROM hashicorp/packer:1.9.2 as packer
 
 FROM hashicorp/terraform:1.5.3 as terraform
 
