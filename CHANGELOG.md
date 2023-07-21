@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * python 3.8.17
     * terragrunt v0.48.1
     * golang 1.20.5-buster
-    * python 3.12.0b2-buster
+    * python 3.11.4-buster
     * bats v1.10.0
     * terraform 1.5.3
     * yq 4.34.2
@@ -24,8 +24,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * black 23.7.0
     * cfn-lint 0.78.1
     * terratest v0.43.8
-    * azure-sdk-for-go v51.0
-    * protobuf v1.31.0
     * pytest 7.4.0
 
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
