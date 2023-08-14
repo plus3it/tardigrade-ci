@@ -582,3 +582,5 @@ install: lint/install
 install: rclone/install packer/install pyenv/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
+
+pullrequest: python/format hcl/format terraform/format json/format docs/generate lint
