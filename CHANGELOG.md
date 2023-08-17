@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.10](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
+
+**Released**: 2023.08.17
+
+**Summary**:
+
+* Add new makefile target 'pullrequest' to run formatters, lint and documentation in one call
+* Updates tool version:
+    * cfn-lint 0.79.6
+    * pylint 2.17.5
+    * terraform 1.5.5
+    * terragrunt v0.49.1
+    * terratest v0.43.12
+    * yq 4.35.1
+
+
 ### [0.24.9](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
 
 **Released**: 2023.07.21
