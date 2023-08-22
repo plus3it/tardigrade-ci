@@ -11,6 +11,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Removes deprecated custom endpoints used in tests
+* Updates tool version:
+    * cfn-lint 0.79.7
+    * fixuid v0.6.0
+    * terragrunt v0.50.4
+    * packer 1.9.4
 
 ### [0.24.10](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
 
