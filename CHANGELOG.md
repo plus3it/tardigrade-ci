@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.11](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.10)
+
+**Released**: 2023.08.22
+
+**Summary**:
+
+* Removes deprecated custom endpoints used in tests
+
 ### [0.24.10](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
 
 **Released**: 2023.08.17
@@ -12,13 +20,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Add new makefile target 'pullrequest' to run formatters, lint and documentation in one call
 * Updates tool version:
-    * cfn-lint 0.79.6
-    * pylint 2.17.5
-    * terraform 1.5.5
-    * terragrunt v0.49.1
-    * terratest v0.43.12
-    * yq 4.35.1
-
+  * cfn-lint 0.79.6
+  * pylint 2.17.5
+  * terraform 1.5.5
+  * terragrunt v0.49.1
+  * terratest v0.43.12
+  * yq 4.35.1
 
 ### [0.24.9](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
 
@@ -39,19 +46,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Python version is being restored to the latest stable version, 3.11.4
 
 * Updates tool versions:
-    * bats v1.10.0
-    * black 23.7.0
-    * cfn-lint 0.78.1
-    * golang 1.20.5-buster
-    * pytest 7.4.0
-    * python 3.8.17
-    * python 3.11.4-buster
-    * rclone 1.63.0
-    * terraform 1.5.3
-    * terragrunt v0.48.1
-    * terratest v0.43.8
-    * yq 4.34.2
-    
+  * bats v1.10.0
+  * black 23.7.0
+  * cfn-lint 0.78.1
+  * golang 1.20.5-buster
+  * pytest 7.4.0
+  * python 3.8.17
+  * python 3.11.4-buster
+  * rclone 1.63.0
+  * terraform 1.5.3
+  * terragrunt v0.48.1
+  * terratest v0.43.8
+  * yq 4.34.2
 
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
 
@@ -63,22 +69,22 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Adds `yamllint` to container image and lints yaml as part of `lint` target
 
 * Updates tool versions:
-    * black 23.3.0
-    * cfn-lint 0.77.6
-    * golang 1.20.4
-    * localstack 2.1.0
-    * packer 1.9.1
-    * pylint 2.17.4
-    * pytest 7.3.1
-    * python 3.12.0b1
-    * python-hcl2 4.3.2
-    * rclone 1.62.2
-    * terraform 1.4.6
-    * terragrunt 0.46.1
-    * terratest 0.43.0
-    * tftest 1.8.4
-    * yamllint 1.32.0
-    * yq 4.34.1
+  * black 23.3.0
+  * cfn-lint 0.77.6
+  * golang 1.20.4
+  * localstack 2.1.0
+  * packer 1.9.1
+  * pylint 2.17.4
+  * pytest 7.3.1
+  * python 3.12.0b1
+  * python-hcl2 4.3.2
+  * rclone 1.62.2
+  * terraform 1.4.6
+  * terragrunt 0.46.1
+  * terratest 0.43.0
+  * tftest 1.8.4
+  * yamllint 1.32.0
+  * yq 4.34.1
 
 ### [0.24.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.6)
 
@@ -89,18 +95,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Updates .pylintrc to specify module name for overgeneral-exceptions
 
 * Updates tool versions:
-    * bats 1.9.0
-    * cfn-lint 0.73.2
-    * editorconfig-checker 2.7.0
-    * golang 1.20.1
-    * localstack 1.4.0
-    * packer 1.8.6
-    * pylint 2.16.2
-    * python 3.12.0a5
-    * terraform 1.3.9
-    * terratest 0.41.11
-    * tftest==1.8.2
-    * yq 4.31.1 
+  * bats 1.9.0
+  * cfn-lint 0.73.2
+  * editorconfig-checker 2.7.0
+  * golang 1.20.1
+  * localstack 1.4.0
+  * packer 1.8.6
+  * pylint 2.16.2
+  * python 3.12.0a5
+  * terraform 1.3.9
+  * terratest 0.41.11
+  * tftest==1.8.2
+  * yq 4.31.1
 
 ### [0.24.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.5)
 
@@ -112,11 +118,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   and listening for connections
 
 * Updates tool versions:
-    * black 23.1.0
-    * golang 1.20.0
-    * pylint 2.16.1
-    * terragrunt 0.43.2
-    * terratest 0.41.10
+  * black 23.1.0
+  * golang 1.20.0
+  * pylint 2.16.1
+  * terragrunt 0.43.2
+  * terratest 0.41.10
 
 ### 0.24.4
 
@@ -129,17 +135,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Adds tftest target to makefile for dependency support
 
 * Updates tool versions:
-    * cfn-lint 0.72.10
-    * golang 1.19.5
-    * pydocstyle 6.3.0
-    * pylint 2.15.10
-    * pytest 7.2.1
-    * python 3.12.0a4
-    * python-hcl2 4.3.0
-    * terragrunt 0.43.0
-    * terratest 0.41.9
-    * yamllint 1.29.0
-    * yq 4.30.8
+  * cfn-lint 0.72.10
+  * golang 1.19.5
+  * pydocstyle 6.3.0
+  * pylint 2.15.10
+  * pytest 7.2.1
+  * python 3.12.0a4
+  * python-hcl2 4.3.0
+  * terragrunt 0.43.0
+  * terratest 0.41.9
+  * yamllint 1.29.0
+  * yq 4.30.8
 
 ### 0.24.3
 
@@ -155,23 +161,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Uses localstack 1.3 location for init scripts
 
 * Updates tool versions:
-    * black 22.12.0
-    * cfn-lint 0.72.6
-    * golang 1.19.4
-    * localstack 1.3.1
-    * packer 1.8.5
-    * pydocstyle 6.2.3
-    * pylint 2.15.9
-    * python 3.8.16
-    * python 3.12.0a3
-    * python-hcl2 4.2.0
-    * rclone 1.61.1
-    * shellcheck 0.9.0
-    * terraform 1.3.7
-    * terragrunt 0.42.7
-    * terratest 0.41.7
-    * tftest 1.8.1
-    * yq 4.30.6
+  * black 22.12.0
+  * cfn-lint 0.72.6
+  * golang 1.19.4
+  * localstack 1.3.1
+  * packer 1.8.5
+  * pydocstyle 6.2.3
+  * pylint 2.15.9
+  * python 3.8.16
+  * python 3.12.0a3
+  * python-hcl2 4.2.0
+  * rclone 1.61.1
+  * shellcheck 0.9.0
+  * terraform 1.3.7
+  * terragrunt 0.42.7
+  * terratest 0.41.7
+  * tftest 1.8.1
+  * yq 4.30.6
 
 ### 0.24.2
 
@@ -184,14 +190,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Adds github auth header to bats/install target
 
 * Updates tool versions:
-    * bats 1.8.2
-    * cfn-lint 0.69.1
-    * packer 1.8.4
-    * pytest 7.2.0
-    * python 3.12.0a1
-    * terraform 1.3.3
-    * terragrunt 0.39.2
-    * yq 4.29.2
+  * bats 1.8.2
+  * cfn-lint 0.69.1
+  * packer 1.8.4
+  * pytest 7.2.0
+  * python 3.12.0a1
+  * terraform 1.3.3
+  * terragrunt 0.39.2
+  * yq 4.29.2
 
 ### 0.24.1
 
@@ -204,7 +210,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Creates targets for installing python 3.8 and returning the expected version
 
 * Updates tool versions:
-    * python 3.11.0rc2
+  * python 3.11.0rc2
 
 ### 0.24.0
 
@@ -220,20 +226,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Uses specs bundled with cfn-lint
 
 * Updates tool versions:
-    * bats 1.8.0
-    * black 22.10.0
-    * cfn-lint 0.66.1
-    * golang 1.19.2
-    * localstack 1.2.0
-    * pyenv (master)
-    * pylint 2.15.3
-    * python 3.8.15
-    * rclone 1.59.2
-    * terraform 1.3.2
-    * terragrunt 0.39.1
-    * tftest 1.7.4
-    * yamllint 1.28.0
-    * yq 4.28.1
+  * bats 1.8.0
+  * black 22.10.0
+  * cfn-lint 0.66.1
+  * golang 1.19.2
+  * localstack 1.2.0
+  * pyenv (master)
+  * pylint 2.15.3
+  * python 3.8.15
+  * rclone 1.59.2
+  * terraform 1.3.2
+  * terragrunt 0.39.1
+  * tftest 1.7.4
+  * yamllint 1.28.0
+  * yq 4.28.1
 
 ### 0.23.2
 
@@ -246,16 +252,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Creates target for each file in scope for docs lint and generate
 
 * Updates tool versions:
-    * black 22.8.0
-    * cfn-lint 0.64.1
-    * golang 1.19.1
-    * pylint 2.15.2
-    * pytest 7.1.3
-    * python 3.10.7
-    * terraform 1.2.9
-    * terragrunt 0.38.9
-    * terratest 0.40.22
-    * yq 4.27.5
+  * black 22.8.0
+  * cfn-lint 0.64.1
+  * golang 1.19.1
+  * pylint 2.15.2
+  * pytest 7.1.3
+  * python 3.10.7
+  * terraform 1.2.9
+  * terragrunt 0.38.9
+  * terratest 0.40.22
+  * yq 4.27.5
 
 ### 0.23.1
 
@@ -275,14 +281,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Adds a newline to the end of a README.md file if one does not exist.  
+* Adds a newline to the end of a README.md file if one does not exist.
 
 * Updates tool versions:
-    * cfn-lint 0.61.5
-    * localstack 1.1.0
-    * terragrunt 0.38.7
-    * terratest 0.40.21
-    * yq 4.27.3
+  * cfn-lint 0.61.5
+  * localstack 1.1.0
+  * terragrunt 0.38.7
+  * terratest 0.40.21
+  * yq 4.27.3
 
 ### 0.22.0
 
@@ -293,23 +299,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Replaces all "find" logic with `git ls-files` to honor `.gitignore` by default
-    * Patterns for FIND_EXCLUDES will now need to be based on the git pathspec (e.g. `':!:*/.terraform/*'`), instead of `find`. See also, <https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec>
-    * ECLINT_FILES now takes the command that returns the files, and not the list of files
-    * All FIND_* variables can now be overriden by providing the command that returns the files
+  * Patterns for FIND_EXCLUDES will now need to be based on the git pathspec (e.g. `':!:*/.terraform/*'`), instead of `find`. See also, <https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec>
+  * ECLINT_FILES now takes the command that returns the files, and not the list of files
+  * All FIND_* variables can now be overriden by providing the command that returns the files
 
 * Updates tool versions:
-    * cfn-lint 0.61.5
-    * golang 1.19.0
-    * localstack 1.0.4
-    * packer 1.8.3
-    * pylint 2.14.5
-    * python 3.10.6
-    * rclone 1.59.1
-    * terraform 1.2.7
-    * terragrunt 0.38.7
-    * terratest 0.40.19
-    * tftest 1.7.1
-    * yq 4.27.2
+  * cfn-lint 0.61.5
+  * golang 1.19.0
+  * localstack 1.0.4
+  * packer 1.8.3
+  * pylint 2.14.5
+  * python 3.10.6
+  * rclone 1.59.1
+  * terraform 1.2.7
+  * terragrunt 0.38.7
+  * terratest 0.40.19
+  * tftest 1.7.1
+  * yq 4.27.2
 
 ### 0.21.9
 
@@ -323,14 +329,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Marks make macros as unexported, fixing .EXPORT_ALL_VARIABLES
 
 * Updates tool versions:
-    * black 22.6.0
-    * cfn-lint 0.61.2
-    * localstack 0.14.5
-    * pylint 2.14.4
-    * rclone 1.59.0
-    * terraform 1.2.4
-    * terragrunt 0.38.4
-    * yamllint 1.27.1
+  * black 22.6.0
+  * cfn-lint 0.61.2
+  * localstack 0.14.5
+  * pylint 2.14.4
+  * rclone 1.59.0
+  * terraform 1.2.4
+  * terragrunt 0.38.4
+  * yamllint 1.27.1
 
 ### 0.21.8
 
@@ -344,11 +350,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Defaults to node/install to version 16
 
 * Updates tool versions:
-    * cfn-lint 0.61.1
-    * localstack 0.14.4
-    * packer 1.8.2
-    * terragrunt 0.38.1
-    * yq 4.25.3
+  * cfn-lint 0.61.1
+  * localstack 0.14.4
+  * packer 1.8.2
+  * terragrunt 0.38.1
+  * yq 4.25.3
 
 ### 0.21.7
 
@@ -361,16 +367,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Ensures root Makefile targets are available even to "guard" targets
 
 * Updates tool versions:
-    * cfn-lint 0.61.0
-    * golang 1.18.3
-    * localstack 0.14.3
-    * packer 1.8.1
-    * pylint 2.14.3
-    * python 3.10.5
-    * terraform 1.2.3
-    * terragrunt 0.38.0
-    * terratest 0.40.17
-    * yq 4.25.2
+  * cfn-lint 0.61.0
+  * golang 1.18.3
+  * localstack 0.14.3
+  * packer 1.8.1
+  * pylint 2.14.3
+  * python 3.10.5
+  * terraform 1.2.3
+  * terragrunt 0.38.0
+  * terratest 0.40.17
+  * yq 4.25.2
 
 ### 0.21.6
 
@@ -383,17 +389,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Updates cfn-lint specs with each tardigrade-ci release
 
 * Updates tool versions:
-    * bats 1.7.0
-    * cfn-lint 0.60.0
-    * golang 1.18.2
-    * pylint 2.13.9
-    * pytest 7.1.2
-    * rclone 1.58.1
-    * terraform 1.1.9
-    * terragrunt 0.37.1
-    * terratest 0.40.8
-    * tftest 1.6.5
-    * yq 4.25.1
+  * bats 1.7.0
+  * cfn-lint 0.60.0
+  * golang 1.18.2
+  * pylint 2.13.9
+  * pytest 7.1.2
+  * rclone 1.58.1
+  * terraform 1.1.9
+  * terragrunt 0.37.1
+  * terratest 0.40.8
+  * tftest 1.6.5
+  * yq 4.25.1
 
 ### 0.21.5
 
@@ -404,20 +410,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Updates tool versions:
-    * black 22.3
-    * cfn-lint 0.58.4
-    * golang 1.17.8
-    * hcl2 3.0.5
-    * localstack 0.14.2
-    * packer 1.8.0
-    * pylint 2.13.5
-    * pytest 7.1.0
-    * python 3.10.4
-    * rclone 1.58.0
-    * terraform 1.1.8
-    * terragrunt 0.36.3
-    * terratest 0.40.6
-    * yq 4.24.2
+  * black 22.3
+  * cfn-lint 0.58.4
+  * golang 1.17.8
+  * hcl2 3.0.5
+  * localstack 0.14.2
+  * packer 1.8.0
+  * pylint 2.13.5
+  * pytest 7.1.0
+  * python 3.10.4
+  * rclone 1.58.0
+  * terraform 1.1.8
+  * terragrunt 0.36.3
+  * terratest 0.40.6
+  * yq 4.24.2
 
 ### 0.21.4
 
@@ -430,13 +436,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Detects python files to determine whether to format/lint.
 
 * Updates tool versions:
-    * bats 1.6.0
-    * cfn-lint 0.58.2
-    * hcl2 3.0.4
-    * terraform 1.1.6
-    * terragrunt 0.36.2
-    * terratest 0.40.4
-    * yq 4.21.1
+  * bats 1.6.0
+  * cfn-lint 0.58.2
+  * hcl2 3.0.4
+  * terraform 1.1.6
+  * terragrunt 0.36.2
+  * terratest 0.40.4
+  * yq 4.21.1
 
 ### 0.21.3
 
@@ -449,17 +455,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Detects README.md and terrraform or packer files to detect whether to generate and/or lint docs.
 
 * Updates tool versions:
-    * cfn-lint 0.58.0
-    * black 22.1.0
-    * localstack 0.14.0
-    * packer 1.7.10
-    * pytest 7.0.1
-    * terraform 1.1.5
-    * terragrunt 0.36.1
-    * terratest 0.40.1
-    * tftest 1.6.4
-    * yq 4.19.1
-    * Docker now using golang 1.17.7-buster
+  * cfn-lint 0.58.0
+  * black 22.1.0
+  * localstack 0.14.0
+  * packer 1.7.10
+  * pytest 7.0.1
+  * terraform 1.1.5
+  * terragrunt 0.36.1
+  * terratest 0.40.1
+  * tftest 1.6.4
+  * yq 4.19.1
+  * Docker now using golang 1.17.7-buster
 
 ### 0.21.2
 
@@ -500,7 +506,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   inspect the state and re-run `terraform destroy`.
 
 * Updates tool versions:
-    * tftest 1.6.3
+  * tftest 1.6.3
 
 ### 0.19.7
 
@@ -511,7 +517,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Updates tool versions:
-    * localstack 0.13.2
+  * localstack 0.13.2
 
 ### 0.19.6
 
@@ -525,10 +531,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
   the mockstack usage of tardigrade-ci in other projects.
 
 * Updates tool versions:
-    * editorconfig-checker 2.4.0
-    * localstack 0.12.20
-    * tftest 1.6.2
-    * yq 4.16.2
+  * editorconfig-checker 2.4.0
+  * localstack 0.12.20
+  * tftest 1.6.2
+  * yq 4.16.2
 
 ### 0.19.5
 
@@ -539,12 +545,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Patch release primarily to include terraform 1.1.2, as 1.1.0 had regressions
-  that did not work with modules that specify refs. See: https://github.com/hashicorp/terraform/issues/30119
+  that did not work with modules that specify refs. See: <https://github.com/hashicorp/terraform/issues/30119>
 
 * Updates tool versions:
-    * terraform 1.1.2
-    * terragrunt 0.35.16
-    * terratest 0.38.8
+  * terraform 1.1.2
+  * terragrunt 0.35.16
+  * terratest 0.38.8
 
 ### 0.19.4
 
@@ -554,23 +560,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds the environment variable MOTO_DOCKER_NETWORK_NAME to the docker
+* Adds the environment variable MOTO_DOCKER_NETWORK_NAME to the docker
     compose file used for LocalStack and moto.  This environment variable
     is used by moto_server to determine the IP address for the docker
     container.
 
 * Updates tool versions:
-    * black 21.12b0
-    * cfn-lint 0.56.3
-    * golang 1.17.5-buster
-    * pylint 2.12.2
-    * python 3.10.1-buster
-    * shellcheck 0.8.0
-    * terraform 1.1.0
-    * terragrunt 0.35.14
-    * terratest 0.38.6
-    * tftest 1.6.1
-    * yq 4.16.1
+  * black 21.12b0
+  * cfn-lint 0.56.3
+  * golang 1.17.5-buster
+  * pylint 2.12.2
+  * python 3.10.1-buster
+  * shellcheck 0.8.0
+  * terraform 1.1.0
+  * terragrunt 0.35.14
+  * terratest 0.38.6
+  * tftest 1.6.1
+  * yq 4.16.1
 
 ### 0.19.3
 
@@ -580,7 +586,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   If ONLY_MOTO is set to true in a Makefile and a integration test is run
+* If ONLY_MOTO is set to true in a Makefile and a integration test is run
     against AWS itself (versus a mock AWS), instead of failing due to the
     conflicting command line options, a warning will be printed.
 
@@ -592,11 +598,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds new Makefile targets for the purpose of installing packer and rclone
+* Adds new Makefile targets for the purpose of installing packer and rclone
 
-*   Adds install targets for the tools:
-    * packer 1.7.8
-    * rclone 1.57.0
+* Adds install targets for the tools:
+  * packer 1.7.8
+  * rclone 1.57.0
 
 ### 0.19.1
 
@@ -606,15 +612,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Added moto-only services to mockstack.tf:  Cloudtrail, Directory Service,
+* Added moto-only services to mockstack.tf:  Cloudtrail, Directory Service,
     Route53 and Route53 Resolver.
 
 * Updates tool versions:
-    * black 21.10b0
-    * cfn-lint 0.54.4
-    * terraform 1.0.10
-    * yq 4.14.1
-    * terragrunt 0.35.5
+  * black 21.10b0
+  * cfn-lint 0.54.4
+  * terraform 1.0.10
+  * yq 4.14.1
+  * terragrunt 0.35.5
 
 ### 0.19.0
 
@@ -624,20 +630,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   The new environment variable "ONLY_MOTO" can be used to specify that
+* The new environment variable "ONLY_MOTO" can be used to specify that
     moto should be used for mock AWS services, and not LocalStack or some
     combination of moto and LocalStack.
 
 * Updates tool versions:
-    * bats 1.50
-    * cfn-lint 0.54.3
-    * terraform 1.0.9
-    * terraform-docs 1.16.0
-    * terragrunt 0.35.4
-    * terratest 0.38.2
-    * yq 4.13.5
-    * Docker now using golang:1.17.2-buster
-    * Docker now using python:3.10.0-buster
+  * bats 1.50
+  * cfn-lint 0.54.3
+  * terraform 1.0.9
+  * terraform-docs 1.16.0
+  * terragrunt 0.35.4
+  * terratest 0.38.2
+  * yq 4.13.5
+  * Docker now using golang:1.17.2-buster
+  * Docker now using python:3.10.0-buster
 
 ### 0.18.0
 
@@ -647,27 +653,27 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   The new environment variable "PROVIDER_ALIAS" can be used to specify the
+* The new environment variable "PROVIDER_ALIAS" can be used to specify the
     name of a Terraform provider alias.  Used as a value for the new "--alias"
     command line option, it instructs the automated integration test tool
     to create the aliased provider information in preparation for a test run.
 
-*   When running Terraform tests, the Firehose service will now be provided
+* When running Terraform tests, the Firehose service will now be provided
     by moto and not LocalStack.
 
-*   Updates tool versions:
-    * black 21.9b0
-    * cfn-lint 0.54.1
-    * pylint 2.11.1
-    * pytest 6.2.5
-    * terraform 1.0.7
-    * terraform-docs 1.15.0
-    * terragrunt 0.31.10
-    * terratest 0.37.8
-    * yamllint 1.26.3
-    * yq 4.13.2
-    * Docker now using golang:1.17.1-buster
-    * Docker now using python:3.9.7-buster
+* Updates tool versions:
+  * black 21.9b0
+  * cfn-lint 0.54.1
+  * pylint 2.11.1
+  * pytest 6.2.5
+  * terraform 1.0.7
+  * terraform-docs 1.15.0
+  * terragrunt 0.31.10
+  * terratest 0.37.8
+  * yamllint 1.26.3
+  * yq 4.13.2
+  * Docker now using golang:1.17.1-buster
+  * Docker now using python:3.9.7-buster
 
 ### 0.17.1
 
@@ -677,7 +683,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Uses fixuid in entrypoint to fix permissions issues with bindmounts.
+* Uses fixuid in entrypoint to fix permissions issues with bindmounts.
     The user that builds the tardigrade-ci container and the user that runs
     the tardigrade-ci container (or containers built from it) must have the
     same UID, or permissions issues will occur. Fixuid checks the user running
@@ -693,10 +699,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Creates a non-root user in docker image and passes user context when
+* Creates a non-root user in docker image and passes user context when
     building the image. This ensures that files created in volumes mounted to
     the docker container are owned by the user running the container.
-*   Mounts the `.aws` directory as read-only in the docker container.
+* Mounts the `.aws` directory as read-only in the docker container.
 
 ### 0.16.1
 
@@ -706,11 +712,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Modifies Travis workflow to run lint generically, not just ec and a shell check.
+* Modifies Travis workflow to run lint generically, not just ec and a shell check.
 
-*   Corrects various lint errors.
+* Corrects various lint errors.
 
-*   No changes to tool versions.
+* No changes to tool versions.
 
 ### 0.16.0
 
@@ -720,14 +726,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds the target "pytest/%" for Python unit testing.
+* Adds the target "pytest/%" for Python unit testing.
 
-*   Replaces the environment variable TERRAFORM_PYTEST_ARGS with PYTEST_ARGS.
+* Replaces the environment variable TERRAFORM_PYTEST_ARGS with PYTEST_ARGS.
 
-*   Corrects an error with the integration test utility that occurs when
+* Corrects an error with the integration test utility that occurs when
     Terraform fails during the apply.
 
-*   No changes to tool versions.
+* No changes to tool versions.
 
 ### 0.15.0
 
@@ -737,17 +743,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds new Makefile targets for the purpose of testing Terraform modules
+* Adds new Makefile targets for the purpose of testing Terraform modules
     using Terraform and the mock AWS stacks LocalStack and/or moto.  The new
     readme file `INTEGRATION_TESTING.md` describes the expected testing
     environment and the associated Makefile targets.
 
-*   Updates tool versions:
-    * docker-compose 1.29.2
+* Updates tool versions:
+  * docker-compose 1.29.2
 
-*   Adds install targets for the tools:
-    * pytest-compose 6.2.4
-    * tftest 1.6.0
+* Adds install targets for the tools:
+  * pytest-compose 6.2.4
+  * tftest 1.6.0
 
 ### 0.14.1
 
@@ -757,17 +763,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates language versions:
-    * python 3.9.6
-*   Updates tool versions:
-    * black 21.6b0
-    * cfn-lint 0.52.0
-    * pylint 2.9.3
-    * terraform 1.0.2
-    * terraform-docs 0.14.1
-    * terragrunt 0.31.0
-    * terratest 0.36.5
-    * yq 4.9.8
+* Updates language versions:
+  * python 3.9.6
+* Updates tool versions:
+  * black 21.6b0
+  * cfn-lint 0.52.0
+  * pylint 2.9.3
+  * terraform 1.0.2
+  * terraform-docs 0.14.1
+  * terragrunt 0.31.0
+  * terratest 0.36.5
+  * yq 4.9.8
 
 ### 0.14.0
 
@@ -777,10 +783,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Modifies "install" targets to install the version pinned in a file managed
+* Modifies "install" targets to install the version pinned in a file managed
     by Dependabot. Depending on the tool and how it is packaged/hosted, the version
     may be pinned in `Dockerfile.tools`, `requirements.txt`, or `.github/workflows/dependabot_hack.yml`.
-*   Uses "install" targets in Dockerfile, to ensure the targets are all tested
+* Uses "install" targets in Dockerfile, to ensure the targets are all tested
     when building the image in Ci.
 
 ### 0.13.1
@@ -791,7 +797,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Provides a target for installing terragrunt, `terragrunt/install`, and adds
+* Provides a target for installing terragrunt, `terragrunt/install`, and adds
     terragrunt to the docker container.
 
 ### 0.13.0
@@ -802,7 +808,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Update terraform-docs version to v0.13.0
+* Update terraform-docs version to v0.13.0
 
 ### 0.12.4
 
@@ -812,8 +818,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Uses `pip` pyenv shim when available
-*   Adds `PYTHONUSERBASE` bin directory to PATH
+* Uses `pip` pyenv shim when available
+* Adds `PYTHONUSERBASE` bin directory to PATH
 
 ### 0.12.3
 
@@ -823,7 +829,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates version of black. Modifies pydocstyle unit test to accommodate change for the new version of black.
+* Updates version of black. Modifies pydocstyle unit test to accommodate change for the new version of black.
 
 ### 0.12.2
 
@@ -833,10 +839,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Provides a macro "stream_github_release" that supports piping a GitHub Release
+* Provides a macro "stream_github_release" that supports piping a GitHub Release
     artifact to another tool (like `tar`). The target "stream/gh-release/%" is
     deprecated in favor of this macro, to avoid an unnecessary recursive `$(MAKE)`.
-*   Updates the `terraform-docs/install` target to extract the binary from the
+* Updates the `terraform-docs/install` target to extract the binary from the
     tar.gz archive hosted by GitHub Releases, as the binary is no longer available
     as a separate artifact.
 
@@ -848,7 +854,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Remove the "--user" option from the "python -m pip install" commands.
+* Remove the "--user" option from the "python -m pip install" commands.
 
 ### 0.12.0
 
@@ -858,19 +864,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Pins terraform-docs version using multi-stage docker build
-*   Pins terraform version using multi-stage docker build
-*   Pins shellcheck version using multi-stage docker build
-*   Pins bats version using multi-stage docker build
-*   Pins editorconfig-checker (ec) version using multi-stage docker build
-*   Pins yq version using multi-stage docker build
-*   Pins black version using requirements.txt and multi-stage docker build
-*   Pins pylint version using requirements.txt and multi-stage docker build
-*   Pins pylint-pytest version using requirements.txt and multi-stage docker build
-*   Pins pydocstyle version using requirements.txt and multi-stage docker build
-*   Pins yamllint version using requirements.txt and multi-stage docker build
-*   Pins cfn-lint version using requirements.txt and multi-stage docker build
-*   Pins bumpversion version using requirements.txt and multi-stage docker build
+* Pins terraform-docs version using multi-stage docker build
+* Pins terraform version using multi-stage docker build
+* Pins shellcheck version using multi-stage docker build
+* Pins bats version using multi-stage docker build
+* Pins editorconfig-checker (ec) version using multi-stage docker build
+* Pins yq version using multi-stage docker build
+* Pins black version using requirements.txt and multi-stage docker build
+* Pins pylint version using requirements.txt and multi-stage docker build
+* Pins pylint-pytest version using requirements.txt and multi-stage docker build
+* Pins pydocstyle version using requirements.txt and multi-stage docker build
+* Pins yamllint version using requirements.txt and multi-stage docker build
+* Pins cfn-lint version using requirements.txt and multi-stage docker build
+* Pins bumpversion version using requirements.txt and multi-stage docker build
 
 ### 0.11.0
 
@@ -880,9 +886,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds env TARDIGRADE_CI_AUTO_INIT that controls whether auto-init is enabled
+* Adds env TARDIGRADE_CI_AUTO_INIT that controls whether auto-init is enabled
     (defaults to true).
-*   Suppresses the duplicative output from the auto-init logic in recursive calls
+* Suppresses the duplicative output from the auto-init logic in recursive calls
     to $(MAKE).
 
 ### 0.10.0
@@ -893,11 +899,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   No longer requires a docker file with the fixed name of `Dockerfile`.
+* No longer requires a docker file with the fixed name of `Dockerfile`.
     The environment variable `TARDIGRADE_CI_DOCKERFILE` can be used to
     specify an alternative docker filename for the `docker/build`
     target or for the file used for the bootstrap.
-*   Corrects misspelling of the module name for terratest golang test.
+* Corrects misspelling of the module name for terratest golang test.
 
 ### 0.9.2
 
@@ -907,7 +913,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Restores terraform-docs version to latest (currently v0.11.1), suppressing
+* Restores terraform-docs version to latest (currently v0.11.1), suppressing
     the `modules` and `resources` sections. Also, the newline behavior of `docs/generate`
     is managed explicitly so it is no longer subject to future changes in the
     terminating newline behavior of `terraform-docs`. See [PR #143](https://github.com/plus3it/tardigrade-ci/pull/143)
@@ -920,7 +926,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Skips setting AWS_PROFILE when the env is not available
+* Skips setting AWS_PROFILE when the env is not available
 
 ### 0.9.0
 
@@ -930,8 +936,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   PYLINT_RCFILE defines location of the .pylintrc used by pylint
-*   Loadable-plugin added to .pylintrc file to support pytest linting
+* PYLINT_RCFILE defines location of the .pylintrc used by pylint
+* Loadable-plugin added to .pylintrc file to support pytest linting
 
 ### 0.8.1
 
@@ -941,8 +947,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Runs auto-init in non-`tardigrade-ci` containers, so the make targets are available
-*   Ensures `$PWD` is always set, including when invoking the container directly
+* Runs auto-init in non-`tardigrade-ci` containers, so the make targets are available
+* Ensures `$PWD` is always set, including when invoking the container directly
     with `docker run`
 
 ### 0.8.0
@@ -953,21 +959,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Provides auto-init functionality that removes requirement to run `make init`
+* Provides auto-init functionality that removes requirement to run `make init`
     before calling other `make` targets
-*   Documents the operational differences between **user mode** and **developer mode**
-*   Documents software tools and versions required to use the Makefile operational
+* Documents the operational differences between **user mode** and **developer mode**
+* Documents software tools and versions required to use the Makefile operational
     modes
-*   Improves safeties around `make clean` by restricting its operation to the tardigrade-ci
+* Improves safeties around `make clean` by restricting its operation to the tardigrade-ci
     subdirectory (relevant to **user mode**)
-*   Removes `{project}/.tardigrade-ci` when calling `make clean`
-*   Recommends the calling project `include` test for the `.tardigrade-ci` file
+* Removes `{project}/.tardigrade-ci` when calling `make clean`
+* Recommends the calling project `include` test for the `.tardigrade-ci` file
     to avoid unnecessary network I/O
-*   Updates docker image to place the tardigrade-ci contents at `/tardigrade-ci`
-*   Sets `docker/run` WORKDIR to `/workdir` and mounts calling project to `/workdir`
-*   Exposes the env `entrypoint` to the `docker/run` target, keeping backwards
+* Updates docker image to place the tardigrade-ci contents at `/tardigrade-ci`
+* Sets `docker/run` WORKDIR to `/workdir` and mounts calling project to `/workdir`
+* Exposes the env `entrypoint` to the `docker/run` target, keeping backwards
     compatibility by setting the default to `make`
-*   Authenticates to GitHub API with GITHUB_ACCESS_TOKEN only if present
+* Authenticates to GitHub API with GITHUB_ACCESS_TOKEN only if present
 
 ### 0.7.0
 
@@ -977,8 +983,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Provides `bumpversion` utility and targets to manage version update workflows
-*   Exposes env `PKG_VERSION_CMD` so the target `install/pip/%` can tailor the
+* Provides `bumpversion` utility and targets to manage version update workflows
+* Exposes env `PKG_VERSION_CMD` so the target `install/pip/%` can tailor the
     version check per utility
 
 ### 0.6.2
@@ -989,7 +995,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates `docker/run` to grant the container access to the tardigrade-ci repo
+* Updates `docker/run` to grant the container access to the tardigrade-ci repo
     when the repo is outside the project directory
 
 ### 0.6.1
@@ -1000,8 +1006,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Disables the `detachedHead` warning when bootstrapping tardigrade-ci repo
-*   Retrieves version from Dockerfile when bootstrapping the tardigrade-ci repo
+* Disables the `detachedHead` warning when bootstrapping tardigrade-ci repo
+* Retrieves version from Dockerfile when bootstrapping the tardigrade-ci repo
     With the change to how the container is mounted in v0.6.0, projects would
     _always_ retrieve the latest Makefile even when pinning an earlier version
     of the docker container. This could cause unexpected CI failures in work unrelated
@@ -1015,7 +1021,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Uses the calling project's directory as the docker WORKDIR (`/ci-harness`)
+* Uses the calling project's directory as the docker WORKDIR (`/ci-harness`)
     for the `docker/run` target. This removes a layer of abstraction, where before
     the tardigrade-ci directory was the `/ci-harness` WORKDIR, and the project's
     directory was mounted at `/ci-harness/{project}`. The prior approach meant all
@@ -1031,7 +1037,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Uses `pydocstyle` to lint python docstrings in `python/lint` target
+* Uses `pydocstyle` to lint python docstrings in `python/lint` target
 
 ### 0.4.0
 
@@ -1041,8 +1047,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Replaces `eclint` with `editorconfig-checker`
-*   Improves friendliness of `ec/lint` tests by avoiding changes to the git working area
+* Replaces `eclint` with `editorconfig-checker`
+* Improves friendliness of `ec/lint` tests by avoiding changes to the git working area
 
 ### 0.3.1
 
@@ -1052,7 +1058,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Corrects `ec/lint` behavior when there are no matching files
+* Corrects `ec/lint` behavior when there are no matching files
 
 ### 0.3.0
 
@@ -1062,9 +1068,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Modifies the envs `ECLINT_FILES` and `PYTHON_FILES` to be lists of files, instead
+* Modifies the envs `ECLINT_FILES` and `PYTHON_FILES` to be lists of files, instead
     of commands that return the files
-*   Passes the `PROJECT_ROOT` env to `git ls-files` so `ECLINT_FILES` and `PYTHON_FILES`
+* Passes the `PROJECT_ROOT` env to `git ls-files` so `ECLINT_FILES` and `PYTHON_FILES`
     return the correct set of files
 
 ### 0.2.0
@@ -1075,7 +1081,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates `python/lint` to lint python files with `pylint`
+* Updates `python/lint` to lint python files with `pylint`
 
 ### 0.1.0
 
@@ -1085,8 +1091,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds support for terraform 0.13
-*   Updates `docker/%` target to support building docker image locally on Ubuntu
+* Adds support for terraform 0.13
+* Updates `docker/%` target to support building docker image locally on Ubuntu
 
 ### 0.0.18
 
@@ -1096,7 +1102,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Excludes cache directories from `make docs/%` targets
+* Excludes cache directories from `make docs/%` targets
 
 ### 0.0.17
 
@@ -1106,7 +1112,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Exposes `TIMEOUT` env to customize the terratest timeout in the `make test`
+* Exposes `TIMEOUT` env to customize the terratest timeout in the `make test`
     target
 
 ### 0.0.16
@@ -1117,7 +1123,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates hcl/format and hcl/lint targets
+* Updates hcl/format and hcl/lint targets
 
 ### 0.0.3
 
@@ -1127,7 +1133,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds black and eclint make targets
+* Adds black and eclint make targets
 
 ### 0.0.2
 
@@ -1137,7 +1143,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Adds remote Makefile functionality
+* Adds remote Makefile functionality
 
 ### 0.0.1
 
@@ -1147,7 +1153,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Updates terraform-docs make targets and associated tests
+* Updates terraform-docs make targets and associated tests
 
 ### 0.0.0
 
@@ -1157,4 +1163,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-*   Initial release!
+* Initial release!
