@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.11](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.10)
+
+**Released**: 2023.08.22
+
+**Summary**:
+
+* Removes deprecated custom endpoints used in tests
+* Updates tool version:
+    * cfn-lint 0.79.7
+    * fixuid v0.6.0
+    * terragrunt v0.50.4
+    * packer 1.9.4
+
 ### [0.24.10](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.9)
 
 **Released**: 2023.08.17
