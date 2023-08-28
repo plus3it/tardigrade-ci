@@ -15,7 +15,7 @@ FROM localstack/localstack:2.2.0 as localstack
 
 FROM mikefarah/yq:4.35.1 as yq
 
-FROM mstruebing/editorconfig-checker:2.7.0 as ec
+FROM mstruebing/editorconfig-checker:2.7.1 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.16.0 as tfdocs
 
