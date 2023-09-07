@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.13](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.13)
+
+**Released**: 2023.09.07
+
+**Summary**:
+
+* Updates method to start moto server, also ensuring script exits on failure
+
 ### [0.24.12](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.12)
 
 **Released**: 2023.09.06
