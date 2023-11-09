@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.14](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.14)
+
+**Released**: 2023.11.09
+
+**Summary**:
+
+* Add `docker/run/%` target
+* Updates tool version:
+    * black 23.10.1
+    * cfn-lint 0.82.2
+    * editorconfig 2.7.2
+    * jq 1.7
+    * localstack 2.3.2
+    * pylint 3.0.2
+    * pylint-pytest 1.1.3
+    * pytest 7.4.3
+    * rclone 1.64.2
+    * terragrunt 0.53.2
+    * terraform 1.6.3
+    * terratest 0.46.6
+    * tftest 1.8.5
+
 ### [0.24.13](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.13)
 
 **Released**: 2023.09.07
