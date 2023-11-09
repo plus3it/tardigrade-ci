@@ -482,7 +482,7 @@ docker/build:
 ## Runs the tardigrade-ci docker image
 docker/run/%:
 	@echo "[$@]: Running docker image target=$*"
-	@$(MAKE) docker/run target=$*
+	@$(SELF) docker/run target=$*
 docker/run: export DOCKER_RUN_FLAGS ?= --rm
 docker/run: export AWS_DEFAULT_REGION ?= us-east-1
 docker/run: export target ?= help
