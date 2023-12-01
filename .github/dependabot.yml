@@ -27,11 +27,6 @@ updates:
           - "version-update:semver-major"
           - "version-update:semver-minor"
     open-pull-requests-limit: 10
-  - package-ecosystem: gomod
-    directory: "/tests/terraform"
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
   - package-ecosystem: github-actions
     directory: "/"
     schedule:

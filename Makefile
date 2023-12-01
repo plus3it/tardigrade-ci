@@ -509,21 +509,6 @@ docker/clean:
 	docker system prune -a -f
 	@echo "[$@]: cleanup successful"
 
-export TERRAFORM_TEST_DIR ?= tests
-terratest/install: | guard/program/go
-	@ echo "[$@] Installing terratest"
-	cd $(TERRAFORM_TEST_DIR) && go mod init tardigrade-ci/tests
-	cd $(TERRAFORM_TEST_DIR) && go build ./...
-	cd $(TERRAFORM_TEST_DIR) && go mod tidy
-	@ echo "[$@]: Completed successfully!"
-
-terratest/test: | guard/program/go
-terratest/test: export TIMEOUT ?= 20m
-terratest/test:
-	@ echo "[$@] Starting Terraform tests"
-	cd $(TERRAFORM_TEST_DIR) && go test -count=1 -timeout $(TIMEOUT)
-	@ echo "[$@]: Completed successfully!"
-
 tftest/install: pytest/install
 
 export TERRAFORM_PYTEST_DIR ?= $(TARDIGRADE_CI_PATH)/tests/terraform_pytest
