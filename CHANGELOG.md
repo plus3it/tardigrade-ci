@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.24.15](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.15)
+
+**Released**: 2023.12.1
+
+**Summary**:
+
+* Removes unused terratest configs and dependencies
+
+* Updates tool versions:
+    * black 23.11.0
+    * localstack 3.0.1
+    * pylint-pytest 1.1.6
+    * rclone 1.65.0
+    * terraform 1.6.4
+    * terragrunt 0.53.6
+    * yamllint 1.33.0
+    * yq 4.40.3
+
 ### [0.24.14](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.14)
 
 **Released**: 2023.11.09
@@ -11,7 +29,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Summary**:
 
 * Add `docker/run/%` target
-* Updates tool version:
+
+* Updates tool versions:
     * black 23.10.1
     * cfn-lint 0.82.2
     * editorconfig 2.7.2
@@ -43,7 +62,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Selects/enables global and python38 versions in docker image
 * Adds `pr` target that is an alias for the `pullrequest` target
 
-* Updates tool version:
+* Updates tool versions:
     * cfn-lint 0.79.8
     * editorconfig 2.7.1
     * pytest 7.4.1
@@ -59,7 +78,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Removes deprecated custom endpoints used in tests
 
-* Updates tool version:
+* Updates tool versions:
     * cfn-lint 0.79.7
     * fixuid v0.6.0
     * terragrunt v0.50.4
@@ -73,7 +92,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Add new makefile target 'pullrequest' to run formatters, lint and documentation in one call
 
-* Updates tool version:
+* Updates tool versions:
     * cfn-lint 0.79.6
     * pylint 2.17.5
     * terraform 1.5.5
