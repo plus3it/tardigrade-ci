@@ -3,7 +3,7 @@
 
 # Keep this list in alphabetical order, with a single blank line between each package
 
-black==23.11.0
+black==24.2.0
 
 bump2version==1.0.1
 
