@@ -14,6 +14,7 @@ do
 """Simple test for pydocstyle
 testing docstring style
 """
+
 import os
 
 

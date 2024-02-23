@@ -1,4 +1,5 @@
 """Fixtures and command line processing for testing Terraform installation."""
+
 from pathlib import Path
 import warnings
 
