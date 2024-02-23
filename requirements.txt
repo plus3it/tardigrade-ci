@@ -13,6 +13,6 @@ pydocstyle==6.3.0
 
 pylint==3.0.2
 
-pylint-pytest==1.1.6
+pylint-pytest==1.1.7
 
 yamllint==1.33.0
