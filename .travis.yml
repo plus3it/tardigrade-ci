@@ -1,6 +1,7 @@
 dist: focal
 
-language: minimal
+language: python
+python: "3.10"
 
 env:
   global:

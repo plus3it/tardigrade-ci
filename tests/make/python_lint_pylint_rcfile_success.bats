@@ -10,6 +10,7 @@ do
   mkdir -p "$working_dir"
   cat > "$working_dir/test_good_length.py" <<"EOF"
 """Test rcfile."""
+
 print("good len")
 EOF
 done
