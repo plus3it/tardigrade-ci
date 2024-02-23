@@ -26,4 +26,4 @@ jobs:
 
       - uses: gruntwork-io/terragrunt@v0.53.8
 
-      - uses: stedolan/jq@jq-1.7
+      - uses: stedolan/jq@jq-1.7.1
