@@ -177,7 +177,7 @@ shellcheck/install: $(BIN_DIR) guard/program/xz
 # For editorconfig-checker, the tar file consists of a single file,
 # ./bin/ec-linux-amd64.
 ec/install: EC_BASE_NAME := ec-$(OS)-$(ARCH)
-ec/install: export EC_VERSION ?= tags/$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mstruebing/editorconfig-checker','$(SEMVER_PATTERN)')
+ec/install: export EC_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mstruebing/editorconfig-checker','$(SEMVER_PATTERN)')
 ec/install:
 	@ echo "[$@]: Installing $(@D)..."
 	$(call stream_github_release,editorconfig-checker,editorconfig-checker,$(EC_VERSION),.name | endswith("$(EC_BASE_NAME).tar.gz")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --transform='s/$(EC_BASE_NAME)/ec/' --strip-components=1 $(EC_BASE_NAME)
