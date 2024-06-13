@@ -147,8 +147,8 @@ terraform/install: export TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TA
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
 	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
-	unzip $(@D).zip && rm -f $(@D).zip && chmod +x $(@D)
-	mv $(@D) "$(BIN_DIR)"
+	unzip -d $(TMP) $(@D).zip && rm -f $(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
+	mv $(TMP)/$(@D) "$(BIN_DIR)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
