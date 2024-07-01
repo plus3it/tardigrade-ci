@@ -1,0 +1,16 @@
+formatter: markdown table  # required
+
+sections:
+  hide:
+    - modules
+    - resources
+
+sort:
+  by: required
+
+output:
+  template: |-
+    <!-- BEGIN TFDOCS -->
+    {{ .Content }}
+
+    <!-- END TFDOCS -->
