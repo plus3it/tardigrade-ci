@@ -91,6 +91,13 @@ unexport download_hashicorp_release
 match_pattern_in_file = $(or $(shell grep $(2) $(1) 2> /dev/null | grep -oE $(3) 2> /dev/null),$(error Could not match pattern from file: file=$(1), line=$(2), pattern=$(3)))
 unexport match_pattern_in_file
 
+# Macro to retry a command
+# $(call retry,<max attempts>,<command>)
+define retry
+i=0; set +e; until [[ $$i -ge $(1) ]]; do sleep $$i; echo "$(2)"; ($(2)) && exit 0; ret=$$?; ((i++)); echo "Attempt ($$i) failed, trying until ($(1)) times"; done ; exit $$ret
+endef
+unexport retry
+
 guard/env/%:
 	@ _="$(or $($*),$(error Make/environment variable '$*' not present))"
 
