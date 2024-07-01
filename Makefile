@@ -184,7 +184,13 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-install/pip/% install/pip_pkg_with_no_cli/% pytest/install: export PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
+install/pip/% install/pip_pkg_with_no_cli/% install/pip_requirements/% pytest/install: export PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
+
+install/pip_requirements/%:
+	@ echo "[$@]: Installing pip requirements from $*..."
+	$(PIP) install -r $*
+	@ echo "[$@]: Completed successfully!"
+
 install/pip/%: export PKG_VERSION_CMD ?= $* --version
 install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
@@ -195,6 +201,7 @@ install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
+	@ echo "[$@]: Completed successfully!"
 
 fixuid/install: export FIXUID_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'boxboat/fixuid','$(SEMVER_PATTERN)')
 fixuid/install: QUERY = .name | endswith("$(OS)-$(ARCH).tar.gz")
