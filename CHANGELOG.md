@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.25.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.25.0)
+
+**Released**: 2024.07.02
+
+**Summary**:
+
+* Adds `retry` macro
+* Provides new target for installing python dependencies from requirements file,
+  `install/pip_requirements/<path-to-requirements-file>`
+* Uses `.terraform-doc.yml` to configure terraform-docs, and provides a default
+  config file. Uses `TFDOCS_CONFIG` to supply a non-default config.
+* Updates base image from buster to bookworm
+
+* Updates tool versions:
+    * bats 1.11.0
+    * black 24.4.2
+    * cfn-lint 1.4.2
+    * editorconfig-checker 3.0.1
+    * golang 1.20.14
+    * jq 1.7.1
+    * localstack 3.5.0
+    * packer 1.11.0
+    * pylint 3.2.5
+    * pylint-pytest 1.1.8
+    * pytest 8.2.2
+    * python 3.8.19
+    * python 3.11.8
+    * python-hcl2 4.3.4
+    * rclone 1.67.0
+    * shellcheck 0.10.0
+    * terraform 1.9.0
+    * terraform-docs 0.18.0
+    * terragrunt 0.59.6
+    * yamllint 1.35.1
+    * yq 4.44.2
+
 ### [0.24.15](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.15)
 
 **Released**: 2023.12.1
