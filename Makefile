@@ -450,13 +450,10 @@ TFDOCS_DIRS ?= $(filter $(TF_DIRS) $(HCL_DIRS),$(sort $(dir $(TFDOCS_FILES) $(HC
 TFDOCS_TARGETS ?= $(addsuffix $(TFDOCS_FILE),$(TFDOCS_DIRS))
 
 docs/%: export TFDOCS ?= terraform-docs
-docs/%: export TFDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required
-docs/%: export HCLDOCS_MODULES_OPTIONS ?= --hide modules --hide resources --sort-by required --hide outputs --hide requirements --hide providers --indent 3
-docs/%: export TFDOCS_OPTIONS ?= --output-template '$(TFDOCS_TEMPLATE)' --output-file $(TFDOCS_FILE) markdown table
-docs/%: export TFDOCS_TEMPLATE ?= <!-- BEGIN TFDOCS -->\n{{ .Content }}\n\n<!-- END TFDOCS -->
-docs/%: export TFCMD_OPTS ?= $(if $(TF_FILES),$(TFDOCS_MODULES_OPTIONS),$(if $(HCL_FILES),$(HCLDOCS_MODULES_OPTIONS),))
-docs/%: export TFDOCS_CMD ?= $(if $(TFCMD_OPTS),$(TFDOCS) $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
-docs/%: export TFDOCS_LINT_CMD ?=  $(if $(TFCMD_OPTS),$(TFDOCS) --output-check $(TFCMD_OPTS) $(TFDOCS_OPTIONS),)
+docs/%: export TFDOCS_CONFIG ?= $(or $(wildcard .terraform-docs.yml),$(TARDIGRADE_CI_PATH)/.terraform-docs.yml)
+docs/%: export TFDOCS_OPTIONS ?= --config $(TFDOCS_CONFIG) --output-file $(TFDOCS_FILE)
+docs/%: export TFDOCS_CMD ?= $(TFDOCS) $(TFDOCS_OPTIONS)
+docs/%: export TFDOCS_LINT_CMD ?=  $(TFDOCS) --output-check $(TFDOCS_OPTIONS)
 
 ## Generates Terraform documentation
 docs/generate: $(addprefix docs/generate/,$(TFDOCS_TARGETS))
