@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.25.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.25.1)
+
+**Released**: 2024.08.06
+
+**Summary**:
+
+* Ensures moto 5 and its dependencies are installed in localstack container
+
+* Updates tool versions:
+    * black 24.8.0
+    * cfn-lint 1.9.5
+    * editorconfig-checker 3.0.3
+    * golang 1.22.5
+    * localstack 3.6.0
+    * packer 1.11.2
+    * pylint 3.2.6
+    * pytest 8.3.2
+    * python 3.12.4
+    * terraform 1.9.3
+    * terragrunt 0.66.1
+
 ### [0.25.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.25.0)
 
 **Released**: 2024.07.02
