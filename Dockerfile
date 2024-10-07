@@ -1,6 +1,6 @@
 FROM golang:1.23.1-bookworm as golang
 
-FROM python:3.12.6-bookworm
+FROM python:3.12.7-bookworm
 
 ARG PROJECT_NAME=tardigrade-ci
 ARG GITHUB_ACCESS_TOKEN
