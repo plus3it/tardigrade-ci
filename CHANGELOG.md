@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.26.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.0)
+
+**Released**: 2024.12.30
+
+**Summary**:
+
+* Adds targets to manage python3.12
+* Install python3.12 in tardigrade-ci image
+* Deprecates and removes python3.8 support
+
+* Updates tool versions:
+    * bats 1.11.1
+    * black 24.10.0
+    * cfn-lint 1.22.2
+    * golang 1.23.4
+    * localstack 4.0.3
+    * pylint 3.3.2
+    * pytest 8.3.4
+    * python 3.12.8
+    * python 3.13.1
+    * python-hcl2 5.1.1
+    * rclone 1.68.2
+    * terraform 1.10.3
+    * terraform-docs 0.19.0
+    * terragrunt 0.69.13
+    * yq 4.44.6
+
 ### [0.25.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.25.3)
 
 **Released**: 2024.08.07
