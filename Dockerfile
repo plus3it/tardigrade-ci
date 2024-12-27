@@ -61,12 +61,10 @@ ENV GOPATH=/go
 RUN make -C /${PROJECT_NAME} install
 
 # Install python versions
-RUN make -C /${PROJECT_NAME} python38/install
 RUN make -C /${PROJECT_NAME} python312/install
-RUN pyenv global system $(pyenv versions | grep 3.8) $(pyenv versions | grep 3.12)
+RUN pyenv global system $(pyenv versions | grep 3.12)
 RUN python --version \
     && python3 --version \
-    && python3.8 --version \
     && python3.12 --version
 
 WORKDIR /${PROJECT_NAME}
