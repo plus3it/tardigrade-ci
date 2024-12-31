@@ -30,7 +30,7 @@ export PWD := $(shell pwd)
 export TARDIGRADE_CI_PATH ?= $(PWD)
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
-export TARDIGRADE_CI_DOCKERFILE_PYTHON38 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python38/Dockerfile
+export TARDIGRADE_CI_DOCKERFILE_PYTHON312 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python312/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
@@ -222,16 +222,16 @@ black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE
 black/install:
 	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
-python38/%: export PYTHON_38_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON38),'python:3.8','$(SEMVER_PATTERN)')
+python312/%: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 
-python38/install:
-	@ $(SELF) install/pyenv/$(PYTHON_38_VERSION)
+python312/install:
+	@ $(SELF) install/pyenv/$(PYTHON_312_VERSION)
 
-python38/select:
-	@ $(SELF) select/pyenv/$(PYTHON_38_VERSION)
+python312/select:
+	@ $(SELF) select/pyenv/$(PYTHON_312_VERSION)
 
-python38/version:
-	@ echo $(PYTHON_38_VERSION)
+python312/version:
+	@ echo $(PYTHON_312_VERSION)
 
 select/pyenv/%: | guard/program/pyenv
 	@ echo "[$@]: Selecting python $(@F)"
@@ -476,7 +476,7 @@ docs/lint/%: | terraform/lint guard/program/terraform-docs
 docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
-docker/build: export PYTHON_38_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON38),'python:3.8','$(SEMVER_PATTERN)')
+docker/build: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
 docker/build: export DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
 docker/build:
