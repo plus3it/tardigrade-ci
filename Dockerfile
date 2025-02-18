@@ -1,4 +1,4 @@
-FROM golang:1.23.5-bookworm as golang
+FROM golang:1.24.0-bookworm as golang
 
 FROM python:3.13.2-bookworm
 
