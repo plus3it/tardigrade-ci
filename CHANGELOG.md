@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.26.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.1)
+
+**Released**: 2025.02.18
+
+**Summary**:
+
+* Pins version of moto server, with option for caller to override pin
+
+* Updates tool versions:
+    * black 25.1.0
+    * cfn-lint 1.25.1
+    * editorconfig-checker 3.2.0
+    * golang 1.24.0
+    * localstack 4.1.1
+    * packer 1.12.0
+    * pylint 3.3.4
+    * python 3.13.2
+    * python-hcl2 6.1.1
+    * rclone 1.69.1
+    * terraform 1.10.5
+    * terragrunt 0.73.6
+    * yq 4.45.1
+
 ### [0.26.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.0)
 
 **Released**: 2024.12.30
