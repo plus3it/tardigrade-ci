@@ -16,6 +16,7 @@ services:
       - MAIN_CONTAINER_NAME=localstack
       - LAMBDA_DOCKER_NETWORK=terraform_pytest_default
       - MOTO_DOCKER_NETWORK_NAME=terraform_pytest_default
+      - MOTO_VERSION=${MOTO_VERSION:-5.*}
     volumes:
       - "${DOCKER_HOST:-/var/run/docker.sock}:/var/run/docker.sock"
       - "${TERRAFORM_PYTEST_DIR}/ready.d:/etc/localstack/init/ready.d"

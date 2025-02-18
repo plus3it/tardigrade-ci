@@ -529,6 +529,7 @@ terraform/pytest: | pytest/$(TERRAFORM_PYTEST_DIR)
 .PHONY: mockstack/pytest mockstack/up mockstack/down mockstack/clean
 export INTEGRATION_TEST_BASE_IMAGE_NAME ?= $(shell basename $(PWD))-integration-test
 mockstack/%: export LOCALSTACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'localstack/localstack','$(SEMVER_PATTERN)')
+mockstack/%: export MOTO_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'motoserver/moto','$(SEMVER_PATTERN)')
 mockstack/%: export MOCKSTACK ?= localstack
 mockstack/pytest:
 	@ echo "[$@] Running Terraform tests against LocalStack"
