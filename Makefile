@@ -11,7 +11,11 @@ export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
 # See https://docs.python.org/3/using/cmdline.html#envvar-PYTHONUSERBASE
 export PYTHONUSERBASE ?= $(HOME)/.local
 
+ifdef VIRTUAL_ENV
+PATH := $(BIN_DIR):$(VIRTUAL_ENV)/bin:${PATH}
+else
 PATH := $(BIN_DIR):$(PYTHONUSERBASE)/bin:${PATH}
+endif
 
 MAKEFLAGS += --no-print-directory
 SHELL := bash
