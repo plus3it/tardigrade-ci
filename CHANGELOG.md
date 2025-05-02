@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.26.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.2)
+
+**Released**: 2025.05.05
+
+**Summary**:
+
+* Prefers virtual env binaries if VIRTUAL_ENV is set
+
+* Updates tool versions:
+    * cfn-lint 1.34.2
+    * editorconfig-checker 3.2.1
+    * localstack 4.3.0
+    * golang 1.24.2
+    * moto 5.1.4
+    * pylint 3.3.7
+    * pytest 8.3.5
+    * python 3.13.3
+    * python-hcl2 7.2.0
+    * rclone 1.69.2
+    * terraform 1.11.4
+    * terragrunt 0.78.0
+    * terraform-docs 0.20.0
+    * yamllint 1.37.1
+    * yq 4.45.2
+
 ### [0.26.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.1)
 
 **Released**: 2025.02.18
