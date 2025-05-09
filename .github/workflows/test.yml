@@ -1,0 +1,22 @@
+name: Run test jobs
+on:
+  pull_request:
+
+concurrency:
+  group: test-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: tardigrade-ci-test
+    steps:
+      - name: Clone this git repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+      - name: Build the docker image
+        run: docker build --quiet --build-arg "GITHUB_ACCESS_TOKEN=${{ secrets.GH_READONLY_TOKEN }}" -t "${{ env.IMAGE_NAME }}" -f Dockerfile .
+
+      - name: Run bats tests
+        run: docker run "${{ env.IMAGE_NAME }}" bats/test
