@@ -4,7 +4,7 @@ on:
   # Run on demand
   workflow_dispatch:
 
-  # Run on push to main when .bumpversion.cfg version is updated
+  # Run on push to default branch when .bumpversion.cfg version is updated
   push:
     branches:
       - main
