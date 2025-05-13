@@ -1,9 +1,8 @@
-FROM golang:1.24.3-bookworm as golang
+FROM golang:1.24.3-bookworm AS golang
 
 FROM python:3.13.3-bookworm
 
 ARG PROJECT_NAME=tardigrade-ci
-ARG GITHUB_ACCESS_TOKEN
 
 ENV USER=${PROJECT_NAME}
 ENV USER_UID=1000
@@ -43,7 +42,8 @@ COPY --chown=${USER}:${USER} --from=golang /go/ /go/
 COPY --chown=${USER}:${USER} . /${PROJECT_NAME}
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN make -C /${PROJECT_NAME} fixuid/install \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+    make -C /${PROJECT_NAME} fixuid/install \
     && cp /root/bin/fixuid /usr/local/bin/fixuid \
     && chown root:root /usr/local/bin/fixuid \
     && chmod 4755 /usr/local/bin/fixuid\
@@ -58,10 +58,12 @@ ENV PYENV_ROOT=${HOME}/.pyenv
 ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 
-RUN make -C /${PROJECT_NAME} install
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+    make -C /${PROJECT_NAME} install
 
 # Install python versions
-RUN make -C /${PROJECT_NAME} python312/install
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+    make -C /${PROJECT_NAME} python312/install
 RUN pyenv global system $(pyenv versions | grep 3.12)
 RUN python --version \
     && python3 --version \

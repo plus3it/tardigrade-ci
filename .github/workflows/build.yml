@@ -67,12 +67,12 @@ jobs:
           context: .
           load: true
           tags: plus3it/tardigrade-ci:test
-          build-args: |
-            GITHUB_ACCESS_TOKEN=${{ secrets.GH_READONLY_TOKEN }}
+          secrets: |
+            "GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}"
 
       - name: Run bats tests
         if: github.event_name == 'pull_request'
-        run: docker run --rm plus3it/tardigrade-ci:test bats/test
+        run: docker run --rm -e "GITHUB_ACCESS_TOKEN=${{ secrets.GITHUB_TOKEN }}" plus3it/tardigrade-ci:test bats/test
 
       - name: Push to registries
         if: github.event_name != 'pull_request'
@@ -81,3 +81,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          secrets: |
+            "GITHUB_ACCESS_TOKEN=${{ secrets.GH_READONLY_TOKEN }}"
