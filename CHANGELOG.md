@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.27.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.27.0)
+
+**Released**: 2025.05.14
+
+**Summary**:
+
+* Uses github actions instead of travis-ci
+* Publishes container image to both dockerhub and ghcr.io
+* Uses docker secret instead of build-arg to set GITHUB_ACCESS_TOKEN
+
+* Updates tool versions:
+    * cfn-lint 1.35.1
+    * editorconfig-checker 3.3.0
+    * golang 1.24.3
+    * localstack 4.4.0
+    * terragrunt 0.78.2
+    * yq 4.45.4
+
 ### [0.26.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.26.2)
 
 **Released**: 2025.05.05
