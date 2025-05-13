@@ -1,4 +1,4 @@
-name: Run lint and static analyis checks
+name: Run lint and static analysis checks
 on:
   pull_request:
 
