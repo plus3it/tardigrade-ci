@@ -22,6 +22,8 @@ SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
 .SUFFIXES:
 
+, := ,
+
 export PYTHON ?= python3
 
 .PHONY: guard/% %/install %/lint
