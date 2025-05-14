@@ -487,9 +487,10 @@ docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
-		--build-arg PYTHON_38_VERSION=$(PYTHON_38_VERSION) \
+		--build-arg PYTHON_312_VERSION=$(PYTHON_312_VERSION) \
 		--build-arg USER_UID=$$(id -u) \
 		--build-arg USER_GID=$$(id -g) \
+		$(if $(GITHUB_ACCESS_TOKEN),--secret id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN,) \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
