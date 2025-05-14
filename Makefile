@@ -490,7 +490,7 @@ docker/build:
 		--build-arg PYTHON_312_VERSION=$(PYTHON_312_VERSION) \
 		--build-arg USER_UID=$$(id -u) \
 		--build-arg USER_GID=$$(id -g) \
-		$(if $(GITHUB_ACCESS_TOKEN),--secret id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN,) \
+		$(if $(GITHUB_ACCESS_TOKEN),--secret id=GITHUB_ACCESS_TOKEN$(,)env=GITHUB_ACCESS_TOKEN,) \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
