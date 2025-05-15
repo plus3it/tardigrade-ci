@@ -5,4 +5,4 @@
 # entry in the Dependabot config that ignores major and minor version updates, in
 # order to keep this pinned to Python 3.12.
 
-FROM python:3.12.8 as python312
+FROM python:3.12.10 as python312
