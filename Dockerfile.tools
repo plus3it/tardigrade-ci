@@ -15,7 +15,7 @@ FROM localstack/localstack:4.4.0 as localstack
 
 FROM mikefarah/yq:4.45.4 as yq
 
-FROM motoserver/moto:5.1.4 as moto
+FROM motoserver/moto:5.1.5 as moto
 
 FROM mstruebing/editorconfig-checker:v3.3.0 as ec
 
