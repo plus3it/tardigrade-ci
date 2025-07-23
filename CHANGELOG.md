@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.27.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.27.1)
+
+**Released**: 2025.07.23
+
+**Summary**:
+
+* Removes aws service endpoints to match v6 of aws provider
+
+* Updates tool versions:
+    * bats 1.12.0
+    * cfn-lint 1.38.0
+    * golang 1.24.5
+    * localstack 4.6.0
+    * moto 5.1.8
+    * packer 1.13.1
+    * pytest 8.4.1
+    * python 3.12.11
+    * python 3.13.5
+    * python-hcl2 7.2.1
+    * rclone 1.70.3
+    * terragrunt 0.83.2
+    * terraform 1.12.2
+    * yq 4.46.1
+
 ### [0.27.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.27.0)
 
 **Released**: 2025.05.14
