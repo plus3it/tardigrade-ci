@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.0)
+
+**Released**: 2025.07.28
+
+**Summary**:
+
+* Prefers moto server instead of localstack. May continue to use localstack via
+  the USE_LOCALSTACK env in the Makefile
+
+* Updates tool versions:
+    * moto 5.1.9
+    * python-hcl2 7.3.1
+    * yq 4.47.1
+
 ### [0.27.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.27.1)
 
 **Released**: 2025.07.23
