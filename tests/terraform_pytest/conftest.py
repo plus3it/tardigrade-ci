@@ -26,9 +26,9 @@ def pytest_addoption(parser):
         help="Directory of Terraform files under test; default: './tests'",
     )
     parser.addoption(
-        "--only-moto",
+        "--use-localstack",
         action="store_true",
-        help="Only use moto ports for mock AWS services",
+        help="Use localstack and moto to mock AWS services",
     )
 
 
@@ -82,8 +82,8 @@ def is_mock(request, aws_credentials):
 
     if request.config.option.alternate_profile:
         pytest.exit(msg="conflicting options: 'alternate_profile' and 'nomock'")
-    elif request.config.option.only_moto:
-        warnings.warn(UserWarning("Ignoring command line option: 'only_moto'"))
+    elif request.config.option.use_localstack:
+        warnings.warn(UserWarning("Ignoring command line option: 'use_localstack'"))
 
     return False
 
@@ -98,9 +98,9 @@ def tf_dir(request):
 
 
 @pytest.fixture(scope="session")
-def only_moto(request):
-    """Return True if only moto ports are to be used for mock services."""
-    return request.config.option.only_moto
+def use_localstack(request):
+    """Return True if localstack is to be used for mock services."""
+    return request.config.option.use_localstack
 
 
 def pytest_generate_tests(metafunc):

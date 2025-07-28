@@ -12,7 +12,7 @@ import tftest
 
 AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION", default="us-east-1")
 MOCKSTACK_HOST = os.getenv("MOCKSTACK_HOST", default="localhost")
-MOCKSTACK_PORT = "4566"
+LOCALSTACK_PORT = "4566"
 MOTO_PORT = "4615"
 
 MOCKSTACK_TF_PROVIDER_OVERRIDE = "tardigrade_ci_provider_override.tf.json"
@@ -86,9 +86,9 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
 
 
 @pytest.fixture(scope="function")
-def aws_provider_override(only_moto):
+def aws_provider_override(use_localstack):
     """Return override config for mock aws provider."""
-    mockstack_port = MOTO_PORT if only_moto else MOCKSTACK_PORT
+    mockstack_port = LOCALSTACK_PORT if use_localstack else MOTO_PORT
     mockstack_endpoint = f"http://{MOCKSTACK_HOST}:{mockstack_port}"
     moto_endpoint = f"http://{MOCKSTACK_HOST}:{MOTO_PORT}"
     return {
