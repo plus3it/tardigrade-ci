@@ -13,7 +13,7 @@ FROM koalaman/shellcheck:v0.10.0 as shellcheck
 
 FROM localstack/localstack:4.6.0 as localstack
 
-FROM mikefarah/yq:4.46.1 as yq
+FROM mikefarah/yq:4.47.1 as yq
 
 FROM motoserver/moto:5.1.8 as moto
 
