@@ -371,11 +371,11 @@ python/format/exec:
 
 # Run pytests, typically for unit tests.
 export PYTEST_ARGS ?= -v
-export PYTEST_ONLY_MOTO_ARG ?= $(if $(ONLY_MOTO),--only-moto,)
+export PYTEST_USE_LOCALSTACK ?= $(if $(USE_LOCALSTACK),--use-localstack,)
 pytest/%: | guard/program/pytest
 pytest/%:
 	@ echo "[$@] Starting Python tests found under the directory \"$*\""
-	pytest $* $(PYTEST_ARGS) $(PYTEST_ONLY_MOTO_ARG)
+	pytest $* $(PYTEST_ARGS) $(PYTEST_USE_LOCALSTACK)
 	@ echo "[$@]: Tests executed!"
 
 ## Lints terraform files
