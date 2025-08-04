@@ -9,7 +9,7 @@ FROM hashicorp/packer:1.13.1 as packer
 
 FROM hashicorp/terraform:1.12.2 as terraform
 
-FROM koalaman/shellcheck:v0.10.0 as shellcheck
+FROM koalaman/shellcheck:v0.11.0 as shellcheck
 
 FROM localstack/localstack:4.6.0 as localstack
 
