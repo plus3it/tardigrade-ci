@@ -2,7 +2,7 @@
 
 FROM golang:1.25.2-bookworm AS golang
 
-FROM python:3.13.7-bookworm
+FROM python:3.14.0-bookworm
 
 ARG PROJECT_NAME=tardigrade-ci
 
