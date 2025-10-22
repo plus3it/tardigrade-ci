@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.1)
+
+**Released**: 2025.10.22
+
+**Summary**:
+
+* Updates tool versions:
+    * black 25.9.0
+    * cfn-lint 1.40.2
+    * editorconfig-checker 3.4.1
+    * golang 1.25.3
+    * localstack 4.9.2
+    * moto 5.1.15
+    * packer 1.14.2
+    * pylint 4.0.1
+    * pytest 8.4.2
+    * python 3.12.12
+    * python 3.14.0
+    * rclone 1.71.1
+    * shellcheck 0.11.0
+    * terraform 1.13.4
+    * terragrunt 0.91.2
+    * yq 4.48.1
+
 ### [0.28.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.0)
 
 **Released**: 2025.07.28
