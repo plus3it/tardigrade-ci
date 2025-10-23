@@ -59,6 +59,9 @@ ENV HOME="/home/${USER}"
 ENV PYENV_ROOT=${HOME}/.pyenv
 ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
+ENV TF_PLUGIN_CACHE_DIR=${HOME}/.terraform.d/plugin-cache
+
+RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
 RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
     make -C /${PROJECT_NAME} install
