@@ -356,6 +356,7 @@ python/lint/exec:
 		$(PYTHON) -m pylint --rcfile $(PYLINT_RCFILE) \
 			--msg-template="{path}:{line} [{symbol}] {msg}" \
 			--report no --score no $$python_file; \
+		echo "EXIT CODE=$$?"; \
 	done
 	pydocstyle $(PYTHON_FILES)
 	@ echo "[$@]: Python files PASSED lint test!"
