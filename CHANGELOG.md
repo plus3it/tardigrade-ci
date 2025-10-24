@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.3)
+
+**Released**: 2025.10.24
+
+**Summary**:
+
+* Removes deprecated pylint config option
+
 ### [0.28.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.2)
 
 **Released**: 2025.10.24
