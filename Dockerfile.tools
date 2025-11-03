@@ -11,7 +11,7 @@ FROM hashicorp/terraform:1.13.4 as terraform
 
 FROM koalaman/shellcheck:v0.11.0 as shellcheck
 
-FROM localstack/localstack:4.9.2 as localstack
+FROM localstack/localstack:4.10.0 as localstack
 
 FROM mikefarah/yq:4.48.1 as yq
 
