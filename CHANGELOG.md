@@ -10,7 +10,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Adds support for ghcr.io image in version logic
+* Adds support for any Dockerfile hosts in version logic
+* Updates tool versions:
+    * bats 1.13.0
+    * black 25.11.0
+    * cfn-lint 1.40.4
+    * golang 1.25.4
+    * localstack 4.10.0
+    * moto 5.1.16
+    * pylint 4.0.3
+    * pytest 9.0.0
+    * rclone 1.71.2
+    * terraform 1.13.5
+    * terragrunt 0.93.10
+    * yq 4.48.2
 
 ### [0.28.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.3)
 
