@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.4](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.4)
+
+**Released**: 2025.11.21
+
+**Summary**:
+
+* Adds support for ghcr.io image in version logic
+
 ### [0.28.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.3)
 
 **Released**: 2025.10.24
@@ -376,7 +384,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * terragrunt v0.48.1
     * terratest v0.43.8
     * yq 4.34.2
-    
+
 
 ### [0.24.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.7)
 
@@ -425,7 +433,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * terraform 1.3.9
     * terratest 0.41.11
     * tftest==1.8.2
-    * yq 4.31.1 
+    * yq 4.31.1
 
 ### [0.24.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.24.5)
 
@@ -600,7 +608,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Adds a newline to the end of a README.md file if one does not exist.  
+* Adds a newline to the end of a README.md file if one does not exist.
 
 * Updates tool versions:
     * cfn-lint 0.61.5
