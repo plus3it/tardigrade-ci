@@ -21,4 +21,4 @@ FROM mstruebing/editorconfig-checker:v3.4.1 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.20.0 as tfdocs
 
-FROM rclone/rclone:1.71.2 as rclone
+FROM rclone/rclone:1.72.0 as rclone
