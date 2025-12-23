@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.5)
+
+**Released**: 2025.12.24
+
+**Summary**:
+
+* Reverts python to 3.13.11 for compatibility with cfn-lint and implicit dependency
+  on serverless-application-model, see https://github.com/aws/serverless-application-model/issues/3831
+* Updates tool versions:
+    * black 25.12.0
+    * cfn-lint 1.43.1
+    * editorconfig-checker 3.6.0
+    * golang 1.25.5
+    * localstack 4.12.0
+    * moto 5.1.18
+    * packer 1.14.3
+    * pylint 4.0.4
+    * pytest 9.0.2
+    * python 3.13.11
+    * rclone 1.72.0
+    * terraform 1.14.3
+    * terragrunt 0.96.1
+    * yq 4.50.1
+
 ### [0.28.4](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.4)
 
 **Released**: 2025.11.21
