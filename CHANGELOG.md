@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.6)
+
+**Released**: 2026.01.05
+
+**Summary**:
+
+* Updates tool versions:
+    * moto 5.1.19
+    * terragrunt 0.97.0
+
 ### [0.28.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.5)
 
 **Released**: 2025.12.24
