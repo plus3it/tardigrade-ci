@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM golang:1.26rc3-bookworm AS golang
+FROM golang:1.26-bookworm AS golang
 
 FROM python:3.13.12-bookworm
 
