@@ -555,7 +555,7 @@ mockstack/down:
 
 mockstack/clean: | mockstack/down
 	@ echo "[$@] Stopping and removing LocalStack image"
-	set +o pipefail; docker images | grep $(INTEGRATION_TEST_BASE_IMAGE_NAME) | \
+	set +o pipefail; docker images --format="table {{.Repository}}\t{{.Tag}}\t{{.ID}}\t{{.Created}}\t{{.Size}}" | grep $(shell basename $(PWD)) | \
 		awk '{print $$1 ":" $$2}' | xargs -r docker rmi
 
 ## Runs terraform tests in the tests directory
