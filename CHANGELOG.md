@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.7)
+
+**Released**: 2026.02.24
+
+**Summary**:
+
+* Updates mockstack/clean with explicit format for docker/podman compatiblity
+* Updates tool versions:
+    * black 26.1.0
+    * cfn-lint 1.44.0
+    * editorconfig-checker 3.6.1
+    * golang 1.26.0
+    * localstack 4.13.1
+    * moto 5.1.21
+    * packer 1.15.0
+    * python 3.13.12
+    * rclone 1.73.1
+    * terraform 1.14.5
+    * terragrunt 0.99.4
+    * yamllint 1.38.0
+    * yq 4.52.4
+
 ### [0.28.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.6)
 
 **Released**: 2026.01.05
