@@ -44,7 +44,8 @@ COPY --chown=${USER}:${USER} --from=golang /go/ /go/
 COPY --chown=${USER}:${USER} . /${PROJECT_NAME}
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
+    GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
     make -C /${PROJECT_NAME} fixuid/install \
     && cp /root/bin/fixuid /usr/local/bin/fixuid \
     && chown root:root /usr/local/bin/fixuid \
@@ -63,11 +64,13 @@ ENV TF_PLUGIN_CACHE_DIR=${HOME}/.terraform.d/plugin-cache
 
 RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
+    GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
     make -C /${PROJECT_NAME} install
 
 # Install python versions
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
+    GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
     make -C /${PROJECT_NAME} python312/install/uv python312/select/uv
 RUN python --version \
     && python3 --version \

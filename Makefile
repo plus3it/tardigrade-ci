@@ -523,15 +523,18 @@ docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 ## Builds the tardigrade-ci docker image
 docker/build: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
-docker/build: export DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
+docker/build: export DOCKER_BUILDKIT ?= 1
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
+	_f=$$(mktemp); \
+	trap 'rm -f "$$_f"' EXIT; \
+	printf '%s' "$${GITHUB_ACCESS_TOKEN-}" > "$$_f"; \
+	docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
 		--build-arg PYTHON_312_VERSION=$(PYTHON_312_VERSION) \
 		--build-arg USER_UID=$$(id -u) \
 		--build-arg USER_GID=$$(id -g) \
-		$(if $(GITHUB_ACCESS_TOKEN),--secret id=GITHUB_ACCESS_TOKEN$(,)env=GITHUB_ACCESS_TOKEN,) \
+		--secret id=GITHUB_ACCESS_TOKEN$(,)src="$$_f" \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
@@ -625,7 +628,7 @@ lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/i
 lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
-install: rclone/install packer/install pyenv/install
+install: rclone/install packer/install pyenv/install uv/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
 
