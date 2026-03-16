@@ -68,8 +68,7 @@ RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
 
 # Install python versions
 RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
-    make -C /${PROJECT_NAME} python312/install
-RUN pyenv global system $(pyenv versions | grep 3.12)
+    make -C /${PROJECT_NAME} python312/install/uv python312/select/uv
 RUN python --version \
     && python3 --version \
     && python3.12 --version

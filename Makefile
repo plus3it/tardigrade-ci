@@ -233,8 +233,14 @@ python312/%: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGR
 python312/install:
 	@ $(SELF) install/pyenv/$(PYTHON_312_VERSION)
 
+python312/install/uv:
+	@ $(SELF) install/uv-python/$(PYTHON_312_VERSION)
+
 python312/select:
 	@ $(SELF) select/pyenv/$(PYTHON_312_VERSION)
+
+python312/select/uv:
+	@ $(SELF) select/uv-python/$(PYTHON_312_VERSION)
 
 python312/version:
 	@ echo $(PYTHON_312_VERSION)
@@ -246,12 +252,31 @@ select/pyenv/%: | guard/program/pyenv
 	@ python --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python $(@F)"; exit 1)
 	@ echo "[$@]: Completed successfully!"
 
+select/uv-python/%: | guard/program/uv
+	@ echo "[$@]: Selecting python $(@F)"
+	@ uv_python="$$(uv python find --managed-python --no-python-downloads $(@F) 2> /dev/null)"; \
+		[[ -n "$$uv_python" ]] || (echo "[$@]: Failed to find installed python $(@F)"; exit 1); \
+		ln -sf "$$uv_python" "$(BIN_DIR)/python"; \
+		ln -sf "$$uv_python" "$(BIN_DIR)/python3"
+	uv python pin --global --no-project $(@F)
+	python --version
+	python3 --version
+	@ python --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python $(@F)"; exit 1)
+	@ python3 --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python3 $(@F)"; exit 1)
+	@ echo "[$@]: Completed successfully!"
+
 install/pyenv/%: | guard/program/pyenv
 	@ echo "[$@]: Installing python $(@F)"
 	pyenv install $(@F)
 	pyenv rehash
 	@ pyenv versions | grep $(@F) || (echo "[$@]: Failed to install python $(@F)"; exit 1)
 	pyenv versions | grep $(@F)
+	@ echo "[$@]: Completed successfully!"
+
+install/uv-python/%: | guard/program/uv
+	@ echo "[$@]: Installing python $(@F)"
+	uv python install $(@F)
+	uv python find --managed-python --no-python-downloads $(@F)
 	@ echo "[$@]: Completed successfully!"
 
 # pyenv is not version-pinned by default, so recent python versions are always available
@@ -290,6 +315,20 @@ cfn-lint/install:
 yq/install: export YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
 yq/install:
 	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
+
+uv/%: export UV_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'astral-sh/uv@[0-9]','$(SEMVER_PATTERN)')
+uv/version:
+	@ echo $(UV_VERSION)
+
+uv/install: export UV_TAG ?= tags/$(UV_VERSION)
+uv/install: export UV_ARCH ?= $(if $(filter amd64,$(ARCH)),x86_64,$(if $(filter arm64,$(ARCH)),aarch64,$(ARCH)))
+uv/install: export UV_TARGET_OS ?= $(if $(filter linux,$(OS)),unknown-linux-gnu,$(if $(filter darwin,$(OS)),apple-darwin,$(error Unsupported OS for uv/install: $(OS))))
+uv/install: export UV_ARCHIVE ?= uv-$(UV_ARCH)-$(UV_TARGET_OS).tar.gz
+uv/install: | $(BIN_DIR) guard/program/curl guard/program/jq
+	@ echo "[$@]: Installing $(@D) $(UV_VERSION)..."
+	$(call stream_github_release,astral-sh,$(@D),$(UV_TAG),.name | endswith("$(UV_ARCHIVE)")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --strip-components=1 $(@D) uvx
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
 
 bump2version/install: export BUMPVERSION_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'bump2version==','$(SEMVER_PATTERN)')
 bump2version/install:
