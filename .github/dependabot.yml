@@ -17,18 +17,17 @@ updates:
     open-pull-requests-limit: 10
     ignore:
       # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
-      - dependency-name: python
+      - dependency-name: debian
         update-types:
-          # Ignore major/minor to pin python 3.13.x in ./Dockerfile until cfn-lint is compatible
+          # Ignore major/minor to pin debian bookworm
           - "version-update:semver-major"
-          - "version-update:semver-minor"
   - package-ecosystem: docker
     directory: "/.github/dependencies/python312"
     schedule:
       interval: weekly
     ignore:
       # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
-      - dependency-name: python
+      - dependency-name: debian
         update-types:
           # Ignore major/minor to pin python 3.12.x
           - "version-update:semver-major"

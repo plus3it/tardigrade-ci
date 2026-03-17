@@ -2,13 +2,15 @@
 
 FROM golang:1.26-bookworm AS golang
 
-FROM python:3.13.12-bookworm
+FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a
 
 ARG PROJECT_NAME=tardigrade-ci
+ARG USER_UID=1000
+ARG USER_GID=${USER_UID}
 
 ENV USER=${PROJECT_NAME}
-ENV USER_UID=1000
-ENV USER_GID=${USER_UID}
+ENV USER_UID=${USER_UID}
+ENV USER_GID=${USER_GID}
 
 # Things to do as root
 USER root
@@ -16,6 +18,7 @@ USER root
 RUN apt-get update -y && apt-get install -y \
     xz-utils \
     curl \
+    git \
     jq \
     unzip \
     make \
@@ -57,21 +60,17 @@ RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
 USER ${USER}
 
 ENV HOME="/home/${USER}"
-ENV PYENV_ROOT=${HOME}/.pyenv
-ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
+ENV VIRTUAL_ENV=${HOME}/.venv
+ENV PATH="${VIRTUAL_ENV}/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
 ENV GOPATH=/go
 ENV TF_PLUGIN_CACHE_DIR=${HOME}/.terraform.d/plugin-cache
 
 RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,uid=${USER_UID},gid=${USER_GID},mode=0400 \
     GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
-    make -C /${PROJECT_NAME} install
+    make -C /${PROJECT_NAME} install/docker
 
-# Install python versions
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
-    GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
-    make -C /${PROJECT_NAME} python312/install/uv python312/select/uv
 RUN python --version \
     && python3 --version \
     && python3.12 --version

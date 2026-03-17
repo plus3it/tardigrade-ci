@@ -4,6 +4,7 @@ export OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 export CURL ?= curl --fail -sSL
 export XARGS ?= xargs -I {}
 export BIN_DIR ?= ${HOME}/bin
+export VENV_DIR ?= ${HOME}/.venv
 export TMP ?= /tmp
 export FIND_EXCLUDES ?= ':!:*/.terraform/*' ':!:*/.terragrunt-cache/*'
 export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
@@ -12,7 +13,7 @@ export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
 export PYTHONUSERBASE ?= $(HOME)/.local
 
 ifdef VIRTUAL_ENV
-PATH := $(BIN_DIR):$(VIRTUAL_ENV)/bin:${PATH}
+PATH := $(VIRTUAL_ENV)/bin:$(BIN_DIR):${PATH}
 else
 PATH := $(BIN_DIR):$(PYTHONUSERBASE)/bin:${PATH}
 endif
@@ -242,6 +243,9 @@ python312/select:
 python312/select/uv:
 	@ $(SELF) select/uv-python/$(PYTHON_312_VERSION)
 
+python312/venv/uv:
+	@ $(SELF) install/uv-venv/$(PYTHON_312_VERSION)
+
 python312/version:
 	@ echo $(PYTHON_312_VERSION)
 
@@ -277,6 +281,14 @@ install/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Installing python $(@F)"
 	uv python install $(@F)
 	uv python find --managed-python --no-python-downloads $(@F)
+	@ echo "[$@]: Completed successfully!"
+
+install/uv-venv/%: | guard/program/uv
+	@ echo "[$@]: Creating uv venv using python $(@F) at $(VENV_DIR)"
+	uv venv --python $(@F) --seed "$(VENV_DIR)"
+	"$(VENV_DIR)/bin/python" --version
+	"$(VENV_DIR)/bin/python" -m pip --version
+	@ "$(VENV_DIR)/bin/python" --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to create venv for python $(@F)"; exit 1)
 	@ echo "[$@]: Completed successfully!"
 
 # pyenv is not version-pinned by default, so recent python versions are always available
@@ -521,7 +533,6 @@ docs/lint/%: | terraform/lint guard/program/terraform-docs
 docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
-docker/build: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
 docker/build: export DOCKER_BUILDKIT ?= 1
 docker/build:
@@ -531,7 +542,6 @@ docker/build:
 	printf '%s' "$${GITHUB_ACCESS_TOKEN-}" > "$$_f"; \
 	docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
-		--build-arg PYTHON_312_VERSION=$(PYTHON_312_VERSION) \
 		--build-arg USER_UID=$$(id -u) \
 		--build-arg USER_GID=$$(id -g) \
 		--secret id=GITHUB_ACCESS_TOKEN$(,)src="$$_f" \
@@ -629,6 +639,15 @@ lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
 install: rclone/install packer/install pyenv/install uv/install
+
+## Installs tools for docker image using only uv-managed Python runtimes
+install/docker:
+	@ $(SELF) uv/install
+	@ $(SELF) python312/install/uv
+	@ $(SELF) python312/select/uv
+	@ $(SELF) python312/venv/uv
+	@ $(SELF) lint/install
+	@ $(SELF) rclone/install packer/install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
 
