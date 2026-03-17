@@ -138,9 +138,9 @@ zip/install:
 packer/install: export PACKER_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/packer','$(SEMVER_PATTERN)')
 packer/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D) $(PACKER_VERSION)..."
-	$(call download_hashicorp_release,$(@D).zip,$(@D),$(PACKER_VERSION))
-	unzip $(@D).zip && rm -f $(@D).zip && chmod +x $(@D)
-	mv $(@D) "$(BIN_DIR)"
+	$(call download_hashicorp_release,$(TMP)/$(@D).zip,$(@D),$(PACKER_VERSION))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip && rm -f $(TMP)/$(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
+	mv $(TMP)/$(@D) "$(BIN_DIR)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
@@ -149,10 +149,10 @@ packer/install: | $(BIN_DIR) guard/program/jq
 rclone/install: RCLONE_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'rclone/rclone','$(SEMVER_PATTERN)')
 rclone/install: | $(BIN_DIR) guard/program/unzip
 	@ echo "[$@]: Installing $(@D) $(RCLONE_VERSION) ..."
-	$(call download_github_release,$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
-	unzip $(@D).zip
-	mv $(@D)-*/$(@D) $(BIN_DIR)
-	rm -rf $(@D)*
+	$(call download_github_release,$(TMP)/$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip
+	mv $(TMP)/$(@D)-*/$(@D) $(BIN_DIR)
+	rm -rf $(TMP)/$(@D).zip $(TMP)/$(@D)-*
 	chmod +x $(BIN_DIR)/$(@D)
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
@@ -160,8 +160,8 @@ rclone/install: | $(BIN_DIR) guard/program/unzip
 terraform/install: export TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
-	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
-	unzip -d $(TMP) $(@D).zip && rm -f $(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
+	$(call download_hashicorp_release,$(TMP)/$(@D).zip,$(@D),$(TERRAFORM_VERSION))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip && rm -f $(TMP)/$(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
 	mv $(TMP)/$(@D) "$(BIN_DIR)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
@@ -215,14 +215,6 @@ install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
 	$(PIP) install $(PYPI_PKG_NAME)
-	@ echo "[$@]: Completed successfully!"
-
-fixuid/install: export FIXUID_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'boxboat/fixuid','$(SEMVER_PATTERN)')
-fixuid/install: QUERY = .name | endswith("$(OS)-$(ARCH).tar.gz")
-fixuid/install: | $(BIN_DIR) guard/program/jq
-	@ echo "[$@]: Installing $(@D)..."
-	$(call stream_github_release,boxboat,$(@D),$(FIXUID_VERSION),$(QUERY)) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
-	which $(@D)
 	@ echo "[$@]: Completed successfully!"
 
 black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
@@ -542,8 +534,6 @@ docker/build:
 	printf '%s' "$${GITHUB_ACCESS_TOKEN-}" > "$$_f"; \
 	docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
-		--build-arg USER_UID=$$(id -u) \
-		--build-arg USER_GID=$$(id -g) \
 		--secret id=GITHUB_ACCESS_TOKEN$(,)src="$$_f" \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
@@ -557,11 +547,14 @@ docker/run: export DOCKER_RUN_FLAGS ?= --rm
 docker/run: export AWS_DEFAULT_REGION ?= us-east-1
 docker/run: export target ?= help
 docker/run: export entrypoint ?= entrypoint.sh
+docker/run: export DOCKER_USERNS ?=
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
+	userns=""; \
+	if docker --version 2>/dev/null | grep -qi podman; then userns="--userns=keep-id"; elif [ -n "$(DOCKER_USERNS)" ]; then userns="--userns=$(DOCKER_USERNS)"; fi; \
 	docker run $(DOCKER_RUN_FLAGS) \
-	--user "$$(id -u):$$(id -g)" \
+	$$userns \
 	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
@@ -616,7 +609,7 @@ test: terraform/pytest
 bats/install: export BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
 	$(CURL) $(GITHUB_AUTHORIZATION) $(shell $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
-	$(TMP)/bats-core-*/install.sh ~
+	$(TMP)/bats-core-*/install.sh $(dir $(BIN_DIR))
 	bats --version
 	rm -rf $(TMP)/bats-core-*
 	@ echo "[$@]: Completed successfully!"
