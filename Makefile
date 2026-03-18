@@ -573,7 +573,7 @@ docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
 	_f=$$(mktemp); \
 	trap 'rm -f "$$_f"' EXIT; \
-	printf '%s' "$${GITHUB_ACCESS_TOKEN-}" > "$$_f"; \
+	printf '%s' "$${GITHUB_ACCESS_TOKEN:-}" > "$$_f"; \
 	docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
 		--secret id=GITHUB_ACCESS_TOKEN$(,)src="$$_f" \
@@ -602,7 +602,7 @@ docker/run: docker/build
 	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
-	-e GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN) \
+	-e GITHUB_ACCESS_TOKEN=$${GITHUB_ACCESS_TOKEN:-} \
 	-w /workdir/ \
 	--entrypoint $(entrypoint) \
 	$(IMAGE_NAME) $(target)
