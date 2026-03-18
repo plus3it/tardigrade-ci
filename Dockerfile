@@ -19,19 +19,6 @@ RUN apt-get update -y && apt-get install -y \
     unzip \
     make \
     vim \
-    build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    llvm \
-    libncursesw5-dev \
-    tk-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    libffi-dev \
-    liblzma-dev \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 
@@ -44,6 +31,9 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Things to do as $USER
 USER ${USER}
+
+ENV PIP_NO_CACHE_DIR=1
+ENV UV_NO_CACHE=1
 
 ENV HOME="/home/${USER}"
 ENV VIRTUAL_ENV=${HOME}/.venv
