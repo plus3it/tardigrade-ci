@@ -47,7 +47,7 @@ RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
 RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,mode=0400,uid=1000,gid=1000 \
     GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
-    make -C /${PROJECT_NAME} install/docker
+    make -C /${PROJECT_NAME} install/build
 
 RUN python --version \
     && python3 --version \

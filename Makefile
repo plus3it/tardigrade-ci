@@ -226,18 +226,12 @@ black/install:
 python312/%: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 
 python312/install:
-	@ $(SELF) install/pyenv/$(PYTHON_312_VERSION)
-
-python312/install/uv:
 	@ $(SELF) install/uv-python/$(PYTHON_312_VERSION)
 
 python312/select:
-	@ $(SELF) select/pyenv/$(PYTHON_312_VERSION)
-
-python312/select/uv:
 	@ $(SELF) select/uv-python/$(PYTHON_312_VERSION)
 
-python312/venv/uv:
+python312/venv:
 	@ $(SELF) install/uv-venv/$(PYTHON_312_VERSION)
 
 python312/version:
@@ -246,18 +240,12 @@ python312/version:
 python313/%: export PYTHON_313_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON313),'python:3.13','$(SEMVER_PATTERN)')
 
 python313/install:
-	@ $(SELF) install/pyenv/$(PYTHON_313_VERSION)
-
-python313/install/uv:
 	@ $(SELF) install/uv-python/$(PYTHON_313_VERSION)
 
 python313/select:
-	@ $(SELF) select/pyenv/$(PYTHON_313_VERSION)
-
-python313/select/uv:
 	@ $(SELF) select/uv-python/$(PYTHON_313_VERSION)
 
-python313/venv/uv:
+python313/venv:
 	@ $(SELF) install/uv-venv/$(PYTHON_313_VERSION)
 
 python313/version:
@@ -266,29 +254,16 @@ python313/version:
 python314/%: export PYTHON_314_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON314),'python:3.14','$(SEMVER_PATTERN)')
 
 python314/install:
-	@ $(SELF) install/pyenv/$(PYTHON_314_VERSION)
-
-python314/install/uv:
 	@ $(SELF) install/uv-python/$(PYTHON_314_VERSION)
 
 python314/select:
-	@ $(SELF) select/pyenv/$(PYTHON_314_VERSION)
-
-python314/select/uv:
 	@ $(SELF) select/uv-python/$(PYTHON_314_VERSION)
 
-python314/venv/uv:
+python314/venv:
 	@ $(SELF) install/uv-venv/$(PYTHON_314_VERSION)
 
 python314/version:
 	@ echo $(PYTHON_314_VERSION)
-
-select/pyenv/%: | guard/program/pyenv
-	@ echo "[$@]: Selecting python $(@F)"
-	pyenv global $(@F)
-	python --version
-	@ python --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python $(@F)"; exit 1)
-	@ echo "[$@]: Completed successfully!"
 
 select/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Selecting python $(@F)"
@@ -303,14 +278,6 @@ select/uv-python/%: | guard/program/uv
 	@ python3 --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python3 $(@F)"; exit 1)
 	@ echo "[$@]: Completed successfully!"
 
-install/pyenv/%: | guard/program/pyenv
-	@ echo "[$@]: Installing python $(@F)"
-	pyenv install $(@F)
-	pyenv rehash
-	@ pyenv versions | grep $(@F) || (echo "[$@]: Failed to install python $(@F)"; exit 1)
-	pyenv versions | grep $(@F)
-	@ echo "[$@]: Completed successfully!"
-
 install/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Installing python $(@F)"
 	uv python install $(@F)
@@ -323,16 +290,6 @@ install/uv-venv/%: | guard/program/uv
 	"$(VENV_DIR)/bin/python" --version
 	"$(VENV_DIR)/bin/python" -m pip --version
 	@ "$(VENV_DIR)/bin/python" --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to create venv for python $(@F)"; exit 1)
-	@ echo "[$@]: Completed successfully!"
-
-# pyenv is not version-pinned by default, so recent python versions are always available
-# To get a specific version, export PYENV_VERSION
-pyenv/install: export PYENV_INSTALLER ?= https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
-pyenv/install: export PYENV_GIT_TAG = $(PYENV_VERSION)
-pyenv/install:
-	@ echo "[$@]: Installing $(@D)..."
-	$(CURL) $(PYENV_INSTALLER) | bash
-	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
 pytest/install:
@@ -673,18 +630,17 @@ lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/i
 lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
-install: rclone/install packer/install pyenv/install uv/install
+install: rclone/install packer/install
 
-## Installs tools for docker image using only uv-managed Python runtimes
-install/docker:
+## Installs tools for container image using only uv-managed Python runtimes
+install/build:
 	@ $(SELF) uv/install
-	@ $(SELF) python312/install/uv
-	@ $(SELF) python313/install/uv
-	@ $(SELF) python314/install/uv
-	@ $(SELF) python313/select/uv
-	@ $(SELF) python313/venv/uv
-	@ $(SELF) lint/install
-	@ $(SELF) rclone/install packer/install
+	@ $(SELF) python312/install
+	@ $(SELF) python313/install
+	@ $(SELF) python314/install
+	@ $(SELF) python313/select
+	@ $(SELF) python313/venv
+	@ $(SELF) install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
 
