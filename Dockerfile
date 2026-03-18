@@ -50,7 +50,9 @@ RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN \
 
 RUN python --version \
     && python3 --version \
-    && python3.12 --version
+    && python3.12 --version \
+    && python3.13 --version \
+    && python3.14 --version
 
 WORKDIR /${PROJECT_NAME}
 ENTRYPOINT ["entrypoint.sh"]

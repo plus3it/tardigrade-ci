@@ -27,9 +27,33 @@ updates:
       interval: weekly
     ignore:
       # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
-      - dependency-name: debian
+      - dependency-name: python
         update-types:
           # Ignore major/minor to pin python 3.12.x
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/.github/dependencies/python313"
+    schedule:
+      interval: weekly
+    ignore:
+      # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
+      - dependency-name: python
+        update-types:
+          # Ignore major/minor to pin python 3.13.x
+          - "version-update:semver-major"
+          - "version-update:semver-minor"
+    open-pull-requests-limit: 10
+  - package-ecosystem: docker
+    directory: "/.github/dependencies/python314"
+    schedule:
+      interval: weekly
+    ignore:
+      # See <https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file#ignore>
+      - dependency-name: python
+        update-types:
+          # Ignore major/minor to pin python 3.14.x
           - "version-update:semver-major"
           - "version-update:semver-minor"
     open-pull-requests-limit: 10

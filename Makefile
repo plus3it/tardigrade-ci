@@ -38,6 +38,8 @@ export TARDIGRADE_CI_PATH ?= $(PWD)
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
 export TARDIGRADE_CI_DOCKERFILE_PYTHON312 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python312/Dockerfile
+export TARDIGRADE_CI_DOCKERFILE_PYTHON313 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python313/Dockerfile
+export TARDIGRADE_CI_DOCKERFILE_PYTHON314 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python314/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
@@ -240,6 +242,46 @@ python312/venv/uv:
 
 python312/version:
 	@ echo $(PYTHON_312_VERSION)
+
+python313/%: export PYTHON_313_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON313),'python:3.13','$(SEMVER_PATTERN)')
+
+python313/install:
+	@ $(SELF) install/pyenv/$(PYTHON_313_VERSION)
+
+python313/install/uv:
+	@ $(SELF) install/uv-python/$(PYTHON_313_VERSION)
+
+python313/select:
+	@ $(SELF) select/pyenv/$(PYTHON_313_VERSION)
+
+python313/select/uv:
+	@ $(SELF) select/uv-python/$(PYTHON_313_VERSION)
+
+python313/venv/uv:
+	@ $(SELF) install/uv-venv/$(PYTHON_313_VERSION)
+
+python313/version:
+	@ echo $(PYTHON_313_VERSION)
+
+python314/%: export PYTHON_314_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON314),'python:3.14','$(SEMVER_PATTERN)')
+
+python314/install:
+	@ $(SELF) install/pyenv/$(PYTHON_314_VERSION)
+
+python314/install/uv:
+	@ $(SELF) install/uv-python/$(PYTHON_314_VERSION)
+
+python314/select:
+	@ $(SELF) select/pyenv/$(PYTHON_314_VERSION)
+
+python314/select/uv:
+	@ $(SELF) select/uv-python/$(PYTHON_314_VERSION)
+
+python314/venv/uv:
+	@ $(SELF) install/uv-venv/$(PYTHON_314_VERSION)
+
+python314/version:
+	@ echo $(PYTHON_314_VERSION)
 
 select/pyenv/%: | guard/program/pyenv
 	@ echo "[$@]: Selecting python $(@F)"
@@ -637,8 +679,10 @@ install: rclone/install packer/install pyenv/install uv/install
 install/docker:
 	@ $(SELF) uv/install
 	@ $(SELF) python312/install/uv
-	@ $(SELF) python312/select/uv
-	@ $(SELF) python312/venv/uv
+	@ $(SELF) python313/install/uv
+	@ $(SELF) python314/install/uv
+	@ $(SELF) python313/select/uv
+	@ $(SELF) python313/venv/uv
 	@ $(SELF) lint/install
 	@ $(SELF) rclone/install packer/install
 
