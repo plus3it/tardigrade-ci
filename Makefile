@@ -114,7 +114,7 @@ guard/program/%:
 	@ which $* > /dev/null || $(SELF) $*/install
 
 guard/python_pkg/%:
-	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(SELF) $*/install
+	@ $(PIP) freeze | grep $* > /dev/null || $(SELF) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
@@ -200,7 +200,7 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-install/pip/% install/pip_pkg_with_no_cli/% install/pip_requirements/% pytest/install: export PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
+install/pip/% install/pip_pkg_with_no_cli/% install/pip_requirements/% pytest/install guard/python_pkg/%: export PIP ?= $(if $(shell which uv 2> /dev/null),uv pip,$(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip))
 
 install/pip_requirements/%:
 	@ echo "[$@]: Installing pip requirements from $*..."
@@ -267,10 +267,7 @@ python314/version:
 
 select/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Selecting python $(@F)"
-	@ uv_python="$$(uv python find --managed-python --no-python-downloads $(@F) 2> /dev/null)"; \
-		[[ -n "$$uv_python" ]] || (echo "[$@]: Failed to find installed python $(@F)"; exit 1); \
-		ln -sf "$$uv_python" "$(BIN_DIR)/python"; \
-		ln -sf "$$uv_python" "$(BIN_DIR)/python3"
+	uv python install --preview --default $(@F)
 	uv python pin --global --no-project $(@F)
 	python --version
 	python3 --version
