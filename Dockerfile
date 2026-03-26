@@ -2,13 +2,11 @@
 
 FROM golang:1.26-bookworm AS golang
 
-FROM python:3.13.12-bookworm
+FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a
 
 ARG PROJECT_NAME=tardigrade-ci
 
 ENV USER=${PROJECT_NAME}
-ENV USER_UID=1000
-ENV USER_GID=${USER_UID}
 
 # Things to do as root
 USER root
@@ -16,63 +14,46 @@ USER root
 RUN apt-get update -y && apt-get install -y \
     xz-utils \
     curl \
+    git \
     jq \
     unzip \
     make \
     vim \
-    build-essential \
-    libssl-dev \
-    zlib1g-dev \
-    libbz2-dev \
-    libreadline-dev \
-    libsqlite3-dev \
-    llvm \
-    libncursesw5-dev \
-    tk-dev \
-    libxml2-dev \
-    libxmlsec1-dev \
-    libffi-dev \
-    liblzma-dev \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --gid ${USER_GID} ${USER} \
-    && adduser --disabled-password --gecos '' --uid ${USER_UID} --gid ${USER_GID} ${USER}
+RUN addgroup --gid 1000 ${USER} \
+    && adduser --disabled-password --gecos '' --uid 1000 --gid 1000 ${USER}
 
 COPY --from=golang /usr/local/go/ /usr/local/go/
 COPY --chown=${USER}:${USER} --from=golang /go/ /go/
 COPY --chown=${USER}:${USER} . /${PROJECT_NAME}
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
-    make -C /${PROJECT_NAME} fixuid/install \
-    && cp /root/bin/fixuid /usr/local/bin/fixuid \
-    && chown root:root /usr/local/bin/fixuid \
-    && chmod 4755 /usr/local/bin/fixuid\
-    && mkdir -p /etc/fixuid \
-    && printf "user: $USER\ngroup: $USER\n" > /etc/fixuid/config.yml
-
 # Things to do as $USER
 USER ${USER}
 
+ENV PIP_NO_CACHE_DIR=1
+ENV UV_NO_CACHE=1
+
 ENV HOME="/home/${USER}"
-ENV PYENV_ROOT=${HOME}/.pyenv
-ENV PATH="$PYENV_ROOT/shims:$PYENV_ROOT/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
+ENV VIRTUAL_ENV=${HOME}/.venv
+ENV PATH="${VIRTUAL_ENV}/bin:${HOME}/.local/bin:${HOME}/bin:/go/bin:/usr/local/go/bin:${PATH}"
+
 ENV GOPATH=/go
 ENV TF_PLUGIN_CACHE_DIR=${HOME}/.terraform.d/plugin-cache
 
 RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
-    make -C /${PROJECT_NAME} install
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,mode=0400,uid=1000,gid=1000 \
+    GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
+    make -C /${PROJECT_NAME} install/build
 
-# Install python versions
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,env=GITHUB_ACCESS_TOKEN \
-    make -C /${PROJECT_NAME} python312/install
-RUN pyenv global system $(pyenv versions | grep 3.12)
 RUN python --version \
     && python3 --version \
-    && python3.12 --version
+    && python3.12 --version \
+    && python3.13 --version \
+    && python3.14 --version
 
 WORKDIR /${PROJECT_NAME}
 ENTRYPOINT ["entrypoint.sh"]

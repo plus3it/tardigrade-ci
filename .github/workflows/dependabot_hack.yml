@@ -22,7 +22,7 @@ jobs:
     steps:
       # Keep these sorted alphabetically by <user>/<repo>, separated by an empty line
 
-      - uses: boxboat/fixuid@v0.6.0
+      - uses: astral-sh/uv@0.10.10
 
       - uses: gruntwork-io/terragrunt@5.14.1
 

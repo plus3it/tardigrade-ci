@@ -4,6 +4,7 @@ export OS ?= $(shell uname -s | tr '[:upper:]' '[:lower:'])
 export CURL ?= curl --fail -sSL
 export XARGS ?= xargs -I {}
 export BIN_DIR ?= ${HOME}/bin
+export VENV_DIR ?= ${HOME}/.venv
 export TMP ?= /tmp
 export FIND_EXCLUDES ?= ':!:*/.terraform/*' ':!:*/.terragrunt-cache/*'
 export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
@@ -12,7 +13,7 @@ export GIT_LS_FILES ?= git ls-files --cached --others --exclude-standard
 export PYTHONUSERBASE ?= $(HOME)/.local
 
 ifdef VIRTUAL_ENV
-PATH := $(BIN_DIR):$(VIRTUAL_ENV)/bin:${PATH}
+PATH := $(VIRTUAL_ENV)/bin:$(BIN_DIR):${PATH}
 else
 PATH := $(BIN_DIR):$(PYTHONUSERBASE)/bin:${PATH}
 endif
@@ -37,6 +38,8 @@ export TARDIGRADE_CI_PATH ?= $(PWD)
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
 export TARDIGRADE_CI_DOCKERFILE_PYTHON312 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python312/Dockerfile
+export TARDIGRADE_CI_DOCKERFILE_PYTHON313 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python313/Dockerfile
+export TARDIGRADE_CI_DOCKERFILE_PYTHON314 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python314/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
@@ -111,7 +114,7 @@ guard/program/%:
 	@ which $* > /dev/null || $(SELF) $*/install
 
 guard/python_pkg/%:
-	@ $(PYTHON) -m pip freeze | grep $* > /dev/null || $(SELF) $*/install
+	@ $(PIP) freeze | grep $* > /dev/null || $(SELF) $*/install
 
 $(BIN_DIR):
 	@ echo "[make]: Creating directory '$@'..."
@@ -137,9 +140,9 @@ zip/install:
 packer/install: export PACKER_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/packer','$(SEMVER_PATTERN)')
 packer/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D) $(PACKER_VERSION)..."
-	$(call download_hashicorp_release,$(@D).zip,$(@D),$(PACKER_VERSION))
-	unzip $(@D).zip && rm -f $(@D).zip && chmod +x $(@D)
-	mv $(@D) "$(BIN_DIR)"
+	$(call download_hashicorp_release,$(TMP)/$(@D).zip,$(@D),$(PACKER_VERSION))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip && rm -f $(TMP)/$(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
+	mv $(TMP)/$(@D) "$(BIN_DIR)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
@@ -148,10 +151,10 @@ packer/install: | $(BIN_DIR) guard/program/jq
 rclone/install: RCLONE_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'rclone/rclone','$(SEMVER_PATTERN)')
 rclone/install: | $(BIN_DIR) guard/program/unzip
 	@ echo "[$@]: Installing $(@D) $(RCLONE_VERSION) ..."
-	$(call download_github_release,$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
-	unzip $(@D).zip
-	mv $(@D)-*/$(@D) $(BIN_DIR)
-	rm -rf $(@D)*
+	$(call download_github_release,$(TMP)/$(@D).zip,$(@D),$(@D),$(RCLONE_VERSION),.name | endswith("$(OS)-$(ARCH).zip"))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip
+	mv $(TMP)/$(@D)-*/$(@D) $(BIN_DIR)
+	rm -rf $(TMP)/$(@D).zip $(TMP)/$(@D)-*
 	chmod +x $(BIN_DIR)/$(@D)
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
@@ -159,8 +162,8 @@ rclone/install: | $(BIN_DIR) guard/program/unzip
 terraform/install: export TERRAFORM_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'hashicorp/terraform','$(SEMVER_PATTERN)')
 terraform/install: | $(BIN_DIR) guard/program/jq
 	@ echo "[$@]: Installing $(@D)..."
-	$(call download_hashicorp_release,$(@D).zip,$(@D),$(TERRAFORM_VERSION))
-	unzip -d $(TMP) $(@D).zip && rm -f $(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
+	$(call download_hashicorp_release,$(TMP)/$(@D).zip,$(@D),$(TERRAFORM_VERSION))
+	unzip -o -d $(TMP) $(TMP)/$(@D).zip && rm -f $(TMP)/$(@D).zip $(TMP)/LICENSE.txt && chmod +x $(TMP)/$(@D)
 	mv $(TMP)/$(@D) "$(BIN_DIR)"
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
@@ -197,7 +200,7 @@ ec/install:
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-install/pip/% install/pip_pkg_with_no_cli/% install/pip_requirements/% pytest/install: export PIP ?= $(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip)
+install/pip/% install/pip_pkg_with_no_cli/% install/pip_requirements/% pytest/install guard/python_pkg/%: export PIP ?= $(if $(shell which uv 2> /dev/null),uv pip,$(if $(shell pyenv which $(PYTHON) 2> /dev/null),pip,$(PYTHON) -m pip))
 
 install/pip_requirements/%:
 	@ echo "[$@]: Installing pip requirements from $*..."
@@ -216,14 +219,6 @@ install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	$(PIP) install $(PYPI_PKG_NAME)
 	@ echo "[$@]: Completed successfully!"
 
-fixuid/install: export FIXUID_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'boxboat/fixuid','$(SEMVER_PATTERN)')
-fixuid/install: QUERY = .name | endswith("$(OS)-$(ARCH).tar.gz")
-fixuid/install: | $(BIN_DIR) guard/program/jq
-	@ echo "[$@]: Installing $(@D)..."
-	$(call stream_github_release,boxboat,$(@D),$(FIXUID_VERSION),$(QUERY)) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored $(@D)
-	which $(@D)
-	@ echo "[$@]: Completed successfully!"
-
 black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
 black/install:
 	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
@@ -231,37 +226,67 @@ black/install:
 python312/%: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 
 python312/install:
-	@ $(SELF) install/pyenv/$(PYTHON_312_VERSION)
+	@ $(SELF) install/uv-python/$(PYTHON_312_VERSION)
 
 python312/select:
-	@ $(SELF) select/pyenv/$(PYTHON_312_VERSION)
+	@ $(SELF) select/uv-python/$(PYTHON_312_VERSION)
+
+python312/venv:
+	@ $(SELF) install/uv-venv/$(PYTHON_312_VERSION)
 
 python312/version:
 	@ echo $(PYTHON_312_VERSION)
 
-select/pyenv/%: | guard/program/pyenv
+python313/%: export PYTHON_313_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON313),'python:3.13','$(SEMVER_PATTERN)')
+
+python313/install:
+	@ $(SELF) install/uv-python/$(PYTHON_313_VERSION)
+
+python313/select:
+	@ $(SELF) select/uv-python/$(PYTHON_313_VERSION)
+
+python313/venv:
+	@ $(SELF) install/uv-venv/$(PYTHON_313_VERSION)
+
+python313/version:
+	@ echo $(PYTHON_313_VERSION)
+
+python314/%: export PYTHON_314_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON314),'python:3.14','$(SEMVER_PATTERN)')
+
+python314/install:
+	@ $(SELF) install/uv-python/$(PYTHON_314_VERSION)
+
+python314/select:
+	@ $(SELF) select/uv-python/$(PYTHON_314_VERSION)
+
+python314/venv:
+	@ $(SELF) install/uv-venv/$(PYTHON_314_VERSION)
+
+python314/version:
+	@ echo $(PYTHON_314_VERSION)
+
+select/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Selecting python $(@F)"
-	pyenv global $(@F)
+	uv python install --preview --default $(@F)
+	uv python pin --global --no-project $(@F)
 	python --version
+	python3 --version
 	@ python --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python $(@F)"; exit 1)
+	@ python3 --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to select python3 $(@F)"; exit 1)
 	@ echo "[$@]: Completed successfully!"
 
-install/pyenv/%: | guard/program/pyenv
+install/uv-python/%: | guard/program/uv
 	@ echo "[$@]: Installing python $(@F)"
-	pyenv install $(@F)
-	pyenv rehash
-	@ pyenv versions | grep $(@F) || (echo "[$@]: Failed to install python $(@F)"; exit 1)
-	pyenv versions | grep $(@F)
+	uv python install $(@F)
+	uv python find --managed-python --no-python-downloads $(@F)
 	@ echo "[$@]: Completed successfully!"
 
-# pyenv is not version-pinned by default, so recent python versions are always available
-# To get a specific version, export PYENV_VERSION
-pyenv/install: export PYENV_INSTALLER ?= https://raw.githubusercontent.com/pyenv/pyenv-installer/master/bin/pyenv-installer
-pyenv/install: export PYENV_GIT_TAG = $(PYENV_VERSION)
-pyenv/install:
-	@ echo "[$@]: Installing $(@D)..."
-	$(CURL) $(PYENV_INSTALLER) | bash
-	$(@D) --version
+install/uv-venv/%: | guard/program/uv
+	@ echo "[$@]: Creating uv venv using python $(@F) at $(VENV_DIR)"
+	uv venv --python $(@F) --seed "$(VENV_DIR)"
+	"$(VENV_DIR)/bin/python" --version
+	"$(VENV_DIR)/bin/python" -m pip --version
+	@ "$(VENV_DIR)/bin/python" --version | grep $(@F) > /dev/null || (echo "[$@]: Failed to create venv for python $(@F)"; exit 1)
 	@ echo "[$@]: Completed successfully!"
 
 pytest/install:
@@ -290,6 +315,20 @@ cfn-lint/install:
 yq/install: export YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'mikefarah/yq','$(SEMVER_PATTERN)')
 yq/install:
 	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
+
+uv/%: export UV_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'astral-sh/uv@[0-9]','$(SEMVER_PATTERN)')
+uv/version:
+	@ echo $(UV_VERSION)
+
+uv/install: export UV_TAG ?= tags/$(UV_VERSION)
+uv/install: export UV_ARCH ?= $(if $(filter amd64,$(ARCH)),x86_64,$(if $(filter arm64,$(ARCH)),aarch64,$(ARCH)))
+uv/install: export UV_TARGET_OS ?= $(if $(filter linux,$(OS)),unknown-linux-gnu,$(if $(filter darwin,$(OS)),apple-darwin,$(error Unsupported OS for uv/install: $(OS))))
+uv/install: export UV_ARCHIVE ?= uv-$(UV_ARCH)-$(UV_TARGET_OS).tar.gz
+uv/install: | $(BIN_DIR) guard/program/curl guard/program/jq
+	@ echo "[$@]: Installing $(@D) $(UV_VERSION)..."
+	$(call stream_github_release,astral-sh,$(@D),$(UV_TAG),.name | endswith("$(UV_ARCHIVE)")) | tar -C "$(BIN_DIR)" -xzv --wildcards --no-anchored --strip-components=1 $(@D) uvx
+	$(@D) --version
+	@ echo "[$@]: Completed successfully!"
 
 bump2version/install: export BUMPVERSION_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'bump2version==','$(SEMVER_PATTERN)')
 bump2version/install:
@@ -482,17 +521,16 @@ docs/lint/%: | terraform/lint guard/program/terraform-docs
 docker/%: export IMAGE_NAME ?= $(shell basename $(PWD)):latest
 
 ## Builds the tardigrade-ci docker image
-docker/build: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
 docker/build: export TARDIGRADE_CI_DOCKERFILE ?= Dockerfile
-docker/build: export DOCKER_BUILDKIT ?= $(shell [ -z $(TRAVIS) ] && echo "DOCKER_BUILDKIT=1" || echo "DOCKER_BUILDKIT=0";)
+docker/build: export DOCKER_BUILDKIT ?= 1
 docker/build:
 	@echo "[$@]: building docker image named: $(IMAGE_NAME)"
-	$(DOCKER_BUILDKIT) docker build -t $(IMAGE_NAME) \
+	_f=$$(mktemp); \
+	trap 'rm -f "$$_f"' EXIT; \
+	printf '%s' "$${GITHUB_ACCESS_TOKEN:-}" > "$$_f"; \
+	docker build -t $(IMAGE_NAME) \
 		--build-arg PROJECT_NAME=$(TARDIGRADE_CI_PROJECT) \
-		--build-arg PYTHON_312_VERSION=$(PYTHON_312_VERSION) \
-		--build-arg USER_UID=$$(id -u) \
-		--build-arg USER_GID=$$(id -g) \
-		$(if $(GITHUB_ACCESS_TOKEN),--secret id=GITHUB_ACCESS_TOKEN$(,)env=GITHUB_ACCESS_TOKEN,) \
+		--secret id=GITHUB_ACCESS_TOKEN$(,)src="$$_f" \
 		-f $(TARDIGRADE_CI_DOCKERFILE) .
 	@echo "[$@]: Docker image build complete"
 
@@ -505,17 +543,20 @@ docker/run: export DOCKER_RUN_FLAGS ?= --rm
 docker/run: export AWS_DEFAULT_REGION ?= us-east-1
 docker/run: export target ?= help
 docker/run: export entrypoint ?= entrypoint.sh
+docker/run: export DOCKER_USERNS ?=
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 docker/run: docker/build
 	@echo "[$@]: Running docker image"
+	userns=""; \
+	if docker --version 2>/dev/null | grep -qi podman; then userns="--userns=keep-id"; elif [ -n "$(DOCKER_USERNS)" ]; then userns="--userns=$(DOCKER_USERNS)"; fi; \
 	docker run $(DOCKER_RUN_FLAGS) \
-	--user "$$(id -u):$$(id -g)" \
+	$$userns \
 	-v "$(PWD)/:/workdir/" \
 	-v "$(TARDIGRADE_CI_PATH)/:/$(TARDIGRADE_CI_PROJECT)/" \
 	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
-	-e GITHUB_ACCESS_TOKEN=$(GITHUB_ACCESS_TOKEN) \
+	-e GITHUB_ACCESS_TOKEN=$${GITHUB_ACCESS_TOKEN:-} \
 	-w /workdir/ \
 	--entrypoint $(entrypoint) \
 	$(IMAGE_NAME) $(target)
@@ -564,7 +605,7 @@ test: terraform/pytest
 bats/install: export BATS_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_TOOLS),'bats/bats','$(SEMVER_PATTERN)')
 bats/install:
 	$(CURL) $(GITHUB_AUTHORIZATION) $(shell $(CURL) $(GITHUB_AUTHORIZATION) https://api.github.com/repos/bats-core/bats-core/releases/$(BATS_VERSION) | jq -r '.tarball_url') | tar -C $(TMP) -xzvf -
-	$(TMP)/bats-core-*/install.sh ~
+	$(TMP)/bats-core-*/install.sh $(dir $(BIN_DIR))
 	bats --version
 	rm -rf $(TMP)/bats-core-*
 	@ echo "[$@]: Completed successfully!"
@@ -586,7 +627,17 @@ lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/i
 lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
-install: rclone/install packer/install pyenv/install
+install: rclone/install packer/install
+
+## Installs tools for container image using only uv-managed Python runtimes
+install/build:
+	@ $(SELF) uv/install
+	@ $(SELF) python312/install
+	@ $(SELF) python313/install
+	@ $(SELF) python314/install
+	@ $(SELF) python313/select
+	@ $(SELF) python313/venv
+	@ $(SELF) install
 
 lint: project/validate terraform/lint sh/lint json/lint docs/lint python/lint ec/lint cfn/lint hcl/lint yaml/lint
 
