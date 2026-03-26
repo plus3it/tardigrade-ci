@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.28.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.0)
+
+**Released**: 2026.03.30
+
+**Summary**:
+
+* Uses uv to provide python versions
+* Removes fixuid from entrypoint
+* Relies on docker userns-remap to manage permissions for bindmount (or use podman)
+* Removes pyenv and its dev dependencies, reducing image size significantly
+* Updates tool versions:
+    * black 26.3.1
+    * cfn-lint 1.47.1
+    * localstack 4.14.0
+    * moto 5.1.22
+    * packer 1.15.1
+    * pylint 4.0.5
+    * python 3.12.13
+    * python 3.13.12 (global default)
+    * python 3.14.3
+    * rclone 1.73.3
+    * terragrunt 0.99.5
+    * uv 0.11.1
+    * yq 4.52.5
+
 ### [0.28.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.7)
 
 **Released**: 2026.02.24
