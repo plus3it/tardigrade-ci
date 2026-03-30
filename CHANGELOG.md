@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     * python 3.14.3
     * rclone 1.73.3
     * terragrunt 0.99.5
-    * uv 0.11.1
+    * uv 0.11.2
     * yq 4.52.5
 
 ### [0.28.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.28.7)
