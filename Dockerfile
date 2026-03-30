@@ -45,6 +45,9 @@ ENV TF_PLUGIN_CACHE_DIR=${HOME}/.terraform.d/plugin-cache
 
 RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 
+RUN git config --global --add safe.directory /workdir \
+    && git config --global --add safe.directory /${PROJECT_NAME}
+
 RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,mode=0400,uid=1000,gid=1000 \
     GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
     make -C /${PROJECT_NAME} install/build
