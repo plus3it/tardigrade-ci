@@ -626,7 +626,7 @@ lint/install: pytest/install terraform/install terraform-docs/install cfn-lint/i
 lint/install: ec/install shellcheck/install jq/install yamllint/install
 
 install: lint/install
-install: rclone/install packer/install
+install: rclone/install packer/install terragrunt/install
 
 ## Installs tools for container image using only uv-managed Python runtimes
 install/build:

@@ -24,6 +24,6 @@ jobs:
 
       - uses: astral-sh/uv@0.11.2
 
-      - uses: gruntwork-io/terragrunt@5.14.1
+      - uses: gruntwork-io/terragrunt@0.99.5
 
       - uses: stedolan/jq@jq-1.8.1
