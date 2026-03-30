@@ -19,3 +19,4 @@ jobs:
       release-token: ${{ secrets.GH_RELEASES_TOKEN }}
     with:
       mockstacktest-enable: false
+      tardigradelint-enable: false
