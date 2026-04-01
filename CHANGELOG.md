@@ -4,7 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### [0.28.7](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.0)
+### [0.29.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.1)
+
+**Released**: 2026.04.01
+
+**Summary**:
+
+* Pulls or builds image if not present in docker local storage
+
+### [0.29.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.0)
 
 **Released**: 2026.03.30
 
