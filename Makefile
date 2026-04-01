@@ -545,7 +545,15 @@ docker/run: export target ?= help
 docker/run: export entrypoint ?= entrypoint.sh
 docker/run: export DOCKER_USERNS ?=
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
-	@echo "[$@]: Running docker image"
+	@ echo "[$@]: Checking the image '$(IMAGE_NAME)' exists..."
+	@ if docker image inspect $(IMAGE_NAME) > /dev/null 2>&1; \
+	then \
+		echo "[$@]: Using image found in local storage '$(IMAGE_NAME)' -- To rebuild image, run 'make docker/build'"; \
+	else \
+		echo "[$@]: Image '$(IMAGE_NAME)' not found, trying to pull or build..."; \
+		docker pull $(IMAGE_NAME) > /dev/null 2>&1 || $(SELF) docker/build; \
+	fi
+	@ echo "[$@]: Running target "$(target)"..."
 	userns=""; \
 	if docker --version 2>/dev/null | grep -qi podman; then userns="--userns=keep-id"; elif [ -n "$(DOCKER_USERNS)" ]; then userns="--userns=$(DOCKER_USERNS)"; fi; \
 	docker run $(DOCKER_RUN_FLAGS) \
