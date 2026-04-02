@@ -7,6 +7,8 @@ FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0
 ARG PROJECT_NAME=tardigrade-ci
 
 ENV USER=${PROJECT_NAME}
+ENV USER_UID=1001
+ENV USER_GID=${USER_UID}
 
 # Things to do as root
 USER root
@@ -22,8 +24,8 @@ RUN apt-get update -y && apt-get install -y \
     && touch /.dockerenv \
     && rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --gid 1000 ${USER} \
-    && adduser --disabled-password --gecos '' --uid 1000 --gid 1000 ${USER}
+RUN addgroup --gid ${USER_GID} ${USER} \
+    && adduser --disabled-password --gecos '' --uid ${USER_UID} --gid ${USER_GID} ${USER}
 
 COPY --from=golang /usr/local/go/ /usr/local/go/
 COPY --chown=${USER}:${USER} --from=golang /go/ /go/
@@ -48,7 +50,7 @@ RUN mkdir -p "$TF_PLUGIN_CACHE_DIR"
 RUN git config --global --add safe.directory /workdir \
     && git config --global --add safe.directory /${PROJECT_NAME}
 
-RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,mode=0400,uid=1000,gid=1000 \
+RUN --mount=type=secret,id=GITHUB_ACCESS_TOKEN,mode=0400,uid=${USER_UID},gid=${USER_GID} \
     GITHUB_ACCESS_TOKEN="$(cat /run/secrets/GITHUB_ACCESS_TOKEN)" \
     make -C /${PROJECT_NAME} install/build
 

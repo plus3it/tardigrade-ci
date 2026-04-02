@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.29.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.2)
+
+**Released**: 2026.04.03
+
+**Summary**:
+
+* Uses the same UID as the GHA runner, which fixes permissions issues when running
+  in GitHub Actions. Ideally, GHA would use userns-remap, but it does not, and
+  reconfiguring it for every project and every action is not viable.
+
 ### [0.29.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.1)
 
 **Released**: 2026.04.01
