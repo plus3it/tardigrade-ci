@@ -22,7 +22,7 @@ jobs:
     steps:
       # Keep these sorted alphabetically by <user>/<repo>, separated by an empty line
 
-      - uses: astral-sh/uv@0.11.2
+      - uses: astral-sh/uv@0.11.3
 
       - uses: gruntwork-io/terragrunt@0.99.5
 
