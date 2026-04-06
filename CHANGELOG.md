@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.29.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.3)
+
+**Released**: 2026.04.07
+
+**Summary**:
+
+* Reads tool versions from mise.toml instead of dependabot hack
+* Updates tool versions:
+    * cfn-lint 1.48.1
+    * tftest 1.8.7
+    * uv 0.11.3
+
 ### [0.29.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.2)
 
 **Released**: 2026.04.03

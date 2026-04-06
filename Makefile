@@ -41,6 +41,7 @@ export TARDIGRADE_CI_DOCKERFILE_PYTHON312 ?= $(TARDIGRADE_CI_PATH)/.github/depen
 export TARDIGRADE_CI_DOCKERFILE_PYTHON313 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python313/Dockerfile
 export TARDIGRADE_CI_DOCKERFILE_PYTHON314 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python314/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
+export TARDIGRADE_CI_MISE_TOOLS ?= $(TARDIGRADE_CI_PATH)/mise.toml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
 export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
 
@@ -168,7 +169,7 @@ terraform/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-terragrunt/install: export TERRAGRUNT_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'gruntwork-io/terragrunt','$(SEMVER_PATTERN)')
+terragrunt/install: export TERRAGRUNT_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE_CI_MISE_TOOLS),'terragrunt = ','$(SEMVER_PATTERN)')
 terragrunt/install: | $(BIN_DIR) guard/program/jq
 	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=gruntwork-io REPO=$(@D) VERSION=$(TERRAGRUNT_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
@@ -179,7 +180,7 @@ terraform-docs/install: | $(BIN_DIR) guard/program/jq
 	$(@D) --version
 	@ echo "[$@]: Completed successfully!"
 
-jq/install: export JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'stedolan/jq','$(SEMVER_PATTERN)')
+jq/install: export JQ_VERSION ?= tags/jq-$(call match_pattern_in_file,$(TARDIGRADE_CI_MISE_TOOLS),'jq = ','$(SEMVER_PATTERN)')
 jq/install: | $(BIN_DIR)
 	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=stedolan REPO=$(@D) VERSION=$(JQ_VERSION) QUERY='.name | endswith("$(OS)64")'
 
@@ -316,7 +317,7 @@ yq/install: export YQ_VERSION ?= tags/v$(call match_pattern_in_file,$(TARDIGRADE
 yq/install:
 	@ $(SELF) install/gh-release/$(@D) FILENAME="$(BIN_DIR)/$(@D)" OWNER=mikefarah REPO=$(@D) VERSION=$(YQ_VERSION) QUERY='.name | endswith("$(OS)_$(ARCH)")'
 
-uv/%: export UV_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_GITHUB_TOOLS),'astral-sh/uv@[0-9]','$(SEMVER_PATTERN)')
+uv/%: export UV_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_MISE_TOOLS),'uv = ','$(SEMVER_PATTERN)')
 uv/version:
 	@ echo $(UV_VERSION)
 

@@ -1,0 +1,4 @@
+[tools]
+jq = "1.8.1"
+terragrunt = "1.0.0"
+uv = "0.11.3"
