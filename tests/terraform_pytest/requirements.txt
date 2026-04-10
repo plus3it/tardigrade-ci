@@ -5,6 +5,6 @@
 
 pytest==9.0.3
 
-python-hcl2==7.3.1
+python-hcl2==8.1.1
 
 tftest==1.8.7
