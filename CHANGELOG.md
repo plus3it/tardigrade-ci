@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.29.4](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.4)
+
+**Released**: 2026.04.15
+
+**Summary**:
+
+* Uses metadata embedded in uv release to get latest available python versions
+* Updates tool versions:
+    * pytest 9.0.3
+    * python-hcl2 8.1.1
+    * rclone 1.73.4
+
 ### [0.29.3](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.3)
 
 **Released**: 2026.04.07

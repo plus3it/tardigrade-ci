@@ -37,9 +37,6 @@ export PWD := $(shell pwd)
 export TARDIGRADE_CI_PATH ?= $(PWD)
 export TARDIGRADE_CI_PROJECT ?= tardigrade-ci
 export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
-export TARDIGRADE_CI_DOCKERFILE_PYTHON312 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python312/Dockerfile
-export TARDIGRADE_CI_DOCKERFILE_PYTHON313 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python313/Dockerfile
-export TARDIGRADE_CI_DOCKERFILE_PYTHON314 ?= $(TARDIGRADE_CI_PATH)/.github/dependencies/python314/Dockerfile
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_MISE_TOOLS ?= $(TARDIGRADE_CI_PATH)/mise.toml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
@@ -224,7 +221,8 @@ black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE
 black/install:
 	@ $(SELF) install/pip/$(@D) PYPI_PKG_NAME='$(@D)==$(BLACK_VERSION)'
 
-python312/%: export PYTHON_312_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON312),'python:3.12','$(SEMVER_PATTERN)')
+python312/%: | guard/program/uv
+python312/%: export PYTHON_312_VERSION ?= $(shell uv python list 3.12 --only-downloads --output-format json | jq -r '.[0].version')
 
 python312/install:
 	@ $(SELF) install/uv-python/$(PYTHON_312_VERSION)
@@ -238,7 +236,8 @@ python312/venv:
 python312/version:
 	@ echo $(PYTHON_312_VERSION)
 
-python313/%: export PYTHON_313_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON313),'python:3.13','$(SEMVER_PATTERN)')
+python313/%: | guard/program/uv
+python313/%: export PYTHON_313_VERSION ?= $(shell uv python list 3.13 --only-downloads --output-format json | jq -r '.[0].version')
 
 python313/install:
 	@ $(SELF) install/uv-python/$(PYTHON_313_VERSION)
@@ -252,7 +251,8 @@ python313/venv:
 python313/version:
 	@ echo $(PYTHON_313_VERSION)
 
-python314/%: export PYTHON_314_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_DOCKERFILE_PYTHON314),'python:3.14','$(SEMVER_PATTERN)')
+python314/%: | guard/program/uv
+python314/%: export PYTHON_314_VERSION ?= $(shell uv python list 3.14 --only-downloads --output-format json | jq -r '.[0].version')
 
 python314/install:
 	@ $(SELF) install/uv-python/$(PYTHON_314_VERSION)
