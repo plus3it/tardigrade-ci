@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.29.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.5)
+
+**Released**: 2026.05.11
+
+**Summary**:
+
+* Merge mock aws provider config into all discovered aws provider
+* Map podman userns to container user 1001
+* Updates tool versions:
+    * cfn-lint 1.50.1
+    * moto 5.2.0
+    * packer 1.15.3
+    * python-hcl2 8.1.2
+    * rclone 1.74.0
+    * terraform 1.15.2
+    * yq 4.53.2
+
+
 ### [0.29.4](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.4)
 
 **Released**: 2026.04.15

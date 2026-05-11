@@ -64,16 +64,12 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
             for tf_object in tf_objects:
                 aws_providers.extend(tf_aws_providers(tf_object))
 
-            # For all aws provider blocks that contain an "alias" attribute,
-            # add a mock aws provider config with that alias
-            for provider in aws_providers:
-                if "alias" in provider:
-                    mock_provider["provider"]["aws"].append(
-                        {
-                            **mock_aws_provider,
-                            **{"alias": provider["alias"]},
-                        }
-                    )
+            # Merge mock config into each discovered aws provider block so that
+            # any attributes present in the original (e.g. alias, region) are
+            # preserved while mock settings take precedence.
+            mock_provider["provider"]["aws"].extend(
+                {**provider, **mock_aws_provider} for provider in aws_providers
+            )
 
             tf_provider_path = Path(current_dir / MOCKSTACK_TF_PROVIDER_OVERRIDE)
             extra_files.append(
