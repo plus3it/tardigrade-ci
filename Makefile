@@ -545,6 +545,7 @@ docker/run: export AWS_DEFAULT_REGION ?= us-east-1
 docker/run: export target ?= help
 docker/run: export entrypoint ?= entrypoint.sh
 docker/run: export DOCKER_USERNS ?=
+docker/run: export PODMAN_USERNS ?= keep-id:uid=1001,gid=1001
 docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 	@ echo "[$@]: Checking the image '$(IMAGE_NAME)' exists..."
 	@ if docker image inspect $(IMAGE_NAME) > /dev/null 2>&1; \
@@ -556,7 +557,7 @@ docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 	fi
 	@ echo "[$@]: Running target "$(target)"..."
 	userns=""; \
-	if docker --version 2>/dev/null | grep -qi podman; then userns="--userns=keep-id"; elif [ -n "$(DOCKER_USERNS)" ]; then userns="--userns=$(DOCKER_USERNS)"; fi; \
+	if docker --version 2>/dev/null | grep -qi podman; then userns="--userns=$(PODMAN_USERNS)"; elif [ -n "$(DOCKER_USERNS)" ]; then userns="--userns=$(DOCKER_USERNS)"; fi; \
 	docker run $(DOCKER_RUN_FLAGS) \
 	$$userns \
 	-v "$(PWD)/:/workdir/" \
