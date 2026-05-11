@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.29.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.6)
+
+**Released**: 2026.05.12
+
+**Summary**:
+
+* Adjusts hcl2 usage to restore map keys for indexing and lookups
+
 ### [0.29.5](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.5)
 
 **Released**: 2026.05.11
