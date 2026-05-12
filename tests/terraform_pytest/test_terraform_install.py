@@ -27,7 +27,14 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
         tf_objects = []
         for file in glob.glob(f"{tf_module}/*.tf"):
             with open(file, "r", encoding="utf8") as handle:
-                tf_objects.append(hcl2.load(handle))
+                tf_objects.append(
+                    hcl2.load(
+                        handle,
+                        serialization_options=hcl2.SerializationOptions(
+                            strip_string_quotes=True
+                        ),
+                    )
+                )
         return tf_objects
 
     def tf_aws_providers(tf_object):
@@ -40,7 +47,6 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
 
     def write_file(path, content):
         """Write content to path."""
-        path = tmp_path / MOCKSTACK_TF_PROVIDER_OVERRIDE
         path.write_text(content)
         return str(path)
 
@@ -51,8 +57,6 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
 
         # Create an override file that contain endpoints for all the services in use
         if is_mock:
-            current_dir = Path(__file__).resolve().parent
-
             # Get the terraform objects from the test module
             tf_objects = parse_tf_module(tf_dir / tf_module)
 
@@ -71,7 +75,7 @@ def tf_test_object(is_mock, tf_dir, tmp_path, aws_provider_override):
                 {**provider, **mock_aws_provider} for provider in aws_providers
             )
 
-            tf_provider_path = Path(current_dir / MOCKSTACK_TF_PROVIDER_OVERRIDE)
+            tf_provider_path = Path(tmp_path / MOCKSTACK_TF_PROVIDER_OVERRIDE)
             extra_files.append(
                 write_file(tf_provider_path, json.dumps(mock_provider, indent=4))
             )
