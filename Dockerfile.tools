@@ -17,7 +17,7 @@ FROM mikefarah/yq:4.53.3 as yq
 
 FROM motoserver/moto:5.2.2 as moto
 
-FROM mstruebing/editorconfig-checker:v3.7.0 as ec
+FROM mstruebing/editorconfig-checker:v3.8.0 as ec
 
 FROM quay.io/terraform-docs/terraform-docs:0.20.0 as tfdocs
 
