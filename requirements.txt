@@ -11,7 +11,7 @@ cfn-lint==1.54.0
 
 pydocstyle==6.3.0
 
-pylint==4.0.6
+pylint==4.0.7
 
 pylint-pytest==1.1.8
 
