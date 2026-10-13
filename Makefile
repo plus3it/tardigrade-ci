@@ -40,7 +40,7 @@ export TARDIGRADE_CI_DOCKERFILE_TOOLS ?= $(TARDIGRADE_CI_PATH)/Dockerfile.tools
 export TARDIGRADE_CI_GITHUB_TOOLS ?= $(TARDIGRADE_CI_PATH)/.github/workflows/dependabot_hack.yml
 export TARDIGRADE_CI_MISE_TOOLS ?= $(TARDIGRADE_CI_PATH)/mise.toml
 export TARDIGRADE_CI_PYTHON_TOOLS ?= $(TARDIGRADE_CI_PATH)/requirements.txt
-export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}
+export SEMVER_PATTERN ?= [0-9]+(\.[0-9]+){1,3}(\.post[0-9]+)?
 
 export TARDIGRADE_CI_AUTO_INIT = false
 
