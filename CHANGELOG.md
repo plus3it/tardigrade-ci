@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.30.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.30.0)
+
+**Released**: 2026.10.21
+
+**Summary**:
+
+* Adds `agents/` directory with shared agent instruction content and profile-specific conventions
+* Adds `make agents/sync` target to sync agent instructions to consumer repositories
+* Consumer repositories can set `AGENTS_PROFILE` to include profile-specific content (terraform-module, terragrunt-deployment, or salt-formula)
+* The sync writes `.agents/plus3it/AGENTS.md` with content from the pinned tardigrade-ci version
+* Adds `AGENTS.md` with instructions for developing tardigrade-ci
+* Documents moto as the default mock AWS stack in `INTEGRATION_TESTING.md` (`USE_LOCALSTACK` replaces the obsolete `ONLY_MOTO`)
+
 ### [0.29.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.6)
 
 **Released**: 2026.05.12

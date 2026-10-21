@@ -87,6 +87,37 @@ clone, a CI run, or after `make clean`), so changes to the bootstrap file reach 
 regardless of their pinned version. Changes to the Makefile reach consumers when they bump the
 pinned version; the bootstrap re-clones tardigrade-ci when the local clone does not match it.
 
+## Agent Instruction Files
+
+The `agents/` directory contains shared agent instruction content for consumer repositories:
+
+- `agents/shared.md` — Conventions shared across all Plus3 IT repositories (make targets, releases, dependency automation, the "Before you finish" checklist)
+- `agents/profiles/terraform-module.md` — Conventions for Terraform modules (layout, testing, interface changes, CI/CD)
+- `agents/profiles/terragrunt-deployment.md` — Conventions for tardigrade deployments (safety rules, plan-only operations, validation)
+- `agents/profiles/salt-formula.md` — Conventions for Salt formulas (layout, testing, documentation)
+
+Consumer repositories run `make agents/sync` to write `.agents/plus3it/AGENTS.md`, which combines `shared.md` with an optional profile. The sync reads from the tardigrade-ci version the consumer pins in its Dockerfile. The output directory `.agents/plus3it/` includes a `.gitignore` containing `*`, so it ignores itself and requires no `.gitignore` change in the consumer.
+
+### Using agents/sync in a Consumer Repository
+
+Set `AGENTS_PROFILE` in the consumer's Makefile to include profile content:
+
+```make
+export AGENTS_PROFILE ?= terraform-module
+```
+
+Then run `make agents/sync` to generate `.agents/plus3it/AGENTS.md`. The consumer's committed `AGENTS.md` imports this file (via an `@.agents/plus3it/AGENTS.md` line) and adds repository-specific content in a `## Repository-specific` section.
+
+### Updating Shared Content
+
+To change shared conventions or add a new profile:
+
+1. Edit the appropriate file in `agents/` or `agents/profiles/`
+2. Follow the standard release flow (CHANGELOG entry, commit, `make bumpversion`)
+3. Consumer repositories receive the change when their tardigrade-ci pin is bumped (via Dependabot or Renovate)
+
+Keep shared content generic and accurate for all consumer types. Conditional phrasing ("if present", "where available") covers features that vary by repository.
+
 ## Testing
 
 ### BATS Unit Tests
