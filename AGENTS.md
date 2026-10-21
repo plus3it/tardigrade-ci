@@ -152,9 +152,22 @@ Version is managed by `bump2version` (`.bumpversion.cfg`). To bump the version:
 make bumpversion/patch  # or minor, major
 ```
 
+### Prepare the CHANGELOG entry
+
+Releases bundle every change merged since the last release, including Dependabot tool bumps. Before writing the entry:
+
+1. Make sure your branch is up to date with the plus3it/tardigrade-ci default branch (`master`), for example `git fetch upstream && git merge upstream/master`. Ask before rebasing a branch that is already pushed.
+2. Find the last release tag with `git describe --tags --abbrev=0 upstream/master`, then compare the pinned versions against it:
+
+    ```bash
+    git diff <last-tag>..HEAD -- Dockerfile Dockerfile.tools mise.toml requirements.txt tests/terraform_pytest/requirements.txt .github/dependencies
+    ```
+
+3. In the new CHANGELOG.md section, list the functional changes since the last release (`git log --oneline <last-tag>..HEAD`), then an `* Updates tool versions:` list with the new version of each changed tool, in alphabetical order, matching earlier entries. List tools and base images such as golang; leave out image digests and GitHub Actions pins.
+
 ### Release Flow
 
-1. Create a PR with CHANGELOG.md updates and run `make bumpversion/patch` (or minor/major)
+1. Create a PR with the CHANGELOG.md entry, commit it, then run `make bumpversion/patch` (or minor/major), which creates its own commit
 2. Merge the PR to master
 3. `.github/workflows/release.yml` triggers on push to master when `.bumpversion.cfg` changes
 4. The release workflow uses `plus3it/actions-workflows/.github/workflows/release.yml`, which
