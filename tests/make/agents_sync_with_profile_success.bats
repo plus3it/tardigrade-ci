@@ -17,12 +17,12 @@ function setup() {
   grep -q "Terraform Module Profile" "$TEST_DIR/.agents/plus3it/AGENTS.md"
 }
 
-@test "agents/sync: success with terragrunt-deployment profile" {
-  run bash -c "cd '$TEST_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=terragrunt-deployment"
+@test "agents/sync: success with tardigrade-deployment profile" {
+  run bash -c "cd '$TEST_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment"
   [ "$status" -eq 0 ]
   [ -f "$TEST_DIR/.agents/plus3it/AGENTS.md" ]
   grep -q "Shared Plus3 IT Agent Instructions" "$TEST_DIR/.agents/plus3it/AGENTS.md"
-  grep -q "Terragrunt Deployment Profile" "$TEST_DIR/.agents/plus3it/AGENTS.md"
+  grep -q "Tardigrade Deployment Profile" "$TEST_DIR/.agents/plus3it/AGENTS.md"
 }
 
 @test "agents/sync: success with salt-formula profile" {

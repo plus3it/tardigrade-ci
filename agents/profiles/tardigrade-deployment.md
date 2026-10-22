@@ -1,4 +1,4 @@
-# Terragrunt Deployment Profile
+# Tardigrade Deployment Profile
 
 ## Safety rules
 

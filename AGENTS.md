@@ -93,7 +93,7 @@ The `agents/` directory contains shared agent instruction content for consumer r
 
 - `agents/shared.md` — Conventions shared across all Plus3 IT repositories (make targets, releases, dependency automation, the "Before you finish" checklist)
 - `agents/profiles/terraform-module.md` — Conventions for Terraform modules (layout, testing, interface changes, CI/CD)
-- `agents/profiles/terragrunt-deployment.md` — Conventions for tardigrade deployments (safety rules, plan-only operations, validation)
+- `agents/profiles/tardigrade-deployment.md` — Conventions for tardigrade deployments (safety rules, plan-only operations, validation)
 - `agents/profiles/salt-formula.md` — Conventions for Salt formulas (layout, testing, documentation)
 
 Consumer repositories run `make agents/sync` to write `.agents/plus3it/AGENTS.md`, which combines `shared.md` with an optional profile. The sync reads from the tardigrade-ci version the consumer pins in its Dockerfile. The output directory `.agents/plus3it/` includes a `.gitignore` containing `*`, so it ignores itself and requires no `.gitignore` change in the consumer.

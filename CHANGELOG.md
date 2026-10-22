@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Adds `agents/` directory with shared agent instruction content and profile-specific conventions
 * Adds `make agents/sync` target to sync agent instructions to consumer repositories
-* Consumer repositories can set `AGENTS_PROFILE` to include profile-specific content (terraform-module, terragrunt-deployment, or salt-formula)
+* Consumer repositories can set `AGENTS_PROFILE` to include profile-specific content (terraform-module, tardigrade-deployment, or salt-formula)
 * The sync writes `.agents/plus3it/AGENTS.md` with content from the pinned tardigrade-ci version
 * Adds `AGENTS.md` with instructions for developing tardigrade-ci
 * Documents moto as the default mock AWS stack in `INTEGRATION_TESTING.md` (`USE_LOCALSTACK` replaces the obsolete `ONLY_MOTO`)
