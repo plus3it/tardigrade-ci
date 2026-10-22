@@ -11,6 +11,7 @@ function setup() {
   run bash -c "cd '$TEST_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=nonexistent-profile"
   [ "$status" -eq 2 ]
   [[ "$output" == *"ERROR: Profile 'nonexistent-profile' does not exist"* ]]
+  [ ! -e "$TEST_DIR/.agents" ]
 }
 
 function teardown() {
