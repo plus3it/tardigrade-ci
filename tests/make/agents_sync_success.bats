@@ -4,6 +4,7 @@ TEST_DIR="$(pwd)/agents_sync_success"
 REPO_ROOT="$(cd "$(dirname "${BATS_TEST_FILENAME}")/../.." && pwd)"
 
 function setup() {
+  rm -rf "$TEST_DIR"
   mkdir -p "$TEST_DIR"
 }
 
