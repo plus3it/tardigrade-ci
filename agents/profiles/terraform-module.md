@@ -20,13 +20,13 @@ When adding or changing a variable, output or required version:
 1. Update the README documentation by running `make docs/generate`. This regenerates the content between `<!-- BEGIN TFDOCS -->` and `<!-- END TFDOCS -->` markers. Do not edit the generated tables manually.
 2. If the change renames or moves a resource address (for example, adding `count` or `for_each`), add a `moved` block to `migrations.tf` (create it if absent) so existing users do not destroy and recreate resources.
 3. For new or changed inputs, add a test scenario under `tests/` that exercises them.
-4. Add an entry to `CHANGELOG.md` following [Keep a Changelog](http://keepachangelog.com/) format.
+4. Add an entry to `CHANGELOG.md` following [Keep a Changelog](http://keepachangelog.com/) format, linking the pull request that implements the change.
 5. Commit your changes, including the CHANGELOG.md entry.
 6. Run the appropriate semantic version bump, which creates its own commit:
     - `make bumpversion/patch` — Bug fixes (1.2.3 → 1.2.4)
     - `make bumpversion/minor` — New features, backward-compatible (1.2.3 → 1.3.0)
     - `make bumpversion/major` — Breaking changes, including variable removals or type changes (1.2.3 → 2.0.0)
-7. Both commits go in the same pull request.
+7. Both commits go in the same pull request, and its description includes a comparison link to the last release.
 
 ## Testing
 

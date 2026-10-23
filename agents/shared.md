@@ -8,9 +8,10 @@ Plus3 IT repositories use tardigrade-ci for linting, testing, and releases. Run 
 
 1. Run `make lint`.
 2. Run the tests described in Repository-specific → Testing.
-3. For user-visible changes in a repository with `.bumpversion.cfg`: add a `CHANGELOG.md` entry ([Keep a Changelog](http://keepachangelog.com/) format) and commit it with your changes, then run `make bumpversion/patch` (or `minor` or `major`), which creates its own commit. Both commits go in the same pull request.
-4. Regenerate any generated docs, for example `make docs/generate` for Terraform module READMEs.
-5. In your final report, list everything a person must still do (pushes, pull requests, applies, account or credential setup) and anything you could not verify.
+3. For user-visible changes in a repository with `.bumpversion.cfg`: add a `CHANGELOG.md` entry ([Keep a Changelog](http://keepachangelog.com/) format) that links each change to the pull request that implemented it, and commit it with your changes. Then run `make bumpversion/patch` (or `minor` or `major`), which creates its own commit. Both commits go in the same pull request. If that pull request isn't open yet, leave its link for the person who opens it and say so in your final report.
+4. In the description of a pull request that bumps the version, include a comparison link to the last release (on GitHub, `https://github.com/<owner>/<repo>/compare/<last-tag>...<branch>`; for a fork's branch, `<owner>:<branch>`).
+5. Regenerate any generated docs, for example `make docs/generate` for Terraform module READMEs.
+6. In your final report, list everything a person must still do (pushes, pull requests, applies, account or credential setup) and anything you could not verify.
 
 ## Tooling
 
