@@ -4,6 +4,35 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.30.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.30.0)
+
+**Released**: 2026.10.23
+
+**Summary**:
+
+* Adds `agents/` with shared agent instructions and per-repository-type profiles (terraform-module, tardigrade-deployment, salt-formula) ([#1581](https://github.com/plus3it/tardigrade-ci/pull/1581))
+* Adds `make agents/sync`, which writes `.agents/plus3it/AGENTS.md` from the pinned tardigrade-ci version; consumers choose a profile with `AGENTS_PROFILE` ([#1581](https://github.com/plus3it/tardigrade-ci/pull/1581))
+* Adds `AGENTS.md` with instructions for developing tardigrade-ci ([#1581](https://github.com/plus3it/tardigrade-ci/pull/1581))
+* Documents moto as the default mock AWS stack in `INTEGRATION_TESTING.md` (`USE_LOCALSTACK` replaces the obsolete `ONLY_MOTO`) ([#1581](https://github.com/plus3it/tardigrade-ci/pull/1581))
+* Updates the semver pattern to match an optional `.post` release marker, needed for pylint-pytest 1.1.9.post1 ([#1573](https://github.com/plus3it/tardigrade-ci/pull/1573))
+* Adjusts `ec/install` for the new editorconfig-checker image and build packaging ([#1554](https://github.com/plus3it/tardigrade-ci/pull/1554))
+* Updates tool versions:
+    * bats 1.14.0 ([#1530](https://github.com/plus3it/tardigrade-ci/pull/1530))
+    * black 26.10.1 ([#1578](https://github.com/plus3it/tardigrade-ci/pull/1578))
+    * cfn-lint 1.57.2 ([#1580](https://github.com/plus3it/tardigrade-ci/pull/1580))
+    * editorconfig-checker 4.0.1 ([#1554](https://github.com/plus3it/tardigrade-ci/pull/1554))
+    * golang 1.27 ([#1546](https://github.com/plus3it/tardigrade-ci/pull/1546))
+    * moto 5.2.4 ([#1576](https://github.com/plus3it/tardigrade-ci/pull/1576))
+    * packer 1.16.1 ([#1563](https://github.com/plus3it/tardigrade-ci/pull/1563))
+    * pylint 4.1.3 ([#1579](https://github.com/plus3it/tardigrade-ci/pull/1579))
+    * pylint-pytest 1.1.9.post1 ([#1573](https://github.com/plus3it/tardigrade-ci/pull/1573))
+    * pytest 9.1.1 ([#1513](https://github.com/plus3it/tardigrade-ci/pull/1513))
+    * python-hcl2 8.1.4 ([#1562](https://github.com/plus3it/tardigrade-ci/pull/1562))
+    * rclone 1.75.2 ([#1577](https://github.com/plus3it/tardigrade-ci/pull/1577))
+    * terraform 1.16.6 ([#1582](https://github.com/plus3it/tardigrade-ci/pull/1582))
+    * tftest 1.8.8 ([#1521](https://github.com/plus3it/tardigrade-ci/pull/1521))
+    * yq 4.54.1 ([#1567](https://github.com/plus3it/tardigrade-ci/pull/1567))
+
 ### [0.29.6](https://github.com/plus3it/tardigrade-ci/releases/tag/0.29.6)
 
 **Released**: 2026.05.12
