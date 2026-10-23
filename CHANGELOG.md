@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### [0.30.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.30.0)
 
-**Released**: 2026.10.21
+**Released**: 2026.10.23
 
 **Summary**:
 
