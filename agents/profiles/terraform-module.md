@@ -6,6 +6,7 @@ Root module files:
 - `main.tf` — Module resources and data sources
 - `variables.tf` — Input variables
 - `outputs.tf` — Output values
+- `versions.tf` — Required Terraform and provider versions (if present)
 - `migrations.tf` — If present, contains `moved` blocks to allow users to upgrade the module without destroying and recreating resources
 - `modules/<name>/` — Submodules (if present); `make docs/generate` also updates their READMEs
 
@@ -15,7 +16,7 @@ Test scenarios in `tests/<scenario>/`:
 
 ## Interface changes
 
-When adding or changing a variable or output:
+When adding or changing a variable, output or required version:
 1. Update the README documentation by running `make docs/generate`. This regenerates the content between `<!-- BEGIN TFDOCS -->` and `<!-- END TFDOCS -->` markers. Do not edit the generated tables manually.
 2. If the change renames or moves a resource address (for example, adding `count` or `for_each`), add a `moved` block to `migrations.tf` (create it if absent) so existing users do not destroy and recreate resources.
 3. For new or changed inputs, add a test scenario under `tests/` that exercises them.
@@ -37,7 +38,7 @@ make mockstack/pytest   # Run tests
 make mockstack/clean    # Clean up
 ```
 
-Run exactly these three commands (Docker is required). Do not substitute `make test` or `make docker/run target=test`: they do not start the mock AWS services, and host `make test` uses host Python packages, which can differ from the versions tardigrade-ci pins in its `tests/terraform_pytest/requirements.txt`. If Docker is unavailable, say so in your final report.
+Run exactly these three commands (Docker is required). Do not substitute with `make test` or `make docker/run target=test`: they do not start the mock AWS services, and host `make test` uses host Python packages, which can differ from the versions tardigrade-ci pins in its `tests/terraform_pytest/requirements.txt`. If Docker is unavailable, say so in your final report.
 
 Tests use moto by default. Set `USE_LOCALSTACK` (for example, `USE_LOCALSTACK := true` in the Makefile) only if a test needs LocalStack. `ONLY_MOTO` is obsolete and has no effect; if a Makefile still sets it, it can be removed.
 
