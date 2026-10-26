@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Extends `make agents/sync` for tardigrade deployments: when `AGENTS_PROFILE=tardigrade-deployment` and the file named by `TARDIGRADE_REF_FILE` (default `.github/workflows/dependabot_hack.yml`) contains `plus3it/tardigrade@<tag>`, the sync also writes the template's `agents/procedures/*.md` from that tag to `.agents/plus3it/tardigrade/`; `TARDIGRADE_PATH` uses a local checkout and `TARDIGRADE_GIT_URL` overrides the clone URL ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
+* Extends `make agents/sync` for tardigrade deployments: when `AGENTS_PROFILE=tardigrade-deployment` and the file named by `TARDIGRADE_REF_FILE` (default `.github/workflows/dependabot_hack.yml`) contains `<project>@<tag>`, the sync also writes the template's `agents/procedures/*.md` from that tag to `.agents/plus3it/tardigrade/`; `TARDIGRADE_PATH` uses a local checkout and `TARDIGRADE_GIT_URL` overrides the clone URL and names the `<project>` to look for in the pin (its path without `.git`, for example `plus3it/tardigrade`), so the template can be hosted at a mirror ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 * `make agents/sync` fails before writing anything when the pinned tag cannot be downloaded or has no `agents/procedures/` ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 * Updates the `tardigrade-deployment` profile to point to the procedures ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 

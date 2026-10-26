@@ -533,10 +533,16 @@ agents/sync:
 	fi
 	@ echo "[$@]: Syncing agent instructions to $(AGENTS_SYNC_DIR)..."
 	@ set -e; \
+	project=$$(echo '$(TARDIGRADE_GIT_URL)' | sed -E 's|/+$$||; s|\.git$$||; s|^[a-zA-Z][a-zA-Z0-9+.-]*://[^/]*/?||; s|^[^@/]+@[^:/]+:||; s|^/+||'); \
+	pattern=$$(echo "$$project" | sed 's|[.+]|\\&|g'); \
 	tag=; \
 	if [ "$(AGENTS_PROFILE)" = "tardigrade-deployment" ] && [ -f "$(TARDIGRADE_REF_FILE)" ]; then \
-		if grep -qE 'plus3it/tardigrade@$(SEMVER_PATTERN)' "$(TARDIGRADE_REF_FILE)"; then \
-			tag=$$(grep -m 1 -oE 'plus3it/tardigrade@$(SEMVER_PATTERN)' "$(TARDIGRADE_REF_FILE)" | cut -d@ -f2); \
+		if [ -z "$$project" ]; then \
+			echo "[$@]: ERROR: Could not derive the template project from TARDIGRADE_GIT_URL=$(TARDIGRADE_GIT_URL)"; \
+			exit 1; \
+		fi; \
+		if grep -qE "$$pattern"'@$(SEMVER_PATTERN)' "$(TARDIGRADE_REF_FILE)"; then \
+			tag=$$(grep -m 1 -oE "$$pattern"'@$(SEMVER_PATTERN)' "$(TARDIGRADE_REF_FILE)" | cut -d@ -f2); \
 		fi; \
 	fi; \
 	tmp=$$(mktemp -d); \
@@ -552,7 +558,7 @@ agents/sync:
 			fi; \
 		fi; \
 		if ! ls "$$source"/agents/procedures/*.md > /dev/null 2>&1; then \
-			echo "[$@]: ERROR: Tag $$tag of plus3it/tardigrade (source: $$source) has no agents/procedures/*.md"; \
+			echo "[$@]: ERROR: Tag $$tag of $$project (source: $$source) has no agents/procedures/*.md"; \
 			exit 1; \
 		fi; \
 		mkdir "$$tmp/procedures"; \

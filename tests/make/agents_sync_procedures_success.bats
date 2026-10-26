@@ -45,6 +45,7 @@ function setup() {
 }
 
 @test "agents/sync: pin downloads the tagged template" {
+  echo "      - uses: ${TEMPLATE_DIR#/}@1.2.3" > "$WORK_DIR/$PIN_FILE"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_GIT_URL='$TEMPLATE_DIR'"
   [ "$status" -eq 0 ]
   [ "$(cat "$WORK_DIR/.agents/plus3it/tardigrade/stacks.md")" = "# Stacks" ]
@@ -53,8 +54,51 @@ function setup() {
 }
 
 @test "agents/sync: a custom TARDIGRADE_REF_FILE is read" {
-  mv "$WORK_DIR/$PIN_FILE" "$WORK_DIR/pin.txt"
+  rm "$WORK_DIR/$PIN_FILE"
+  echo "      - uses: ${TEMPLATE_DIR#/}@1.2.3" > "$WORK_DIR/pin.txt"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_REF_FILE=pin.txt TARDIGRADE_GIT_URL='$TEMPLATE_DIR'"
+  [ "$status" -eq 0 ]
+  [ -f "$WORK_DIR/.agents/plus3it/tardigrade/stacks.md" ]
+}
+
+@test "agents/sync: the pinned project is derived from TARDIGRADE_GIT_URL" {
+  local cases=(
+    "https://github.com/plus3it/tardigrade.git|plus3it/tardigrade"
+    "https://github.com/plus3it/tardigrade|plus3it/tardigrade"
+    "https://github.com/plus3it/tardigrade/|plus3it/tardigrade"
+    "https://git.example.com/mirrors/tardigrade.git|mirrors/tardigrade"
+    "https://git.example.com:8443/group/sub/tardigrade.git|group/sub/tardigrade"
+    "git@git.example.com:mirrors/tardigrade.git|mirrors/tardigrade"
+    "ssh://git@git.example.com:2222/mirrors/tardigrade.git|mirrors/tardigrade"
+    "file:///srv/git/tardigrade.git|srv/git/tardigrade"
+    "/srv/git/tardigrade.git|srv/git/tardigrade"
+  )
+  local case url project
+  for case in "${cases[@]}"; do
+    url="${case%%|*}"
+    project="${case#*|}"
+    echo "      - uses: $project@1.2.3" > "$WORK_DIR/$PIN_FILE"
+    rm -rf "$WORK_DIR/.agents"
+    run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_PATH='$TEMPLATE_DIR' TARDIGRADE_GIT_URL='$url'"
+    [ "$status" -eq 0 ]
+    [ -f "$WORK_DIR/.agents/plus3it/tardigrade/stacks.md" ]
+  done
+}
+
+@test "agents/sync: a pin for a different project than TARDIGRADE_GIT_URL is ignored" {
+  run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_PATH='$TEMPLATE_DIR' TARDIGRADE_GIT_URL='https://git.example.com/mirrors/tardigrade.git'"
+  [ "$status" -eq 0 ]
+  [ -f "$WORK_DIR/.agents/plus3it/AGENTS.md" ]
+  [ ! -e "$WORK_DIR/.agents/plus3it/tardigrade" ]
+}
+
+@test "agents/sync: dots in the project are matched literally" {
+  echo "      - uses: myXorg/tardigrade@1.2.3" > "$WORK_DIR/$PIN_FILE"
+  run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_PATH='$TEMPLATE_DIR' TARDIGRADE_GIT_URL='https://git.example.com/my.org/tardigrade.git'"
+  [ "$status" -eq 0 ]
+  [ ! -e "$WORK_DIR/.agents/plus3it/tardigrade" ]
+  echo "      - uses: my.org/tardigrade@1.2.3" > "$WORK_DIR/$PIN_FILE"
+  run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_PATH='$TEMPLATE_DIR' TARDIGRADE_GIT_URL='https://git.example.com/my.org/tardigrade.git'"
   [ "$status" -eq 0 ]
   [ -f "$WORK_DIR/.agents/plus3it/tardigrade/stacks.md" ]
 }

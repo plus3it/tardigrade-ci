@@ -22,9 +22,10 @@ function setup() {
 }
 
 @test "agents/sync: pinned tag without procedures fails and creates nothing" {
+  echo "      - uses: ${EMPTY_DIR#/}@1.2.3" > "$WORK_DIR/$PIN_FILE"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_GIT_URL='$EMPTY_DIR'"
   [ "$status" -ne 0 ]
-  [[ "$output" == *"ERROR: Tag 1.2.3 of plus3it/tardigrade"* ]]
+  [[ "$output" == *"ERROR: Tag 1.2.3 of ${EMPTY_DIR#/} "* ]]
   [[ "$output" == *"has no agents/procedures/*.md"* ]]
   [ ! -e "$WORK_DIR/.agents" ]
 }
@@ -37,7 +38,7 @@ function setup() {
 }
 
 @test "agents/sync: pinned tag that cannot be downloaded fails and creates nothing" {
-  echo "      - uses: plus3it/tardigrade@9.9.9" > "$WORK_DIR/$PIN_FILE"
+  echo "      - uses: ${TEMPLATE_DIR#/}@9.9.9" > "$WORK_DIR/$PIN_FILE"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_GIT_URL='$TEMPLATE_DIR'"
   [ "$status" -ne 0 ]
   [[ "$output" == *"ERROR: Could not download tag 9.9.9"* ]]
@@ -45,14 +46,22 @@ function setup() {
 }
 
 @test "agents/sync: a failed sync leaves the previous sync untouched" {
+  echo "      - uses: ${TEMPLATE_DIR#/}@1.2.3" > "$WORK_DIR/$PIN_FILE"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_GIT_URL='$TEMPLATE_DIR'"
   [ "$status" -eq 0 ]
   cp -r "$WORK_DIR/.agents" "$TEST_DIR/before"
-  echo "      - uses: plus3it/tardigrade@9.9.9" > "$WORK_DIR/$PIN_FILE"
+  echo "      - uses: ${TEMPLATE_DIR#/}@9.9.9" > "$WORK_DIR/$PIN_FILE"
   run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_GIT_URL='$TEMPLATE_DIR'"
   [ "$status" -ne 0 ]
   run diff -r "$TEST_DIR/before" "$WORK_DIR/.agents"
   [ "$status" -eq 0 ]
+}
+
+@test "agents/sync: a URL with no project path fails and creates nothing" {
+  run bash -c "cd '$WORK_DIR' && make -f '$REPO_ROOT/Makefile' agents/sync TARDIGRADE_CI_PATH='$REPO_ROOT' AGENTS_PROFILE=tardigrade-deployment TARDIGRADE_PATH='$TEMPLATE_DIR' TARDIGRADE_GIT_URL='https://git.example.com/'"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"ERROR: Could not derive the template project from TARDIGRADE_GIT_URL"* ]]
+  [ ! -e "$WORK_DIR/.agents" ]
 }
 
 @test "agents/sync: unknown profile fails first even with a pin" {
