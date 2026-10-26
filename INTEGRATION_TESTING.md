@@ -21,9 +21,9 @@ changes to incorporate automated integration testing.
 
 Defaults:
 
-* `LocalStack` and `moto` are used for the mock AWS stack, with moto serving
-ports for services not yet suported by `LocalStack`.  However, there is an
-option ("only-moto") to specify that only `moto` ports be used.
+* Tests use the `moto` server for mock AWS services. Set `USE_LOCALSTACK`
+(option "use-localstack") to send requests to `LocalStack` instead. The former
+`ONLY_MOTO` variable and "only-moto" option are obsolete and have no effect.
 * The Terraform modules used for the integration tests are expected to
 be located in the directory `tests` off the repo\'s root directory.
 
@@ -32,7 +32,7 @@ be located in the directory `tests` off the repo\'s root directory.
 | Environment variable             | Default value |
 | -------------------------------- | --------------------------------------- |
 | INTEGRATION_TEST_BASE_IMAGE_NAME | $(basename $PWD)-integration-test |
-| ONLY_MOTO                        | False; adds "--only-moto" to PYTEST_ARGS |
+| USE_LOCALSTACK                   | Unset; when set, adds "--use-localstack" to the pytest arguments |
 | PYTEST_ARGS                      | |
 | TERRAFORM_PYTEST_DIR             | $PWD/tests/terraform/pytest |
 
@@ -43,9 +43,9 @@ PYTEST_ARGS.
 
 | Command line option | Description |
 | ------------------- | ----------------------------------------------- |
-| --nomock            | Use AWS, not mocked AWS services.  Takes precedence over the "--only-moto" option. |
+| --nomock            | Use AWS, not mocked AWS services.  Takes precedence over the "--use-localstack" option. |
 | --alternate-profile | Configure an alternate profile in addition to default profile |
-| --only-moto         | Use moto ports only for mock AWS services |
+| --use-localstack    | Use LocalStack, instead of moto, for mock AWS services |
 | --tf-dir=TF_DIR     | Directory of Terraform files under test; default: './tests' |
 
 ## Executing a Terraform test
