@@ -9,6 +9,18 @@
   - changing the state `key`/`TfstateKey` expression.
 - Never edit generated `backend.tf`, `providers.tf`, `versions.tf`, or `.terraform.lock.hcl` in a unit.
 
+## Procedures
+
+A deployment can pin the version of the tardigrade template whose layout it matches, with a `uses: plus3it/tardigrade@<tag>` line in `.github/workflows/dependabot_hack.yml`. When it does, `make agents/sync` also writes the template's procedures to `.agents/plus3it/tardigrade/`. Read the matching file before changing that part of the repository:
+
+- `stacks.md`: add a stack (a new scope, such as an account) or a unit (a root deployed to a region), input precedence, and the safety rules for stacks
+- `roots.md`: add a root, its template, and its dependency globs
+- `modules.md`: add a local module, or use an external one
+- `vendor.md`: vendor external modules, public or private
+- `templates.md`: the conventions for the starter templates used to onboard a stack
+
+If `.agents/plus3it/tardigrade/` doesn't exist, the deployment has no pin, and only the general rules in this file apply.
+
 ## Validation
 
 Use the repository's make targets for validation where they exist (`make help` lists them), for example `make terraform/validate-roots`. Check for a make target before running raw `terraform validate` or `terragrunt validate` on a root.
