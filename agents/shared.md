@@ -28,7 +28,7 @@ The shared instructions and profiles describe the usual layout. The repository m
 - `make lint`, `make test`, and `make <lang>/format` (for example, `make terraform/format`).
 - `make docker/run target=<target>` runs a target inside the pinned tardigrade-ci container.
 - A repository's own `make help` is authoritative for custom targets.
-- `.tardigrade-ci/` is the bootstrap clone of tardigrade-ci; don't edit or commit it.
+- `.tardigrade-ci` is the bootstrap file that the `Makefile` includes. `make init` clones tardigrade-ci into the `tardigrade-ci/` directory. Don't edit or commit either one. Both belong in the repository's `.gitignore`; if one is missing, tell the user.
 - The `Dockerfile` line `FROM plus3it/tardigrade-ci:<version>` pins tardigrade-ci, and the Makefile bootstrap clones the same version.
 
 ## Releases
