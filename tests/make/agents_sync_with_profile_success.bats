@@ -32,6 +32,7 @@ function setup() {
   [ -f "$TEST_DIR/.agents/plus3it/AGENTS.md" ]
   grep -q "Shared Plus3 IT Agent Instructions" "$TEST_DIR/.agents/plus3it/AGENTS.md"
   grep -q "Salt Formula Profile" "$TEST_DIR/.agents/plus3it/AGENTS.md"
+  grep -q "not versioned or released" "$TEST_DIR/.agents/plus3it/AGENTS.md"
 }
 
 function teardown() {
