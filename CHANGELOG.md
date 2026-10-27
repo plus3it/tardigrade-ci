@@ -14,6 +14,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `make agents/sync` fails before writing anything when the pinned tag cannot be downloaded or has no `agents/procedures/` ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 * Updates the `tardigrade-deployment` profile to point to the procedures ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 * Tells agents that Salt formulas are not versioned or released (and lets the shared "Before you finish" version-bump step defer to a profile that says so), and corrects the `salt-formula` profile against `ash-linux-formula`, `scap-formula`, `ash-windows-formula`, and `cribl-edge-formula` (test pillar paths, Windows-only formulas, `pillar.example.yml`, and how the integration workflow starts) ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
+* Updates the shared agent instructions for repositories whose `.bumpversion.cfg` or `release.yml` differs from the usual setup, and tells agents that `.tardigrade-ci/` is the bootstrap clone and that `make help` lists custom targets ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
+* Updates the `terraform-module` profile: Terraform and provider versions belong only in `versions.tf`, `moved` blocks belong only in `migrations.tf`, and modules may have Python tests or disable the mock stack ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
+* Updates the `salt-formula` profile: some formulas add their own jobs to `test.yml` ([#1583](https://github.com/plus3it/tardigrade-ci/pull/1583))
 
 ### [0.30.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.30.0)
 

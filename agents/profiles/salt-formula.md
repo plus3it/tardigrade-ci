@@ -16,6 +16,7 @@ Salt formulas typically have:
 - `.github/workflows/test.yml` calls the reusable `test-salt-linux.yml` workflow from plus3it/actions-workflows (and `test-salt-windows.yml` for formulas that support Windows; Windows-only formulas call only that one). Each job applies a state with `salt-call --local`, using a test pillar directory such as `tests/pillar/<name>`. Linux jobs run in AlmaLinux containers; Windows jobs run on Windows runners.
 - The state names, OS versions, and pillar directories are matrix values in `test.yml`. When you add a state or a test pillar, add it to the matrix too.
 - When you add or change states or pillar keys, update the test pillar data in `tests/pillar/` and `pillar.example` to match.
+- Some formulas add their own jobs to `test.yml`, such as Kitchen verification or PowerShell linting. Read `test.yml` and mirror the existing jobs.
 - `.github/workflows/integration.yml`, when present, runs terrafirm integration tests. It starts on demand (`workflow_dispatch`) or when a pull request review body contains `/build`; a person starts it.
 
 ## CI/CD
