@@ -11,7 +11,17 @@ Plus3 IT repositories use tardigrade-ci for linting, testing, and releases. Run 
 3. For user-visible changes in a repository with `.bumpversion.cfg` (unless a profile or the Repository-specific section says the repository is not versioned or released): add a `CHANGELOG.md` entry ([Keep a Changelog](http://keepachangelog.com/) format) that links each change to the pull request that implemented it, and commit it with your changes. Then run `make bumpversion/patch` (or `minor` or `major`), which normally creates its own commit. If `.bumpversion.cfg` sets `commit = False` or lists extra version files, follow the Repository-specific section instead. Both commits go in the same pull request. If that pull request isn't open yet, leave its link for the person who opens it and say so in your final report.
 4. In the description of a pull request that bumps the version, include a comparison link to the last release (on GitHub, `https://github.com/<owner>/<repo>/compare/<last-tag>...<branch>`; for a fork's branch, `<owner>:<branch>`).
 5. Regenerate any generated docs, for example `make docs/generate` for Terraform module READMEs.
-6. In your final report, list everything a person must still do (pushes, pull requests, applies, account or credential setup) and anything you could not verify.
+6. In your final report, list everything a person must still do (pushes, pull requests, applies, account or credential setup), anything you could not verify, and any place where these instructions did not match the repository.
+
+## When these instructions don't match the repository
+
+The shared instructions and profiles describe the usual layout. The repository may differ. For example, a file may be missing, a path may be different, or a rule may not be possible to follow.
+
+1. Follow the Repository-specific section if it covers the difference.
+2. If it doesn't, don't guess. For a small difference, make the most conservative choice and continue. If a wrong choice could be costly or hard to undo, stop and ask the user.
+3. Tell the user in your final report. Name the instruction, say what you found instead, and suggest where the fix belongs:
+   - The Repository-specific section of this repository's `AGENTS.md`, if this repository is the exception.
+   - tardigrade-ci (`agents/`), if the shared text is wrong for many repositories.
 
 ## Tooling
 
