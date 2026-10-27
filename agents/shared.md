@@ -20,8 +20,8 @@ The shared instructions and profiles describe the usual layout. The repository m
 1. Follow the Repository-specific section if it covers the difference.
 2. If it doesn't, don't guess. For a small difference, make the most conservative choice and continue. If a wrong choice could be costly or hard to undo, stop and ask the user.
 3. Tell the user in your final report. Name the instruction, say what you found instead, and suggest where the fix belongs:
-  - The Repository-specific section of this repository's `AGENTS.md`, if this repository is the exception.
-  - tardigrade-ci (`agents/`), if the shared text is wrong for many repositories.
+    - The Repository-specific section of this repository's `AGENTS.md`, if this repository is the exception.
+    - tardigrade-ci (`agents/`), if the shared text is wrong for many repositories.
 
 ## Tooling
 
