@@ -3,8 +3,8 @@
 TEST_DIR="$(pwd)/python_lint_requirements_success"
 REQUIREMENTS_FILE="$(pwd)/requirements-lint.txt"
 
-# generate a python file that imports a package that is not in the venv, and a
-# requirements file that provides it
+# generate a python file that imports a package that is not already installed in
+# the python environment used by pylint, and a requirements file that provides it
 function setup() {
 rm -rf "$TEST_DIR"
 mkdir -p "$TEST_DIR"
@@ -25,5 +25,9 @@ echo "tabulate" > "$REQUIREMENTS_FILE"
 
 function teardown() {
   rm -rf "$TEST_DIR" "$REQUIREMENTS_FILE"
-  uv pip uninstall tabulate || true
+  if which uv > /dev/null 2>&1; then
+    uv pip uninstall tabulate || true
+  else
+    python3 -m pip uninstall -y tabulate || true
+  fi
 }
