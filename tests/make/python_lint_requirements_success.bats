@@ -21,6 +21,7 @@ echo "tabulate" > "$REQUIREMENTS_FILE"
 @test "python/lint requirements: success" {
   run make python/lint
   [ "$status" -eq 0 ]
+  [[ "$output" == *"Installing pip requirements from requirements-lint.txt"* ]]
 }
 
 function teardown() {
