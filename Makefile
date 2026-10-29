@@ -387,10 +387,12 @@ python/%: export PYTHON_FILES ?= $(shell $(GIT_LS_FILES) -- '*.py' $(FIND_EXCLUD
 python/lint:
 	@if [[ -n "$(PYTHON_FILES)" ]]; then $(SELF) python/lint/exec; fi
 python/lint/exec: export PYLINT_RCFILE ?= $(TARDIGRADE_CI_PATH)/.pylintrc
+python/lint/exec: export PYTHON_LINT_REQUIREMENTS ?= requirements-lint.txt
 python/lint/exec: | guard/program/pylint guard/python_pkg/pylint-pytest guard/program/black guard/program/pydocstyle guard/program/git
 python/lint/exec:
 	@ echo "[$@]: Linting Python files..."
 	@ echo "[$@]: Pylint rcfile:  $(PYLINT_RCFILE)"
+	@ if [[ -f "$(PYTHON_LINT_REQUIREMENTS)" ]]; then $(SELF) install/pip_requirements/$(PYTHON_LINT_REQUIREMENTS); fi
 	black --check $(PYTHON_FILES)
 	for python_file in $(PYTHON_FILES); do \
 		echo "[$@]: pylint file: $$python_file"; \
