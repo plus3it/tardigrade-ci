@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.32.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.0)
+
+**Released**: 2026.10.29
+
+**Summary**:
+
+* Installs Python packages from `requirements-lint.txt` in the consumer repository, when the file exists, before `make python/lint` runs pylint. Set `PYTHON_LINT_REQUIREMENTS` to use a different path. This lets a consumer provide the third-party packages its Python files import, such as `boto3`, which was previously present only as a transitive dependency of cfn-lint ([#1585](https://github.com/plus3it/tardigrade-ci/pull/1585))
+
 ### [0.31.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.31.1)
 
 **Released**: 2026.10.29
