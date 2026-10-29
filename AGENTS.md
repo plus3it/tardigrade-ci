@@ -87,6 +87,19 @@ clone, a CI run, or after `make clean`), so changes to the bootstrap file reach 
 regardless of their pinned version. Changes to the Makefile reach consumers when they bump the
 pinned version; the bootstrap re-clones tardigrade-ci when the local clone does not match it.
 
+The clone lives in `tardigrade-ci/` in the consumer's directory, and `make init` removes it and
+clones the pinned version again. The bootstrap uses the nearest `tardigrade-ci` directory it finds,
+starting in the consumer's directory and then searching its parent directories. A local clone is
+the nearest when it exists.
+
+If there is no local clone and a parent directory has a `tardigrade-ci` directory (for example, a
+checkout next to the consumer), the bootstrap uses that one. It prints
+`Using external tardigrade-ci, skipping auto-init` and does not check its version or re-clone it.
+Changes made there take effect in the consumer immediately, regardless of the consumer's Dockerfile
+pin. This is intended for developing tardigrade-ci features: delete the consumer's local clone, edit
+the checkout, and run the consumer's make targets. To go back to the pinned version, run `make init`
+in the consumer. The new local clone takes precedence.
+
 ## Agent Instruction Files
 
 The `agents/` directory contains shared agent instruction content for consumer repositories:

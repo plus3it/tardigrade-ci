@@ -28,8 +28,11 @@ The shared instructions and profiles describe the usual layout. The repository m
 - `make lint`, `make test`, and `make <lang>/format` (for example, `make terraform/format`).
 - `make docker/run target=<target>` runs a target inside the pinned tardigrade-ci container.
 - A repository's own `make help` is authoritative for custom targets.
-- `.tardigrade-ci` is the bootstrap file that the `Makefile` includes. `make init` clones tardigrade-ci into the `tardigrade-ci/` directory. Don't edit or commit either one. Both belong in the repository's `.gitignore`; if one is missing, tell the user.
-- The `Dockerfile` line `FROM plus3it/tardigrade-ci:<version>` pins tardigrade-ci, and the Makefile bootstrap clones the same version.
+- The `Dockerfile` line `FROM plus3it/tardigrade-ci:<version>` pins tardigrade-ci.
+- `.tardigrade-ci` is the bootstrap file that the `Makefile` includes. It clones the pinned version into the `tardigrade-ci/` directory.
+- Run `make init` to replace the local `tardigrade-ci/` clone with the version in the `Dockerfile`, for example after the pin changes. Don't delete or edit `tardigrade-ci/` by hand.
+- If `make` prints "Using external tardigrade-ci", a `tardigrade-ci` directory in a parent directory is used instead of the pinned version. This is meant for developing tardigrade-ci itself, so don't remove or change it. Tell the user, because results can differ from CI, which uses the pinned version. Run `make init` to use the pinned version instead, but only if the user asks.
+- Don't edit or commit `.tardigrade-ci` or `tardigrade-ci/`. Both belong in the repository's `.gitignore`; if one is missing, tell the user.
 
 ## Releases
 
