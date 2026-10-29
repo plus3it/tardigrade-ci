@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.31.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.31.1)
+
+**Released**: 2026.10.29
+
+**Summary**:
+
+* Tells agents to run `make init` to update the local `tardigrade-ci/` clone to the version pinned in the `Dockerfile`, and explains that a `tardigrade-ci` directory in a parent directory is used on purpose when developing tardigrade-ci, in both the shared instructions and the tardigrade-ci `AGENTS.md` ([#1584](https://github.com/plus3it/tardigrade-ci/pull/1584))
+
 ### [0.31.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.31.0)
 
 **Released**: 2026.10.26
