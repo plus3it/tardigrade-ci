@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [Unreleased]
+
+**Summary**:
+
+* Tells agents not to change git configuration or choose a commit identity themselves, and to ask the user when a commit fails for lack of one, in the shared instructions ([#1590](https://github.com/plus3it/tardigrade-ci/pull/1590))
+
 ### [0.32.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.0)
 
 **Released**: 2026.10.29
