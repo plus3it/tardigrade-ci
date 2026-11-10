@@ -4,7 +4,9 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-### [Unreleased]
+### [0.32.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.1)
+
+**Released**: 2026.11.10
 
 **Summary**:
 
