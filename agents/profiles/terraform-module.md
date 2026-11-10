@@ -59,7 +59,7 @@ When adding or changing a variable, output or required version:
 1. Update the README documentation by running `make docs/generate`. This regenerates the content between `<!-- BEGIN TFDOCS -->` and `<!-- END TFDOCS -->` markers. Do not edit the generated tables manually.
 2. If the change renames or moves a resource address (for example, adding `count` or `for_each`), add a `moved` block to `migrations.tf` (create it if absent; never put `moved` blocks in other files) so existing users do not destroy and recreate resources. When switching from `count` to `for_each`, add one `moved` block for each old index to its new key. Check the plan shows moves, not replacements.
 3. For new or changed inputs, add a test scenario under `tests/` that exercises them. Keep one scenario that passes only the required attributes, so the optional defaults are exercised.
-4. Add an entry to `CHANGELOG.md` following [Keep a Changelog](http://keepachangelog.com/) format, linking the pull request that implements the change.
+4. Add a `CHANGELOG.md` entry as described in step 3 of "Before you finish".
 5. Commit your changes, including the CHANGELOG.md entry.
 6. Run the appropriate semantic version bump, which creates its own commit:
     - `make bumpversion/patch` — Bug fixes (1.2.3 → 1.2.4)
