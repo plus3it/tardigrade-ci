@@ -105,7 +105,7 @@ in the consumer. The new local clone takes precedence.
 The `agents/` directory contains shared agent instruction content for consumer repositories:
 
 - `agents/shared.md` — Conventions shared across all Plus3 IT repositories (make targets, releases, dependency automation, the "Before you finish" checklist)
-- `agents/profiles/terraform-module.md` — Conventions for Terraform modules (layout, testing, interface changes, CI/CD)
+- `agents/profiles/terraform-module.md` — Conventions for Terraform modules (layout, input and output design, testing, interface changes, CI/CD)
 - `agents/profiles/tardigrade-deployment.md` — Conventions for tardigrade deployments (safety rules, plan-only operations, validation)
 - `agents/profiles/salt-formula.md` — Conventions for Salt formulas (layout, testing, documentation)
 
@@ -140,6 +140,25 @@ To change shared conventions or add a new profile:
 3. Consumer repositories receive the change when their tardigrade-ci pin is bumped (via Dependabot or Renovate)
 
 Keep shared content generic and accurate for all consumer types. Conditional phrasing ("if present", "where available") covers features that vary by repository.
+
+### Sources for the Terraform module profile
+
+The Terraform module profile comes from Plus3 IT's own modules. These public sources were reviewed
+for community practices that don't conflict with them. The text is reworded, not copied.
+
+- [antonbabenko/terraform-skill](https://github.com/antonbabenko/terraform-skill) (Apache 2.0),
+  reviewed at commit `9c1e92d962a5407c227e5566416e962a2f057240`. Took: resource block order,
+  `write_only` for secrets, and no list-index identity.
+- [hashicorp/agent-skills](https://github.com/hashicorp/agent-skills) (MPL-2.0), reviewed at commit
+  `5e30fa5c867ba6777c37e4206babfd08049c396f`. Took nothing specific to it, only practices it shares
+  with the other source, such as `for_each` over `count` and `moved` blocks.
+- [hashicorp/agent-skills `plugins/terraform`](https://github.com/hashicorp/agent-skills/tree/main/plugins/terraform),
+  the Terraform bundle of the same repository, at the same commit. Skills read: `terraform-style-guide`,
+  `terraform-test`, and `refactor-module`. Took nothing specific to it.
+
+If you copy wording from any source, keep that project's license terms (Apache 2.0 needs the license
+text, its copyright notice, a statement of changes, and any NOTICE content). Ask before adding
+attribution elsewhere. When you review a source again, update its commit above.
 
 ## Testing
 

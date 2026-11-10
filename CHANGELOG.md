@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.33.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.33.0)
+
+**Released**: 2026.11.10
+
+**Summary**:
+
+* Expands the `terraform-module` profile with input and output design: one input object with `optional()` attributes named for the module's subject, cross-cutting inputs inside it, secrets in a separate `<subject>_secrets` input passed to write-only arguments, plural inputs keyed by `name`, `for_each` and `count` rules, whole-object outputs, git+https module sources pinned to a tag, and the changes that need a major version bump (PR link pending)
+* Tells agents in the shared "Before you finish" step to put the CHANGELOG entry under a heading for the new version, copy the previous entry's date format, and write `PR link pending` instead of guessing a pull request number (PR link pending)
+* Lists in the tardigrade-ci `AGENTS.md` the public Terraform skill sources reviewed for the `terraform-module` profile (PR link pending)
+
 ### [0.32.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.1)
 
 **Released**: 2026.11.10
