@@ -10,9 +10,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 **Summary**:
 
-* Expands the `terraform-module` profile with input and output design: one input object with `optional()` attributes named for the module's subject, cross-cutting inputs inside it, secrets in a separate `<subject>_secrets` input passed to write-only arguments, plural inputs keyed by `name`, `for_each` and `count` rules, whole-object outputs, git+https module sources pinned to a tag, and the changes that need a major version bump (PR link pending)
-* Tells agents in the shared "Before you finish" step to put the CHANGELOG entry under a heading for the new version, copy the previous entry's date format, and write `PR link pending` instead of guessing a pull request number (PR link pending)
-* Lists in the tardigrade-ci `AGENTS.md` the public Terraform skill sources reviewed for the `terraform-module` profile (PR link pending)
+* Expands the `terraform-module` profile with input and output design: one input object with `optional()` attributes named for the module's subject, cross-cutting inputs inside it, secrets in a separate `<subject>_secrets` input passed to write-only arguments, plural inputs keyed by `name`, `for_each` and `count` rules, whole-object outputs, git+https module sources pinned to a tag, and the changes that need a major version bump ([#1596](https://github.com/plus3it/tardigrade-ci/pull/1596))
+* Tells agents in the shared "Before you finish" step to put the CHANGELOG entry under a heading for the new version, copy the previous entry's date format, and write `PR link pending` instead of guessing a pull request number ([#1596](https://github.com/plus3it/tardigrade-ci/pull/1596))
+* Lists in the tardigrade-ci `AGENTS.md` the public Terraform skill sources reviewed for the `terraform-module` profile ([#1596](https://github.com/plus3it/tardigrade-ci/pull/1596))
 
 ### [0.32.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.1)
 
