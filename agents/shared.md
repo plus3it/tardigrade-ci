@@ -23,6 +23,13 @@ The shared instructions and profiles describe the usual layout. The repository m
     - The Repository-specific section of this repository's `AGENTS.md`, if this repository is the exception.
     - tardigrade-ci (`agents/`), if the shared text is wrong for many repositories.
 
+## Git
+
+- Don't change git configuration (global, system, or repository-local) unless the user asks. This includes `user.name`, `user.email`, `commit.gpgsign`, `core.hooksPath`, and edits to `.git/config`. Reading configuration is fine.
+- Never choose a commit identity yourself. Don't take a name or email from the environment, other repositories, or browser or system data.
+- If a commit fails because no identity is set, stop and ask the user. If the user gives you an identity for one commit, pass it per command with `git -c user.name=... -c user.email=... commit` or the `GIT_AUTHOR_*` and `GIT_COMMITTER_*` environment variables. Don't write it to configuration.
+- In your final report, mention any git configuration you were asked to change.
+
 ## Tooling
 
 - `make lint`, `make test`, and `make <lang>/format` (for example, `make terraform/format`).

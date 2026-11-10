@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.32.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.1)
+
+**Released**: 2026.11.10
+
+**Summary**:
+
+* Tells agents not to change git configuration or choose a commit identity themselves, and to ask the user when a commit fails for lack of one, in the shared instructions ([#1590](https://github.com/plus3it/tardigrade-ci/pull/1590))
+* Updates tool versions:
+    * cfn-lint 1.59.0 ([#1592](https://github.com/plus3it/tardigrade-ci/pull/1592))
+    * moto 5.2.5 ([#1593](https://github.com/plus3it/tardigrade-ci/pull/1593))
+    * packer 1.16.2 ([#1588](https://github.com/plus3it/tardigrade-ci/pull/1588))
+    * terraform 1.17.1 ([#1591](https://github.com/plus3it/tardigrade-ci/pull/1591))
+
 ### [0.32.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.32.0)
 
 **Released**: 2026.10.29
