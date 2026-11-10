@@ -50,7 +50,7 @@ module "budget" {
 - Name a resource `this` when the module creates it once. Give any other resource a descriptive name without the resource type. Names are lowercase with underscores.
 - In a resource, put `count` or `for_each` first, then a blank line, then arguments, nested blocks, `depends_on`, and `lifecycle` last.
 - Don't use `ignore_changes = all`, and don't hard-code account IDs or ARNs.
-- A `module` block for a remote module uses the full git+https source with a `ref` that pins a release tag, for example `source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=4.2.1"`. Don't use registry sources or the `github.com/...` shorthand: the full form is the easiest to override with git `insteadOf` configs. Submodules in the same repository use a relative path (`./modules/<name>`).
+- A `module` block for a remote module uses the full `git::https://` source with a `ref` that pins a release tag, for example `source = "git::https://github.com/plus3it/terraform-aws-tardigrade-config.git?ref=4.2.1"`. Don't use registry sources or the `github.com/...` shorthand: the full form is the easiest to override with git `insteadOf` configs. Submodules in the same repository use a relative path (`./modules/<name>`).
 - Add or change outputs only when the task calls for it. Every output has a `description`. Output each resource as a whole object, one output per resource, named for it (`bucket`, `detector`), so callers pick the attributes they need. For `for_each` resources the value is the keyed map. For a conditional resource, use `one(aws_x.this[*])`. Set `sensitive = true` on an output whose object contains secret values.
 
 ## Interface changes

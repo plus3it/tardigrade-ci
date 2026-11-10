@@ -148,7 +148,7 @@ for community practices that don't conflict with them. The text is reworded, not
 
 - [antonbabenko/terraform-skill](https://github.com/antonbabenko/terraform-skill) (Apache 2.0),
   reviewed at commit `9c1e92d962a5407c227e5566416e962a2f057240`. Took: resource block order,
-  `write_only` for secrets, and no list-index identity.
+  write-only arguments for secrets, and no list-index identity.
 - [hashicorp/agent-skills](https://github.com/hashicorp/agent-skills) (MPL-2.0), reviewed at commit
   `5e30fa5c867ba6777c37e4206babfd08049c396f`. Took nothing specific to it, only practices it shares
   with the other source, such as `for_each` over `count` and `moved` blocks.
