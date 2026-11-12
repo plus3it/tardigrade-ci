@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.33.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.33.1)
+
+**Released**: 2026.11.12
+
+**Summary**:
+
+* Stops `make docker/run` from putting the value of `GITHUB_ACCESS_TOKEN` on the `docker run` command line, where any local process could read it from the process list and `docker inspect` showed it. The variable is now passed by name only, and docker or podman read it from the environment ([#1597](https://github.com/plus3it/tardigrade-ci/pull/1597))
+
 ### [0.33.0](https://github.com/plus3it/tardigrade-ci/releases/tag/0.33.0)
 
 **Released**: 2026.11.10

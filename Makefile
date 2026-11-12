@@ -631,7 +631,7 @@ docker/run: | guard/env/TARDIGRADE_CI_PATH guard/env/TARDIGRADE_CI_PROJECT
 	-v "$(HOME)/.aws/:/home/$(TARDIGRADE_CI_PROJECT)/.aws/:ro" \
 	-e AWS_DEFAULT_REGION=$(AWS_DEFAULT_REGION) \
 	$(if $(AWS_PROFILE),-e AWS_PROFILE=$(AWS_PROFILE),) \
-	-e GITHUB_ACCESS_TOKEN=$${GITHUB_ACCESS_TOKEN:-} \
+	-e GITHUB_ACCESS_TOKEN \
 	-w /workdir/ \
 	--entrypoint $(entrypoint) \
 	$(IMAGE_NAME) $(target)
