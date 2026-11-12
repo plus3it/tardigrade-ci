@@ -215,7 +215,7 @@ install/pip/%: | $(BIN_DIR) guard/env/PYPI_PKG_NAME
 
 install/pip_pkg_with_no_cli/%: | guard/env/PYPI_PKG_NAME
 	@ echo "[$@]: Installing $*..."
-	$(PIP) install $(PYPI_PKG_NAME)
+	$(PIP) install $(PIP_EXTRA_ARGS) $(PYPI_PKG_NAME)
 	@ echo "[$@]: Completed successfully!"
 
 black/install: export BLACK_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'black==','[0-9]+\.[0-9]+(b[0-9]+)?')
@@ -292,7 +292,7 @@ install/uv-venv/%: | guard/program/uv
 	@ echo "[$@]: Completed successfully!"
 
 pytest/install:
-	@ $(PIP) install -r $(TERRAFORM_PYTEST_DIR)/requirements.txt
+	@ $(PIP) install -c $(TARDIGRADE_CI_PYTHON_TOOLS) pytest -r $(TERRAFORM_PYTEST_DIR)/requirements.txt
 
 pylint/install: export PYLINT_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint==','$(SEMVER_PATTERN)')
 pylint/install:
@@ -300,7 +300,7 @@ pylint/install:
 
 pylint-pytest/install: export PYLINT_PYTEST_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pylint-pytest==','$(SEMVER_PATTERN)')
 pylint-pytest/install:
-	@ $(SELF) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)'
+	@ $(SELF) install/pip_pkg_with_no_cli/$(@D) PYPI_PKG_NAME='$(@D)==$(PYLINT_PYTEST_VERSION)' PIP_EXTRA_ARGS='-c $(TARDIGRADE_CI_PYTHON_TOOLS)'
 
 pydocstyle/install: export PYDOCSTYLE_VERSION ?= $(call match_pattern_in_file,$(TARDIGRADE_CI_PYTHON_TOOLS),'pydocstyle==','$(SEMVER_PATTERN)')
 pydocstyle/install:
