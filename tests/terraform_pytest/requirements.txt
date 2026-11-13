@@ -1,5 +1,6 @@
 # This requirements.txt file is used to let Dependabot manage pinned versions of
-# tools that will be installed using the target `make pytest/install`
+# tools that will be installed using the target `make pytest/install`.
+# pytest itself is pinned in the root requirements.txt, which the install uses as a constraint.
 
 # Keep this list in alphabetical order, with a single blank line between each package
 

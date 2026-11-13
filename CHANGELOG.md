@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+### [0.33.2](https://github.com/plus3it/tardigrade-ci/releases/tag/0.33.2)
+
+**Released**: 2026.11.12
+
+**Summary**:
+
+* Pins pytest in one place, the root `requirements.txt`, and uses it as a constraint for `make pytest/install` and `make pylint-pytest/install`, so `python/lint` no longer installs pytest 9.2.0 alongside pylint-pytest 1.1.9.post1, which crashes pylint with `'FixtureManager' object has no attribute '_arg2fixturedefs'` (PR link pending)
+
 ### [0.33.1](https://github.com/plus3it/tardigrade-ci/releases/tag/0.33.1)
 
 **Released**: 2026.11.12
