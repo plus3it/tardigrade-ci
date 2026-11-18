@@ -19,6 +19,6 @@ FROM motoserver/moto:5.2.5 as moto
 
 FROM editorconfig-checker/editorconfig-checker:4.0.1 as ec
 
-FROM quay.io/terraform-docs/terraform-docs:0.20.0 as tfdocs
+FROM quay.io/terraform-docs/terraform-docs:0.25.1 as tfdocs
 
 FROM rclone/rclone:1.76.0 as rclone
