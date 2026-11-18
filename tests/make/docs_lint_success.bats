@@ -37,7 +37,7 @@ No resources.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_foo"></a> [foo](#input\_foo) | test var | `string` | `"bar"` | no |
 
 ## Outputs
