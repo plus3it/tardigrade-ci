@@ -8,4 +8,4 @@ pytest==9.1.1
 
 python-hcl2==8.2.0
 
-tftest==1.8.8
+tftest==2.0.0
